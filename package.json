@@ -1,0 +1,35 @@
+{
+  "name": "cl-cli",
+  "version": "1.0.0",
+  "description": "self cli",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build tsconfig.json"
+  },
+  "bin": {
+    "cl": "./dist/bin/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChrisLee0211/cl-cli.git"
+  },
+  "keywords": [
+    "cli"
+  ],
+  "author": "chris lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChrisLee0211/cl-cli/issues"
+  },
+  "homepage": "https://github.com/ChrisLee0211/cl-cli#readme",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^6.2.0",
+    "download-git-repo": "^3.0.2",
+    "eslint": "^7.13.0",
+    "inquirer": "^7.3.3",
+    "ora": "^5.1.0",
+    "typescript": "^4.0.5"
+  }
+}
