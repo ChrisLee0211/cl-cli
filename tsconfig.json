@@ -5,7 +5,6 @@
       /* 基础配置 */
       "target": "es2015",
       "lib": [
-          "DOM",
         "esnext"
       ],
       "module": "commonJs",
@@ -20,9 +19,13 @@
       /* 模块分析配置 */
       "baseUrl": ".",
       "outDir": "./dist",
-      "esModuleInterop": true,
+      "esModuleInterop": false,
       "moduleResolution": "node",
-      "resolveJsonModule": true
+      "resolveJsonModule": true,
+      "typeRoots": [                            /* 要包含的类型声明文件路径列表*/
+        "./typings",
+        "./node_modules/@types"
+        ],
     },
     "include": [
       "src"
