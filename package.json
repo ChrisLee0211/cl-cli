@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/ChrisLee0211/cl-cli#readme",
   "dependencies": {
+    "@types/inquirer": "^7.3.1",
     "@types/node": "^14.14.8",
     "chalk": "^4.1.0",
     "commander": "^6.2.0",

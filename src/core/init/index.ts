@@ -1,7 +1,8 @@
-import inquirer from 'inquirer';
+import * as inquirer from 'inquirer';
 import {log} from '../../utils/log';
-import * as fs from 'fs';
+import {checkFileIsBuilt} from '../../utils/file';
 import {getCurrentPath} from '../../utils/path';
+import {prompt} from '../commanders/prompt';
 
 /**
  * 初始化项目信息
@@ -11,5 +12,11 @@ import {getCurrentPath} from '../../utils/path';
  */
 export const initProject = async (name:string):Promise<void> => {
     const path = getCurrentPath();
-    
+    const isBuild = await checkFileIsBuilt(path);
+    let projectName = name;
+    if(isBuild){
+        log(`项目已在当前目录已存在，请重新命名`,'warning');
+        const answer = await inquirer.prompt(prompt["rename"]);
+        projectName = answer.name;
+    }
 }
