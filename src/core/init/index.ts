@@ -1,7 +1,7 @@
 import * as inquirer from 'inquirer';
 import {log} from '../../utils/log';
 import {checkFileIsBuilt} from '../../utils/file';
-import {getCurrentPath} from '../../utils/path';
+import {getCurrentPath,concatPath} from '../../utils/path';
 import {prompt} from '../commanders/prompt';
 import context from '../context'
 
@@ -13,7 +13,7 @@ import context from '../context'
  */
 export const initProject = async (name:string):Promise<void> => {
     const path = getCurrentPath();
-    const isBuild = await checkFileIsBuilt(path);
+    const isBuild = await checkFileIsBuilt(concatPath(path,name));
     let projectName = name;
     if(isBuild){
         log(`项目已在当前目录已存在，请重新命名`,'warning');

@@ -24,7 +24,7 @@ const context_1 = require("../context");
  */
 exports.initProject = (name) => __awaiter(void 0, void 0, void 0, function* () {
     const path = path_1.getCurrentPath();
-    const isBuild = yield file_1.checkFileIsBuilt(path);
+    const isBuild = yield file_1.checkFileIsBuilt(path_1.concatPath(path, name));
     let projectName = name;
     if (isBuild) {
         log_1.log(`项目已在当前目录已存在，请重新命名`, 'warning');
