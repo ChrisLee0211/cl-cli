@@ -34,6 +34,23 @@ exports.initProject = (name) => __awaiter(void 0, void 0, void 0, function* () {
     context_1.default.setName(projectName);
     const langChoice = yield inquirer.prompt([prompt_1.prompt['lang']]);
     context_1.default.setCodeType(langChoice.lang);
+    const projectType = yield inquirer.prompt([prompt_1.prompt['projectType']]);
+    context_1.default.setProjectType(projectType.projectType);
+    switch (projectType.projectType) {
+        case "admin":
+        case "component":
+            const frame = yield inquirer.prompt([prompt_1.prompt['frame']]);
+            context_1.default.setFrame(frame.frame);
+            context_1.default.setEnv('browser');
+            break;
+        case "utils":
+            context_1.default.setEnv('browser');
+            break;
+        case "server":
+            context_1.default.setEnv('node');
+            break;
+        default:
+    }
     console.log(context_1.default.progressStack);
 });
 //# sourceMappingURL=index.js.map

@@ -23,5 +23,22 @@ export const initProject = async (name:string):Promise<void> => {
     context.setName(projectName);
     const langChoice = await inquirer.prompt([prompt['lang']]);
     context.setCodeType(langChoice.lang)
+    const projectType = await inquirer.prompt([prompt['projectType']]);
+    context.setProjectType(projectType.projectType);
+    switch(projectType.projectType){
+        case "admin":
+        case "component":
+            const frame = await inquirer.prompt([prompt['frame']]);
+            context.setFrame(frame.frame);
+            context.setEnv('browser');
+            break;
+        case "utils":
+            context.setEnv('browser');
+            break;
+        case "server":
+            context.setEnv('node');
+            break;
+        default:
+    }
     console.log(context.progressStack)
 }

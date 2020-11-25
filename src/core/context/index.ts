@@ -3,6 +3,8 @@ class Context implements contextCtr {
         name:'',
         codeType:"typescript",
         projectType:"component",
+        envType: 'browser',
+        frameType:undefined,
         useEslint:true,
         useAxios:true};
     progressStack:Array<keyof config> = [];
@@ -25,6 +27,14 @@ class Context implements contextCtr {
 
     setAxios(state){
         this.config.useAxios = state
+    }
+
+    setFrame(frame:frame){
+        this.config.frameType = frame
+    }
+
+    setEnv(env:env){
+        this.config.envType = env;
     }
 
     pushToStack(configName:keyof config){

@@ -6,6 +6,8 @@ class Context {
             name: '',
             codeType: "typescript",
             projectType: "component",
+            envType: 'browser',
+            frameType: undefined,
             useEslint: true,
             useAxios: true
         };
@@ -25,6 +27,12 @@ class Context {
     }
     setAxios(state) {
         this.config.useAxios = state;
+    }
+    setFrame(frame) {
+        this.config.frameType = frame;
+    }
+    setEnv(env) {
+        this.config.envType = env;
     }
     pushToStack(configName) {
         this.progressStack.push(configName);
