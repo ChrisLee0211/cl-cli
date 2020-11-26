@@ -6,7 +6,10 @@ type projectType = 'component' | 'admin' | 'utils' | 'server'
 type frame = 'vue' | 'react' 
 /** 宿主类型 */
 type env = 'node' | 'browser'
-
+/** UI框架 */
+type uiFrameForVue = 'element' | 'antd-vue' |'none'
+type uiFrameForReact = 'antd'| 'none'
+type ui = uiFrameForVue | uiFrameForReact | 'none'
 interface config {
     /** 项目名称 */
     name: string;
@@ -18,6 +21,8 @@ interface config {
     envType: env
     /** 框架类型 */
     frameType: frame | undefined
+    /** ui类型 */
+    ui:ui
     /** 是否启用eslint */
     useEslint: boolean
     /** 是否预装axios */
@@ -39,8 +44,12 @@ interface contextCtr {
     setEslint(state:boolean):void
     /** 设置是否使用axios */
     setAxios(state:boolean):void
+    /** 设置宿主环境类型 */
     setEnv(env:env):void
+    /** 设置框架 */
     setFrame(frame:frame):void
+    /** 设置ui框架 */
+    setUI(ui:ui):void
     /** 记录一个已完成的配置入栈 */
     pushToStack(key:keyof config):void
     /** 检查是否所有配置项加载完成 */

@@ -29,6 +29,14 @@ export const initProject = async (name:string):Promise<void> => {
         case "admin":
         case "component":
             const frame = await inquirer.prompt([prompt['frame']]);
+            if(frame.frame === 'vue'){
+                const UiFrame = await inquirer.prompt(prompt['uiForVue']);
+                context.setUI(UiFrame.ui)
+            }
+            if(frame.frame === 'react'){
+                const UiFrame = await inquirer.prompt(prompt['uiForReact']);
+                context.setUI(UiFrame.ui)
+            }
             context.setFrame(frame.frame);
             context.setEnv('browser');
             break;

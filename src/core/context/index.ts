@@ -5,6 +5,7 @@ class Context implements contextCtr {
         projectType:"component",
         envType: 'browser',
         frameType:undefined,
+        ui: 'none',
         useEslint:true,
         useAxios:true};
     progressStack:Array<keyof config> = [];
@@ -31,6 +32,10 @@ class Context implements contextCtr {
 
     setFrame(frame:frame){
         this.config.frameType = frame
+    }
+
+    setUI(ui:ui){
+        this.config.ui = ui
     }
 
     setEnv(env:env){

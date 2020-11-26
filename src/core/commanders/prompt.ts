@@ -19,6 +19,8 @@ type langQuestion = selectQuestion<{'lang':lang},'lang'>
 type projectTypeQuestion = selectQuestion<{'projectType':projectType},'projectType'>
 type frameTypeQuestion = selectQuestion<{'frame':frame},'frame'>
 type envQuestion = selectQuestion<{'env':env},'env'>
+type uiforVueQuestion = selectQuestion<{'ui':uiFrameForVue},'ui'>
+type uiforReactQuestion = selectQuestion<{'ui':uiFrameForReact},'ui'>
 
 interface promptConfig {
     rename:renameQuestion
@@ -26,6 +28,8 @@ interface promptConfig {
     projectType: projectTypeQuestion
     frame:frameTypeQuestion
     env: envQuestion
+    uiForVue: uiforVueQuestion
+    uiForReact: uiforReactQuestion
 }
 
 export const prompt:promptConfig = {
@@ -58,5 +62,17 @@ export const prompt:promptConfig = {
         message: '项目用于以下哪种运行环境',
         name: 'env',
         choices: ['browser','node'],
+    },
+    uiForVue: {
+        type: 'list',
+        message: '使用以下何种UI框架',
+        name: 'ui',
+        choices: ['antd-vue', 'element', 'none'],
+    },
+    uiForReact: {
+        type: 'list',
+        message: '使用以下何种UI框架',
+        name: 'ui',
+        choices: ['antd', 'none'],
     }
 }
