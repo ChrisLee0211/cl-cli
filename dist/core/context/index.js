@@ -8,6 +8,7 @@ class Context {
             projectType: "component",
             envType: 'browser',
             frameType: undefined,
+            ui: 'none',
             useEslint: true,
             useAxios: true
         };
@@ -30,6 +31,9 @@ class Context {
     }
     setFrame(frame) {
         this.config.frameType = frame;
+    }
+    setUI(ui) {
+        this.config.ui = ui;
     }
     setEnv(env) {
         this.config.envType = env;

@@ -7,6 +7,7 @@ declare class Context implements contextCtr {
     setEslint(state: any): void;
     setAxios(state: any): void;
     setFrame(frame: frame): void;
+    setUI(ui: ui): void;
     setEnv(env: env): void;
     pushToStack(configName: keyof config): void;
     isFinish(): boolean;

@@ -25,12 +25,20 @@ declare type frameTypeQuestion = selectQuestion<{
 declare type envQuestion = selectQuestion<{
     'env': env;
 }, 'env'>;
+declare type uiforVueQuestion = selectQuestion<{
+    'ui': uiFrameForVue;
+}, 'ui'>;
+declare type uiforReactQuestion = selectQuestion<{
+    'ui': uiFrameForReact;
+}, 'ui'>;
 interface promptConfig {
     rename: renameQuestion;
     lang: langQuestion;
     projectType: projectTypeQuestion;
     frame: frameTypeQuestion;
     env: envQuestion;
+    uiForVue: uiforVueQuestion;
+    uiForReact: uiforReactQuestion;
 }
 export declare const prompt: promptConfig;
 export {};

@@ -31,6 +31,18 @@ exports.prompt = {
         message: '项目用于以下哪种运行环境',
         name: 'env',
         choices: ['browser', 'node'],
+    },
+    uiForVue: {
+        type: 'list',
+        message: '使用以下何种UI框架',
+        name: 'ui',
+        choices: ['antd-vue', 'element', 'none'],
+    },
+    uiForReact: {
+        type: 'list',
+        message: '使用以下何种UI框架',
+        name: 'ui',
+        choices: ['antd', 'none'],
     }
 };
 //# sourceMappingURL=prompt.js.map

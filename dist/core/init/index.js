@@ -40,6 +40,14 @@ exports.initProject = (name) => __awaiter(void 0, void 0, void 0, function* () {
         case "admin":
         case "component":
             const frame = yield inquirer.prompt([prompt_1.prompt['frame']]);
+            if (frame.frame === 'vue') {
+                const UiFrame = yield inquirer.prompt(prompt_1.prompt['uiForVue']);
+                context_1.default.setUI(UiFrame.ui);
+            }
+            if (frame.frame === 'react') {
+                const UiFrame = yield inquirer.prompt(prompt_1.prompt['uiForReact']);
+                context_1.default.setUI(UiFrame.ui);
+            }
             context_1.default.setFrame(frame.frame);
             context_1.default.setEnv('browser');
             break;
