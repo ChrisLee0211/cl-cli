@@ -1,6 +1,6 @@
 type lifeType = 'init' | 'parse' | 'transform' 
 
-class HookRegister {
+class HookController {
     private initEvents:Array<Function> = []
     private parseEvents:Array<Function> = []
     private transformEvents:Array<Function> = []
@@ -10,7 +10,7 @@ class HookRegister {
      * @param type 生命周期钩子
      * @param fn 回调函数
      */
-    public register(type:lifeType, fn:Function):HookRegister{
+    public register(type:lifeType, fn:Function):HookController{
         switch(type){
             case "init":
                 this.initEvents.push(fn);
@@ -22,36 +22,49 @@ class HookRegister {
                 this.transformEvents.push(fn);
                 break;
             default:
-                if(!["init","parse","transform"].includes(type)){
-                    throw new Error(`No such type like ${type}!`)
-                }
+                this.checkHookType(type);
         }
         return this
     }
 
+    /**
+     * 执行钩子
+     * @param type 生命周期钩子类型
+     * @returns {void}
+     */
     public emitter(type:lifeType){
         let cb:Function | undefined;
+        let queue: Array<Function>;
         switch(type){
             case "init":
-                cb = this.initEvents.pop();
+                queue = this.initEvents
                 break;
             case "parse":
-                cb = this.parseEvents.pop();
+                queue = this.parseEvents
                 break;
             case "transform":
-                cb = this.transformEvents.pop();
+                queue = this.transformEvents
                 break;
             default:
-                if(!["init","parse","transform"].includes(type)){
-                    throw new Error(`No such type like ${type}!`)
-                }
+                this.checkHookType(type);
+                queue = [];
         }
-        if(typeof(cb)==="function"){
-            cb()
-        }else{
-            throw new Error(`The lifeCylce callback expect a Function!`)
+        while(queue.length){
+            cb = queue.pop();
+            if(typeof(cb)==="function"){
+                cb()
+            }else{
+                throw new Error(`The lifeCylce callback expect a Function!`)
+            }
         }
+    }
+
+    private checkHookType(type:lifeType):lifeType{
+        if(!["init","parse","transform"].includes(type)){
+            throw new Error(`No such type like ${type}!`)
+        }
+        return type
     }
 }
 
-export default new HookRegister();
+export default new HookController();

@@ -1,9 +1,22 @@
-/**
- * 脚手架配置生成器
- * @param name 项目名称
- * @author Chris lee
- * @Time 2020/11/30
- */
-export const generateConfig =  async(name:string):Promise<void> => {
-    
+import {typeValidate} from '../utils/typeValidate';
+import HookController from './helpers/HookController';
+
+class ClCore {
+    pluginsQueue:Array<any> = [];
+
+    public use(plugin:any){
+        this.pluginsQueue.push(plugin);
+    }
+
+    private installPlugins(){
+        while(this.pluginsQueue.length){
+            const plugin = this.pluginsQueue.pop();
+            if(typeValidate(plugin,'function')){
+                plugin()
+            }else{
+
+            }
+            
+        }
+    }
 }
