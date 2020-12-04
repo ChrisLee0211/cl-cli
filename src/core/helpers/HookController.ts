@@ -1,5 +1,12 @@
 type lifeType = 'init' | 'parse' | 'transform' 
 
+/** 通过ctx增删复写配置 */
+export type initFn = (ctx:any) => {}
+/** 通过ruleSetter自定义配置解析规则 */
+export type parseFn = (ruleSetter:any) => {}
+/** 最后机会修改输出文件内容 */
+export type transFn = (fileMemory:any) => {}
+
 class HookController {
     private initEvents:Array<Function> = []
     private parseEvents:Array<Function> = []
@@ -10,7 +17,10 @@ class HookController {
      * @param type 生命周期钩子
      * @param fn 回调函数
      */
-    public register(type:lifeType, fn:Function):HookController{
+    public register(type:'init',fn:initFn):void
+    public register(type:'parse',fn:parseFn):void
+    public register(type:'transform',fn:transFn):void
+    public register(type:lifeType, fn:Function):void{
         switch(type){
             case "init":
                 this.initEvents.push(fn);
@@ -24,7 +34,6 @@ class HookController {
             default:
                 this.checkHookType(type);
         }
-        return this
     }
 
     /**
