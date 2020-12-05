@@ -1,13 +1,14 @@
+import Utils from './UtilsLib';
 type lifeType = 'init' | 'parse' | 'transform' 
 
 /** 通过ctx增删复写配置 */
-export type initFn = (ctx:any) => {}
+export type initFn<T> = (ctx:T) => void
 /** 通过ruleSetter自定义配置解析规则 */
-export type parseFn = (ruleSetter:any) => {}
+export type parseFn<T> = (ruleSetter:any) => void
 /** 最后机会修改输出文件内容 */
-export type transFn = (fileMemory:any) => {}
+export type transFn<T> = (fileMemory:any) => void
 
-class HookController {
+class HookController{
     private initEvents:Array<Function> = []
     private parseEvents:Array<Function> = []
     private transformEvents:Array<Function> = []
@@ -17,10 +18,10 @@ class HookController {
      * @param type 生命周期钩子
      * @param fn 回调函数
      */
-    public register(type:'init',fn:initFn):void
-    public register(type:'parse',fn:parseFn):void
-    public register(type:'transform',fn:transFn):void
-    public register(type:lifeType, fn:Function):void{
+    public register<T>(type:'init',fn:initFn<T>):void
+    public register<T>(type:'parse',fn:parseFn<T>):void
+    public register<T >(type:'transform',fn:transFn<T>):void
+    public register<T>(type:lifeType, fn:Function):void{
         switch(type){
             case "init":
                 this.initEvents.push(fn);
@@ -41,12 +42,15 @@ class HookController {
      * @param type 生命周期钩子类型
      * @returns {void}
      */
-    public emitter(type:lifeType){
+    public emitter<T>(type:'init',args:[T,typeof Utils]);
+    public emitter<T>(type:'parse',args:[]);
+    public emitter<T>(type:'transform',args:[]);
+    public emitter(type:lifeType,args:any[]){
         let cb:Function | undefined;
         let queue: Array<Function>;
         switch(type){
             case "init":
-                queue = this.initEvents
+                queue = this.initEvents;
                 break;
             case "parse":
                 queue = this.parseEvents
@@ -61,7 +65,7 @@ class HookController {
         while(queue.length){
             cb = queue.pop();
             if(typeof(cb)==="function"){
-                cb()
+                cb(...args)
             }else{
                 throw new Error(`The lifeCylce callback expect a Function!`)
             }
