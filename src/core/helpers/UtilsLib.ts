@@ -6,11 +6,11 @@ import {log} from '../../utils/log';
  * @param question 命令行提问配置
  * @returns {any} 返回终端用户输入内容
  */
-const useCommand = async (question:inquirer.Question<{'answer':any}>):Promise<any> => {
+const useCommand = async <T>(question:inquirer.Question<T>, property:string):Promise<any> => {
     const target = question;
     target.name = 'answer';
     const result = await inquirer.prompt([question]);
-    return result.answer
+    return result[property]
 }
 
 export default {

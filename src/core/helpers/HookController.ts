@@ -1,4 +1,14 @@
 import Utils from './UtilsLib';
+
+export interface HookCL<T = any> {
+    register<T>(type:'init',fn:initFn<T>):void
+    register<T>(type:'parse',fn:parseFn<T>):void
+    register<T >(type:'transform',fn:transFn<T>):void
+    emitter<T>(type:'init',args:[T,typeof Utils]);
+    emitter<T>(type:'parse',args:[]);
+    emitter<T>(type:'transform',args:[]);
+}
+
 type lifeType = 'init' | 'parse' | 'transform' 
 
 /** 通过ctx增删复写配置 */
@@ -8,7 +18,7 @@ export type parseFn<T> = (ruleSetter:any) => void
 /** 最后机会修改输出文件内容 */
 export type transFn<T> = (fileMemory:any) => void
 
-class HookController{
+class HookController implements HookCL{
     private initEvents:Array<Function> = []
     private parseEvents:Array<Function> = []
     private transformEvents:Array<Function> = []

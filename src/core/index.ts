@@ -1,12 +1,12 @@
 import {typeValidate} from '../utils/typeValidate';
-import HookController from './helpers/HookController';
+import HookController,{HookCL} from './helpers/HookController';
 import {Ctx} from './context';
 import Utils from './helpers/UtilsLib';
 import {checkFileIsBuilt} from '../utils/file';
 import {getCurrentPath,concatPath} from '../utils/path';
 
-type PluginFunction = (registerFn:typeof HookController['register'], utils:any)=>void
-type Plugin =PluginFunction
+type PluginFunction<T = any> = (registerFn:HookCL<T>['register'], utils: typeof Utils)=>void
+export type Plugin<T = any> = PluginFunction<T>
 
 function isPluginFn(fn): fn is PluginFunction {
     return typeValidate(fn,'function')
@@ -38,7 +38,7 @@ class ClCore {
         const isBuild = await checkFileIsBuilt(concatPath(path,name));
         let projectName = name;
         this.ctx = new Ctx(projectName);
-        
+
         HookController.emitter('init',[this.ctx,Utils])
     }
 }
