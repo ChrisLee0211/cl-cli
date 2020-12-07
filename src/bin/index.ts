@@ -2,6 +2,8 @@
 
 import program = require('commander')
 import {initProject} from '../core/init/index';
+import {ClCore} from '../core';
+import {basePlugin,uiPlugin,framePlugin} from '../core/plugins/self'
 
 // 设置版本号和参数，通过 mycli --help 查看
 program.version('1.0.0')
@@ -12,7 +14,10 @@ program.version('1.0.0')
 program
     .command('create <name>')
     .action(function(name) {
-        initProject(name)
+        // initProject(name)
+        const ins = new ClCore();
+        ins.use(basePlugin).use(framePlugin).use(uiPlugin);
+        ins.createCli(name);
     })
 
 program.parse(process.argv)
