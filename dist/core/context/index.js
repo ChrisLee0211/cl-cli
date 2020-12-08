@@ -53,6 +53,7 @@ class Ctx {
         this.config = { name: '' };
         this.config.name = name;
         this.extraConfig = otherConfig !== null && otherConfig !== void 0 ? otherConfig : {};
+        this.add = this.add.bind(this);
     }
     add(key, value) {
         if (key === 'name') {

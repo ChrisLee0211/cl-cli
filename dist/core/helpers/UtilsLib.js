@@ -18,7 +18,7 @@ const log_1 = require("../../utils/log");
  */
 const useCommand = (question, property) => __awaiter(void 0, void 0, void 0, function* () {
     const target = question;
-    target.name = 'answer';
+    // target.name = 'answer';
     const result = yield inquirer.prompt([question]);
     return result[property];
 });

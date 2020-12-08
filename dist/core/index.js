@@ -48,7 +48,7 @@ class ClCore {
             const isBuild = yield file_1.checkFileIsBuilt(path_1.concatPath(path, name));
             let projectName = name;
             this.ctx = new context_1.Ctx(projectName);
-            HookController_1.default.emitter('init', [this.ctx, UtilsLib_1.default]);
+            yield HookController_1.default.emitter('init', [this.ctx, UtilsLib_1.default]);
         });
     }
 }

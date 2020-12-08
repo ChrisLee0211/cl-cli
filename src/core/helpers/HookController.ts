@@ -58,7 +58,8 @@ class HookController implements HookCL{
     public emitter<T>(type:'init',args:[T,typeof Utils]);
     public emitter<T>(type:'parse',args:[]);
     public emitter<T>(type:'transform',args:[]);
-    public emitter(type:lifeType,args:any[]){
+    public async emitter(type:lifeType,args:any[]){
+        console.log('this.initEvents', this.initEvents);
         let cb:Function | undefined;
         let queue: Array<Function>;
         switch(type){
@@ -78,7 +79,7 @@ class HookController implements HookCL{
         while(queue.length){
             cb = queue.pop();
             if(typeof(cb)==="function"){
-                cb(...args)
+               await cb(...args)
             }else{
                 throw new Error(`The lifeCylce callback expect a Function!`)
             }

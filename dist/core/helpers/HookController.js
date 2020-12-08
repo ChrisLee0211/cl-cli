@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 class HookController {
     constructor() {
@@ -24,31 +33,34 @@ class HookController {
         }
     }
     emitter(type, args) {
-        let cb;
-        let queue;
-        switch (type) {
-            case "init":
-                queue = this.initEvents;
-                break;
-            case "parse":
-                queue = this.parseEvents;
-                break;
-            case "transform":
-                queue = this.transformEvents;
-                break;
-            default:
-                this.checkHookType(type);
-                queue = [];
-        }
-        while (queue.length) {
-            cb = queue.pop();
-            if (typeof (cb) === "function") {
-                cb(...args);
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('this.initEvents', this.initEvents);
+            let cb;
+            let queue;
+            switch (type) {
+                case "init":
+                    queue = this.initEvents;
+                    break;
+                case "parse":
+                    queue = this.parseEvents;
+                    break;
+                case "transform":
+                    queue = this.transformEvents;
+                    break;
+                default:
+                    this.checkHookType(type);
+                    queue = [];
             }
-            else {
-                throw new Error(`The lifeCylce callback expect a Function!`);
+            while (queue.length) {
+                cb = queue.pop();
+                if (typeof (cb) === "function") {
+                    yield cb(...args);
+                }
+                else {
+                    throw new Error(`The lifeCylce callback expect a Function!`);
+                }
             }
-        }
+        });
     }
     checkHookType(type) {
         if (!["init", "parse", "transform"].includes(type)) {

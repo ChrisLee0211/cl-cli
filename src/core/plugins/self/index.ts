@@ -23,7 +23,6 @@ export const framePlugin:Plugin<config> = (register,utils) => {
     const {useCommand} = utils;
     register<config>('init', async (ctx) => {
        const config = ctx.getConfig();
-       console.log('ctx', ctx)
        switch(config.projectType){
            case "admin":
            case "component":

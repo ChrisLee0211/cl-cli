@@ -43,6 +43,6 @@ export class ClCore {
         let projectName = name;
         this.ctx = new Ctx(projectName);
 
-        HookController.emitter('init',[this.ctx,Utils])
+       await HookController.emitter('init',[this.ctx,Utils])
     }
 }
