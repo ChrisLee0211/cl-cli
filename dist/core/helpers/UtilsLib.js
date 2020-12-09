@@ -17,8 +17,6 @@ const log_1 = require("../../utils/log");
  * @returns {any} 返回终端用户输入内容
  */
 const useCommand = (question, property) => __awaiter(void 0, void 0, void 0, function* () {
-    const target = question;
-    // target.name = 'answer';
     const result = yield inquirer.prompt([question]);
     return result[property];
 });

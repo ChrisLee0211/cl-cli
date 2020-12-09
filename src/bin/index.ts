@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import program = require('commander')
-import {initProject} from '../core/init/index';
 import {ClCore} from '../core';
 import {basePlugin,uiPlugin,framePlugin} from '../core/plugins/self'
 

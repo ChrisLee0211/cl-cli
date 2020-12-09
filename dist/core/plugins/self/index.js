@@ -24,7 +24,6 @@ exports.framePlugin = (register, utils) => {
     const { useCommand } = utils;
     register('init', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
         const config = ctx.getConfig();
-        console.log('ctx', ctx);
         switch (config.projectType) {
             case "admin":
             case "component":
