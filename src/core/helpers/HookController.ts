@@ -1,5 +1,6 @@
 import Utils from './UtilsLib';
 import {Ctx} from '../context'
+import {CoreParser} from '../parser'
 export interface HookCL<T = any> {
     register<T>(type:'init',fn:initFn<T>):void
     register<T>(type:'parse',fn:parseFn<T>):void
@@ -10,11 +11,11 @@ export interface HookCL<T = any> {
 }
 
 type lifeType = 'init' | 'parse' | 'transform' 
-
+type rset = CoreParser['ruleSetter']
 /** 通过ctx增删复写配置 */
 export type initFn<T> = (ctx:Ctx<T>) => void
 /** 通过ruleSetter自定义配置解析规则 */
-export type parseFn<T> = (ruleSetter:any) => void
+export type parseFn<T> = (ctx:T,ruleSetter:rset) => void
 /** 最后机会修改输出文件内容 */
 export type transFn<T> = (fileMemory:any) => void
 

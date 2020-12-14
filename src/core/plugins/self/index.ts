@@ -16,6 +16,11 @@ export const basePlugin:Plugin<config> = (register,utils) => {
         const projectType = await useCommand<{'projectType':projectType}>(prompt['projectType'],'projectType');
         ctx.add('lang',lang);
         ctx.add('projectType',projectType);
+    });
+    register<config>('parse', async (ctx,ruleSetter)=>{
+        if(ctx.lang === 'javascript'){
+            ruleSetter<config, keyof config>(ctx.lang, async (val,utils)=>{})
+        }
     })
 }
 
