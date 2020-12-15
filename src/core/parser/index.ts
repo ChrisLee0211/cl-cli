@@ -28,13 +28,21 @@ export class CoreParser {
     }
 
     async buildParseTree(){
-        let len = this.parseNodeList.length;
-        while(len>0){
-            const cur = this.parseNodeList.pop() as parseNode<any>;
-            const key = cur.target;
-            const source = await cur.operate(key,Utils);
-            this.parseTree[key] = source ?? null;
-            len--
+        try{
+            let len = this.parseNodeList.length;
+            while(len>0){
+                const cur = this.parseNodeList.pop() as parseNode<any>;
+                const key = cur.target;
+                const source = await cur.operate(key,Utils);
+                this.parseTree[key] = source ?? null;
+                len--
+            }
+        }catch(e){
+            console.error(e)
         }
+    }
+
+    getParseTree(){
+        return this.parseTree
     }
 }

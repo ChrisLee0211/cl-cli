@@ -17,10 +17,12 @@ export const basePlugin:Plugin<config> = (register,utils) => {
         ctx.add('lang',lang);
         ctx.add('projectType',projectType);
     });
-    register<config>('parse', async (ctx,ruleSetter)=>{
-        if(ctx.lang === 'javascript'){
-            ruleSetter<config, keyof config>(ctx.lang, async (val,utils)=>{})
-        }
+    register<config>('parse', async (cfg,ruleSetter)=>{
+            ruleSetter<config, keyof config>(cfg.lang, async (val,utils)=>{
+                if(val === 'javascript'){
+                    
+                }
+            })
     })
 }
 
