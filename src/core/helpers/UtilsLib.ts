@@ -1,5 +1,6 @@
 import * as inquirer from 'inquirer';
 import {log} from '../../utils/log';
+import gitDownload from 'download-git-repo';
 
 /**
  * 使用命令交互指令
@@ -9,6 +10,10 @@ import {log} from '../../utils/log';
 const useCommand = async <T>(question:inquirer.Question<T>, property:string):Promise<any> => {
     const result = await inquirer.prompt([question]);
     return result[property]
+}
+
+const templateDownload = (url) => {
+    gitDownload(url)
 }
 
 export default {

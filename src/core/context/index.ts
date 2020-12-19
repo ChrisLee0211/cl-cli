@@ -5,6 +5,7 @@ interface baseConfig{
 
 export class Ctx<T = any> {
     config:baseConfig = {name:''}
+    template:string = 'https://github.com/ChrisLee0211/rollupTs.git'
     extraConfig:T
     constructor(name:string, otherConfig?:any){
         this.config.name = name;
@@ -18,7 +19,11 @@ export class Ctx<T = any> {
         }
         this.extraConfig[key] = value
     }
-    
+    public setTemplate(type:"github"|"gitlab"|"bitbucket",url:string){
+        const target = url.split("com/")[1];
+        const newTemplate = type+ ":"+target;
+        this.template = newTemplate;
+    }
     public getConfig(){
         const result = {...this.config,...this.extraConfig}
         return Object.freeze(result)
