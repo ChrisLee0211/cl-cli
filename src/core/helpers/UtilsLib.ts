@@ -12,11 +12,16 @@ const useCommand = async <T>(question:inquirer.Question<T>, property:string):Pro
     return result[property]
 }
 
-const templateDownload = (url) => {
-    gitDownload(url)
+const templateDownload = async(url:string,path?:string) => {
+    if(path){
+        await gitDownload(url,path)
+    }else{
+        await gitDownload(url)
+    }
 }
 
 export default {
     useCommand,
     log,
+    templateDownload
 }
