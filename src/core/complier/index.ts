@@ -13,5 +13,37 @@ export interface fileNode {
     /** 父级目录 */
     parent:fileNode,
     /** 子级目录包含的文件节点 */
-    children:fileNode[]
+    children?:fileNode[]
+}
+
+interface CoreComplierInterface {
+    fileTree : fileNode | undefined,
+    /** 创建fileNode */
+    createFileNode(name:string,path?:string,content?:any,isFolder?:boolean):fileNode
+    /** 将本地拉取的模版目录编译成fileTree */
+    complierLocalTemplate():void;
+    /** 将传入的fileList依次插入到fileTree */
+    complierExtra(fileList:fileNode[]):void
+    /** 将fileTree生成为真实文件 */
+    output():void
+}
+
+export class CoreComplier implements CoreComplierInterface{
+    fileTree;
+
+    createFileNode(name:string,path?:string,content?:any,isFolder?:boolean){
+        return {} as fileNode
+    }
+
+    complierLocalTemplate(){
+
+    };
+
+    complierExtra(list){
+
+    }
+
+    output(){
+
+    }
 }

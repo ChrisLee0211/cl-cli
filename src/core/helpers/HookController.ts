@@ -60,7 +60,6 @@ class HookController implements HookCL{
     public emitter<T>(type:'parse',args:[]);
     public emitter<T>(type:'transform',args:[]);
     public async emitter(type:lifeType,args:any[]){
-        console.log('this.initEvents', this.initEvents);
         let cb:Function | undefined;
         let queue: Array<Function>;
         switch(type){

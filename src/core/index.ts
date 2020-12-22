@@ -4,6 +4,7 @@ import {Ctx} from './context';
 import Utils from './helpers/UtilsLib';
 import {checkFileIsBuilt} from '../utils/file';
 import {getCurrentPath,concatPath} from '../utils/path';
+import UtilsLib from './helpers/UtilsLib';
 
 type PluginFunction<T = any> = (registerFn:HookCL<T>['register'], utils: typeof Utils)=>void
 export type Plugin<T = any> = PluginFunction<T>
@@ -54,6 +55,12 @@ export class ClCore {
         }
         this.ctx = new Ctx(projectName);
 
-       await HookController.emitter('init',[this.ctx,Utils])
+       await HookController.emitter('init',[this.ctx,Utils]);
+       Utils.log(`开始拉取模版`,'warning');
+       await Utils.templateDownload(this.ctx.template);
+       Utils.log(`拉取模版成功，开始编译额外配置`,'success');
+       // 拉取成功后，应该开始将本地目录解析为fileTree
+       // -------
+       await HookController.emitter('parse',[])
     }
 }
