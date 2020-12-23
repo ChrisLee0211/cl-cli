@@ -62,3 +62,7 @@ todo:
 2020.12.21
 1. 看了一下download-git-repo原理，其实用的是child-process库走命令行形式下载，其实可以考虑结合memfs看看能不能实现把仓库下载到内存中，然后再解析成fileTree
 2. 需要在init过程中，加入下载模版的逻辑
+
+2020.12.22
+1. 现在暂时确定parseNode里的operate方法一定要返回fileNode，具体fileNode的构造器会在complier里完成并通过UtilLib提供出去
+2. 拉取模版下来后，还需要对本地目录进行依次解析为fileTree的逻辑，目前没什么头绪。。。
