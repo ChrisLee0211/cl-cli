@@ -4,7 +4,7 @@ import {Ctx} from './context';
 import Utils from './helpers/UtilsLib';
 import {checkFileIsBuilt} from '../utils/file';
 import {getCurrentPath,concatPath} from '../utils/path';
-import UtilsLib from './helpers/UtilsLib';
+import CoreParser from './parser'
 
 type PluginFunction<T = any> = (registerFn:HookCL<T>['register'], utils: typeof Utils)=>void
 export type Plugin<T = any> = PluginFunction<T>
@@ -61,6 +61,6 @@ export class ClCore {
        Utils.log(`拉取模版成功，开始编译额外配置`,'success');
        // 拉取成功后，应该开始将本地目录解析为fileTree
        // -------
-       await HookController.emitter('parse',[])
+       await HookController.emitter('parse',[this.ctx,Utils,CoreParser.ruleSetter])
     }
 }

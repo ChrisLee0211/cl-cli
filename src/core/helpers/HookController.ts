@@ -6,7 +6,7 @@ export interface HookCL<T = any> {
     register<T>(type:'parse',fn:parseFn<T>):void
     register<T >(type:'transform',fn:transFn<T>):void
     emitter<T>(type:'init',args:[T,typeof Utils]);
-    emitter<T>(type:'parse',args:[]);
+    emitter<T>(type:'parse',args:[T,typeof Utils,rset]);
     emitter<T>(type:'transform',args:[]);
 }
 
@@ -15,7 +15,7 @@ type rset = CoreParser['ruleSetter']
 /** 通过ctx增删复写配置 */
 export type initFn<T> = (ctx:Ctx<T>) => void
 /** 通过ruleSetter自定义配置解析规则 */
-export type parseFn<T> = (ctx:T,ruleSetter:rset) => void
+export type parseFn<T> = (ctx:T,utils:typeof Utils,ruleSetter:rset) => void
 /** 最后机会修改输出文件内容 */
 export type transFn<T> = (fileMemory:any) => void
 
@@ -57,7 +57,7 @@ class HookController implements HookCL{
      * @returns {void}
      */
     public emitter<T>(type:'init',args:[T,typeof Utils]);
-    public emitter<T>(type:'parse',args:[]);
+    public emitter<T>(type:'parse',args:[T,typeof Utils,rset]);
     public emitter<T>(type:'transform',args:[]);
     public async emitter(type:lifeType,args:any[]){
         let cb:Function | undefined;
