@@ -66,3 +66,8 @@ todo:
 2020.12.22
 1. 现在暂时确定parseNode里的operate方法一定要返回fileNode，具体fileNode的构造器会在complier里完成并通过UtilLib提供出去
 2. 拉取模版下来后，还需要对本地目录进行依次解析为fileTree的逻辑，目前没什么头绪。。。
+
+2020.12.27
+1. 把fileNode的创建方法完全搬到了UtilsLib中，基本确定了只保证parse过程中的ruleSetter一定接收一个key和fileNode组成一个对象，保存在一个数组中供解析
+2. ruleSetter本身还缺乏一些边界校验
+3. 拉取模版后如何解析成fileTree还没想好。。。

@@ -2,7 +2,7 @@ import {typeValidate} from '../utils/typeValidate';
 import HookController,{HookCL} from './helpers/HookController';
 import {Ctx} from './context';
 import Utils from './helpers/UtilsLib';
-import {checkFileIsBuilt} from '../utils/file';
+import {checkFileIsBuilt, createFolder} from '../utils/file';
 import {getCurrentPath,concatPath} from '../utils/path';
 import CoreParser from './parser'
 
@@ -56,8 +56,9 @@ export class ClCore {
         this.ctx = new Ctx(projectName);
 
        await HookController.emitter('init',[this.ctx,Utils]);
+       const projectPath = await createFolder(projectName);
        Utils.log(`开始拉取模版`,'warning');
-       await Utils.templateDownload(this.ctx.template);
+       await Utils.templateDownload(this.ctx.template,projectPath);
        Utils.log(`拉取模版成功，开始编译额外配置`,'success');
        // 拉取成功后，应该开始将本地目录解析为fileTree
        // -------
