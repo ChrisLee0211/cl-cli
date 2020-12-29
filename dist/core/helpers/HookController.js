@@ -34,7 +34,6 @@ class HookController {
     }
     emitter(type, args) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('this.initEvents', this.initEvents);
             let cb;
             let queue;
             switch (type) {

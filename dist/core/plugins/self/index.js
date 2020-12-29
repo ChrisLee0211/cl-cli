@@ -19,6 +19,8 @@ exports.basePlugin = (register, utils) => {
         ctx.add('lang', lang);
         ctx.add('projectType', projectType);
     }));
+    register('parse', (cfg, utils, ruleSetter) => __awaiter(void 0, void 0, void 0, function* () {
+    }));
 };
 exports.framePlugin = (register, utils) => {
     const { useCommand } = utils;

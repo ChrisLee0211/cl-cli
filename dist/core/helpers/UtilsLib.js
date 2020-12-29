@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const inquirer = require("inquirer");
 const log_1 = require("../../utils/log");
+const gitDownload = require("download-git-repo");
+const path_1 = require("../../utils/path");
 /**
  * 使用命令交互指令
  * @param question 命令行提问配置
@@ -20,8 +22,40 @@ const useCommand = (question, property) => __awaiter(void 0, void 0, void 0, fun
     const result = yield inquirer.prompt([question]);
     return result[property];
 });
+const templateDownload = (url, path) => __awaiter(void 0, void 0, void 0, function* () {
+    // console.log("url=============>",url)
+    return new Promise((resolve, reject) => {
+        gitDownload(url, path, { clone: true }, (err) => {
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve();
+            }
+        });
+    });
+});
+const createFileNode = (name, path, rootPath, content, isFolder) => {
+    const fileName = name;
+    const _path = path_1.checkPathIsUseful(path) ? path : path_1.getCurrentPath();
+    const _rootPath = rootPath ? rootPath : path_1.parseRootPath(_path);
+    const _content = content !== null && content !== void 0 ? content : '';
+    const _isFolder = isFolder !== null && isFolder !== void 0 ? isFolder : false;
+    const node = {
+        path: _path,
+        fileName,
+        rootPath: _rootPath,
+        content: _content,
+        isFolder: _isFolder,
+        parent: null,
+        children: []
+    };
+    return node;
+};
 exports.default = {
     useCommand,
     log: log_1.log,
+    templateDownload,
+    createFileNode
 };
 //# sourceMappingURL=UtilsLib.js.map

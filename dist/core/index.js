@@ -16,6 +16,7 @@ const context_1 = require("./context");
 const UtilsLib_1 = require("./helpers/UtilsLib");
 const file_1 = require("../utils/file");
 const path_1 = require("../utils/path");
+const parser_1 = require("./parser");
 function isPluginFn(fn) {
     return typeValidate_1.typeValidate(fn, 'function');
 }
@@ -60,6 +61,13 @@ class ClCore {
             }
             this.ctx = new context_1.Ctx(projectName);
             yield HookController_1.default.emitter('init', [this.ctx, UtilsLib_1.default]);
+            const projectPath = yield file_1.createFolder(projectName);
+            UtilsLib_1.default.log(`开始拉取模版`, 'warning');
+            yield UtilsLib_1.default.templateDownload(this.ctx.template, projectPath);
+            UtilsLib_1.default.log(`拉取模版成功，开始编译额外配置`, 'success');
+            // 拉取成功后，应该开始将本地目录解析为fileTree
+            // -------
+            yield HookController_1.default.emitter('parse', [this.ctx, UtilsLib_1.default, parser_1.default.ruleSetter]);
         });
     }
 }

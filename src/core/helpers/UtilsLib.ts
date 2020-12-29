@@ -1,6 +1,6 @@
 import * as inquirer from 'inquirer';
 import {log} from '../../utils/log';
-import gitDownload from 'download-git-repo';
+import * as gitDownload from 'download-git-repo';
 import {checkPathIsUseful,getCurrentPath, parseRootPath} from '../../utils/path'
 /** 文件节点 */
 export interface fileNode {
@@ -29,12 +29,18 @@ const useCommand = async <T>(question:inquirer.Question<T>, property:string):Pro
     return result[property]
 }
 
-const templateDownload = async(url:string,path?:string) => {
-    if(path){
-        await gitDownload(url,path)
-    }else{
-        await gitDownload(url)
-    }
+const templateDownload = async (url:string,path:string):Promise<void>  => {
+    // console.log("url=============>",url)
+    return new Promise((resolve, reject) => {
+            gitDownload(url,path,{clone:true},(err) => {
+                if(err){
+                    reject(err)
+                }else{
+                    resolve()
+                }
+            })
+        
+    })
 }
 
 const createFileNode = (name:string,path?:string,rootPath?:string,content?:any,isFolder?:boolean):fileNode => {

@@ -5,3 +5,4 @@
  * @Time 2020/11/23
  */
 export declare function checkFileIsBuilt(path: string): Promise<boolean>;
+export declare function createFolder(name: string): Promise<string>;

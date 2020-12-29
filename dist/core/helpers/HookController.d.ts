@@ -1,17 +1,19 @@
 import Utils from './UtilsLib';
 import { Ctx } from '../context';
+import { CoreParser } from '../parser';
 export interface HookCL<T = any> {
     register<T>(type: 'init', fn: initFn<T>): void;
     register<T>(type: 'parse', fn: parseFn<T>): void;
     register<T>(type: 'transform', fn: transFn<T>): void;
     emitter<T>(type: 'init', args: [T, typeof Utils]): any;
-    emitter<T>(type: 'parse', args: []): any;
+    emitter<T>(type: 'parse', args: [T, typeof Utils, rset]): any;
     emitter<T>(type: 'transform', args: []): any;
 }
+declare type rset = CoreParser['ruleSetter'];
 /** 通过ctx增删复写配置 */
 export declare type initFn<T> = (ctx: Ctx<T>) => void;
 /** 通过ruleSetter自定义配置解析规则 */
-export declare type parseFn<T> = (ruleSetter: any) => void;
+export declare type parseFn<T> = (ctx: T, utils: typeof Utils, ruleSetter: rset) => void;
 /** 最后机会修改输出文件内容 */
 export declare type transFn<T> = (fileMemory: any) => void;
 declare class HookController implements HookCL {
@@ -33,7 +35,7 @@ declare class HookController implements HookCL {
      * @returns {void}
      */
     emitter<T>(type: 'init', args: [T, typeof Utils]): any;
-    emitter<T>(type: 'parse', args: []): any;
+    emitter<T>(type: 'parse', args: [T, typeof Utils, rset]): any;
     emitter<T>(type: 'transform', args: []): any;
     private checkHookType;
 }
