@@ -4,7 +4,7 @@ exports.Ctx = void 0;
 class Ctx {
     constructor(name, otherConfig) {
         this.config = { name: '' };
-        this.template = 'github:ChrisLee0211/rollupTs';
+        this.template = 'github:ChrisLee0211/rollupTs#main';
         this.config.name = name;
         this.extraConfig = otherConfig !== null && otherConfig !== void 0 ? otherConfig : {};
         this.add = this.add.bind(this);

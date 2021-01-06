@@ -63,7 +63,12 @@ class ClCore {
             yield HookController_1.default.emitter('init', [this.ctx, UtilsLib_1.default]);
             const projectPath = yield file_1.createFolder(projectName);
             UtilsLib_1.default.log(`开始拉取模版`, 'warning');
-            yield UtilsLib_1.default.templateDownload(this.ctx.template, projectPath);
+            try {
+                yield UtilsLib_1.default.templateDownload(this.ctx.template, projectPath);
+            }
+            catch (e) {
+                console.error(e);
+            }
             UtilsLib_1.default.log(`拉取模版成功，开始编译额外配置`, 'success');
             // 拉取成功后，应该开始将本地目录解析为fileTree
             // -------

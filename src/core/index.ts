@@ -58,7 +58,11 @@ export class ClCore {
        await HookController.emitter('init',[this.ctx,Utils]);
        const projectPath = await createFolder(projectName);
        Utils.log(`开始拉取模版`,'warning');
-       await Utils.templateDownload(this.ctx.template,projectPath);
+       try{
+           await Utils.templateDownload(this.ctx.template,projectPath);
+       }catch(e){
+           console.error(e)
+       }
        Utils.log(`拉取模版成功，开始编译额外配置`,'success');
        // 拉取成功后，应该开始将本地目录解析为fileTree
        // -------

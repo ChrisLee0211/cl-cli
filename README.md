@@ -71,3 +71,6 @@ todo:
 1. 把fileNode的创建方法完全搬到了UtilsLib中，基本确定了只保证parse过程中的ruleSetter一定接收一个key和fileNode组成一个对象，保存在一个数组中供解析
 2. ruleSetter本身还缺乏一些边界校验
 3. 拉取模版后如何解析成fileTree还没想好。。。
+
+2020.12.29
+1. 勉强是把git模版拉取逻辑跑通，但是子进程报错问题没解决

@@ -5,7 +5,7 @@ interface baseConfig{
 
 export class Ctx<T = any> {
     config:baseConfig = {name:''}
-    template:string = 'github:ChrisLee0211/rollupTs'
+    template:string = 'github:ChrisLee0211/rollupTs#main'
     extraConfig:T
     constructor(name:string, otherConfig?:any){
         this.config.name = name;
