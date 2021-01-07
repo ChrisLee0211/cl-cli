@@ -5,6 +5,7 @@ import Utils from './helpers/UtilsLib';
 import {checkFileIsBuilt, createFolder} from '../utils/file';
 import {getCurrentPath,concatPath} from '../utils/path';
 import CoreParser from './parser'
+import CoreComplier from './complier'
 
 type PluginFunction<T = any> = (registerFn:HookCL<T>['register'], utils: typeof Utils)=>void
 export type Plugin<T = any> = PluginFunction<T>
@@ -42,28 +43,30 @@ export class ClCore {
         const path = getCurrentPath();
         const isBuild = await checkFileIsBuilt(concatPath(path,name));
         let projectName = name;
-        if(isBuild){
-            Utils.log(`项目已在当前目录已存在，请重新命名`,'warning');
-            const renameCommand = {
-                type:"input",
-                message: '请输入项目名',
-                name: 'name',
-                default: 'my-project'
-            }
-            const answer = await  Utils.useCommand<{'name':string}>(renameCommand,'name');
-            projectName = answer;
-        }
+        // if(isBuild){
+        //     Utils.log(`项目已在当前目录已存在，请重新命名`,'warning');
+        //     const renameCommand = {
+        //         type:"input",
+        //         message: '请输入项目名',
+        //         name: 'name',
+        //         default: 'my-project'
+        //     }
+        //     const answer = await  Utils.useCommand<{'name':string}>(renameCommand,'name');
+        //     projectName = answer;
+        // }
         this.ctx = new Ctx(projectName);
 
        await HookController.emitter('init',[this.ctx,Utils]);
        const projectPath = await createFolder(projectName);
        Utils.log(`开始拉取模版`,'warning');
-       try{
-           await Utils.templateDownload(this.ctx.template,projectPath);
-       }catch(e){
-           console.error(e)
-       }
+    //    try{
+    //        await Utils.templateDownload(this.ctx.template,projectPath);
+    //    }catch(e){
+    //        console.error(e)
+    //    }
        Utils.log(`拉取模版成功，开始编译额外配置`,'success');
+       const complier = new CoreComplier(projectPath);
+
        // 拉取成功后，应该开始将本地目录解析为fileTree
        // -------
        await HookController.emitter('parse',[this.ctx,Utils,CoreParser.ruleSetter])

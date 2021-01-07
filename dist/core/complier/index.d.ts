@@ -3,15 +3,16 @@ interface CoreComplierInterface {
     fileTree: fileNode | undefined;
     /** 创建fileNode */
     /** 将本地拉取的模版目录编译成fileTree */
-    complierLocalTemplate(): void;
+    complierLocalTemplate(path: string): void;
     /** 将传入的fileList依次插入到fileTree */
     complierExtra(fileList: fileNode[]): void;
     /** 将fileTree生成为真实文件 */
     output(): void;
 }
-export declare class CoreComplier implements CoreComplierInterface {
+export default class CoreComplier implements CoreComplierInterface {
     fileTree: any;
-    complierLocalTemplate(): void;
+    constructor(path: string);
+    complierLocalTemplate(path: string): void;
     complierExtra(list: any): void;
     output(): void;
 }

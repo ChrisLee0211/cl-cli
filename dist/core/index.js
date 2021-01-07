@@ -17,6 +17,7 @@ const UtilsLib_1 = require("./helpers/UtilsLib");
 const file_1 = require("../utils/file");
 const path_1 = require("../utils/path");
 const parser_1 = require("./parser");
+const complier_1 = require("./complier");
 function isPluginFn(fn) {
     return typeValidate_1.typeValidate(fn, 'function');
 }
@@ -48,28 +49,28 @@ class ClCore {
             const path = path_1.getCurrentPath();
             const isBuild = yield file_1.checkFileIsBuilt(path_1.concatPath(path, name));
             let projectName = name;
-            if (isBuild) {
-                UtilsLib_1.default.log(`项目已在当前目录已存在，请重新命名`, 'warning');
-                const renameCommand = {
-                    type: "input",
-                    message: '请输入项目名',
-                    name: 'name',
-                    default: 'my-project'
-                };
-                const answer = yield UtilsLib_1.default.useCommand(renameCommand, 'name');
-                projectName = answer;
-            }
+            // if(isBuild){
+            //     Utils.log(`项目已在当前目录已存在，请重新命名`,'warning');
+            //     const renameCommand = {
+            //         type:"input",
+            //         message: '请输入项目名',
+            //         name: 'name',
+            //         default: 'my-project'
+            //     }
+            //     const answer = await  Utils.useCommand<{'name':string}>(renameCommand,'name');
+            //     projectName = answer;
+            // }
             this.ctx = new context_1.Ctx(projectName);
             yield HookController_1.default.emitter('init', [this.ctx, UtilsLib_1.default]);
             const projectPath = yield file_1.createFolder(projectName);
             UtilsLib_1.default.log(`开始拉取模版`, 'warning');
-            try {
-                yield UtilsLib_1.default.templateDownload(this.ctx.template, projectPath);
-            }
-            catch (e) {
-                console.error(e);
-            }
+            //    try{
+            //        await Utils.templateDownload(this.ctx.template,projectPath);
+            //    }catch(e){
+            //        console.error(e)
+            //    }
             UtilsLib_1.default.log(`拉取模版成功，开始编译额外配置`, 'success');
+            const complier = new complier_1.default(projectPath);
             // 拉取成功后，应该开始将本地目录解析为fileTree
             // -------
             yield HookController_1.default.emitter('parse', [this.ctx, UtilsLib_1.default, parser_1.default.ruleSetter]);
