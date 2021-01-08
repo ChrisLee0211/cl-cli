@@ -77,3 +77,6 @@ todo:
 
 2020.01.06
 1. 搞半天原来是以为download-git-repo库里把git地址的分支做了兼容默认写死了master，但是新的github已经改成main分支了，导致下载完之后checkout 报错，子进程无法退出，淦！
+
+2020.01.07
+1. 开始动手写关于fileTree的解析逻辑，目前要弄清楚fs的readdir返回内容，做递归解析才行
