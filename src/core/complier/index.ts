@@ -1,7 +1,6 @@
 import { fileNode } from "../helpers/UtilsLib";
 import * as path from 'path';
 import * as fs from 'fs';
-import { debug } from "console";
 
 interface CoreComplierInterface {
     fileTree : fileNode | undefined,
@@ -27,7 +26,7 @@ export default class CoreComplier implements CoreComplierInterface{
         // console.log('projectPath', path);
         fs.readdir(path,{withFileTypes:true},(err,files) => {
             if(!err){
-                debug
+                debugger
                 console.log('files',files)
             }else{
                 console.error(err)
