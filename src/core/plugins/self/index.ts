@@ -1,6 +1,18 @@
 import {Plugin} from '../../index';
 import {prompt} from './command';
 
+/** 语言类型 */
+type lang = 'typescript' | 'javascript'
+/** 项目类型 */
+type projectType = 'component' | 'admin' | 'utils' | 'server'
+/** 框架类型 */
+type frame = 'vue' | 'react' 
+/** 宿主类型 */
+type env = 'node' | 'browser'
+/** UI框架 */
+type uiFrameForVue = 'element' | 'antd-vue' |'none'
+type uiFrameForReact = 'antd'| 'none'
+type ui = uiFrameForVue | uiFrameForReact | 'none'
 interface config {
     lang: lang,
     projectType: projectType,

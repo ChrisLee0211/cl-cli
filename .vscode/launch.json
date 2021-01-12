@@ -9,7 +9,7 @@
             "type": "node",
             "request": "launch",
             "args": [
-              "${workspaceRoot}/src/bin/index.ts" // 入口文件
+              "${workspaceRoot}/test/index.ts" // 入口文件
             ],
             "runtimeArgs": [
               "--nolazy",
@@ -21,18 +21,6 @@
             "protocol": "inspector",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
-          },
-        // {
-        //     "type": "node",
-        //     "request": "launch",
-        //     "name": "启动程序",
-        //     "skipFiles": [
-        //         "<node_internals>/**"
-        //     ],
-        //     "program": "${workspaceFolder}/index.js",
-        //     "outFiles": [
-        //         "${workspaceFolder}/**/*.js"
-        //     ]
-        // }
+          }
     ]
 }
