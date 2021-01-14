@@ -43,7 +43,7 @@ const templateDownload = async (url:string,path:string):Promise<void>  => {
     })
 }
 
-const createFileNode = (name:string,path?:string,rootPath?:string,content?:any,isFolder?:boolean):fileNode => {
+const createFileNode = (name:string,path?:string,rootPath?:string,content?:any,isFolder?:boolean,parent:fileNode|null=null):fileNode => {
     const fileName:string = name;
     const _path = checkPathIsUseful(path)? path: getCurrentPath();
     const _rootPath = rootPath?rootPath:parseRootPath(_path);
@@ -55,7 +55,7 @@ const createFileNode = (name:string,path?:string,rootPath?:string,content?:any,i
         rootPath:_rootPath,
         content:_content,
         isFolder:_isFolder,
-        parent:null,
+        parent:parent,
         children:[]
     }
     return node

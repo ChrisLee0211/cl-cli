@@ -23,7 +23,12 @@ export function checkFileIsBuilt(path:string):Promise<boolean>{
     })
 }
 
-
+/**
+ * 在当前目录创建一个文件夹
+ * @param name 文件名
+ * @author chris lee
+ * @Time 2021/01/14
+ */
 export async function createFolder(name:string):Promise<string>{
     const curPath = process.cwd();
     const folderPath = path.join(curPath,name)
@@ -32,6 +37,28 @@ export async function createFolder(name:string):Promise<string>{
             fs.mkdir(folderPath,{recursive:true},(err) => {
                 if(!err){
                     resolve(folderPath)
+                }
+            })
+        }catch(e){
+            reject(e);
+            console.error(e)
+        }
+    })
+}
+
+/**
+ * 异步读取文件内容
+ * @param path 文件路径
+ * @returns {Buffer}
+ * @author chrislee
+ * @Time 2021/01/14
+ */
+export async function readFileContent(path:string):Promise<Buffer> {
+    return new Promise((resolve,reject) => {
+        try{
+            fs.readFile(path,(err,data) => {
+                if(!err){
+                    resolve(data)
                 }
             })
         }catch(e){
