@@ -67,3 +67,25 @@ export async function readFileContent(path:string):Promise<Buffer> {
         }
     })
 }
+
+/**
+ * 扫描一个路径下的所有文件夹并返回一个文件夹名称数组
+ * @param path 扫描路径
+ * @returns {Array}
+ * @author chris lee
+ * @TIme 2020/01/14
+ */
+export async function scanFolder(path:string):Promise<fs.Dirent[]> {
+    return new Promise((resolve,reject) => {
+        try{
+            fs.readdir(path,{withFileTypes:true},(err,files)=>{
+                if(!err){
+                    resolve(files)
+                }
+            })
+        }catch(e){
+            reject(e);
+            console.error(e)
+        }
+    })
+}
