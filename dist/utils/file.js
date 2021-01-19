@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createFolder = exports.checkFileIsBuilt = void 0;
+exports.scanFolder = exports.readFileContent = exports.createFolder = exports.checkFileIsBuilt = void 0;
 const fs = require("fs");
 const path = require("path");
 /**
@@ -37,6 +37,12 @@ function checkFileIsBuilt(path) {
     });
 }
 exports.checkFileIsBuilt = checkFileIsBuilt;
+/**
+ * 在当前目录创建一个文件夹
+ * @param name 文件名
+ * @author chris lee
+ * @Time 2021/01/14
+ */
 function createFolder(name) {
     return __awaiter(this, void 0, void 0, function* () {
         const curPath = process.cwd();
@@ -57,4 +63,54 @@ function createFolder(name) {
     });
 }
 exports.createFolder = createFolder;
+/**
+ * 异步读取文件内容
+ * @param path 文件路径
+ * @returns {Buffer}
+ * @author chrislee
+ * @Time 2021/01/14
+ */
+function readFileContent(path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            try {
+                fs.readFile(path, (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    }
+                });
+            }
+            catch (e) {
+                reject(e);
+                console.error(e);
+            }
+        });
+    });
+}
+exports.readFileContent = readFileContent;
+/**
+ * 扫描一个路径下的所有文件夹并返回一个文件夹名称数组
+ * @param path 扫描路径
+ * @returns {Array}
+ * @author chris lee
+ * @TIme 2020/01/14
+ */
+function scanFolder(path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            try {
+                fs.readdir(path, { withFileTypes: true }, (err, files) => {
+                    if (!err) {
+                        resolve(files);
+                    }
+                });
+            }
+            catch (e) {
+                reject(e);
+                console.error(e);
+            }
+        });
+    });
+}
+exports.scanFolder = scanFolder;
 //# sourceMappingURL=file.js.map

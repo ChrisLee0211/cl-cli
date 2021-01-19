@@ -35,7 +35,7 @@ const templateDownload = (url, path) => __awaiter(void 0, void 0, void 0, functi
         });
     });
 });
-const createFileNode = (name, path, rootPath, content, isFolder) => {
+const createFileNode = (name, path, rootPath, content, isFolder, parent = null) => {
     const fileName = name;
     const _path = path_1.checkPathIsUseful(path) ? path : path_1.getCurrentPath();
     const _rootPath = rootPath ? rootPath : path_1.parseRootPath(_path);
@@ -47,7 +47,7 @@ const createFileNode = (name, path, rootPath, content, isFolder) => {
         rootPath: _rootPath,
         content: _content,
         isFolder: _isFolder,
-        parent: null,
+        parent: parent,
         children: []
     };
     return node;

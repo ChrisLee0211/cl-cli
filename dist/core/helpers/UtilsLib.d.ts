@@ -20,6 +20,6 @@ declare const _default: {
     useCommand: <T>(question: inquirer.Question<T>, property: string) => Promise<any>;
     log: (txt: string, infoType: "warning" | "success" | "danger") => void;
     templateDownload: (url: string, path: string) => Promise<void>;
-    createFileNode: (name: string, path?: string | undefined, rootPath?: string | undefined, content?: any, isFolder?: boolean | undefined) => fileNode;
+    createFileNode: (name: string, path?: string | undefined, rootPath?: string | undefined, content?: any, isFolder?: boolean | undefined, parent?: fileNode | null) => fileNode;
 };
 export default _default;
