@@ -6,6 +6,8 @@ import {Stack} from '../../utils/stack'
 
 interface CoreComplierInterface {
     fileTree : fileNode | undefined,
+    /** 获取fileTree */
+    getFileTree():fileNode|undefined,
     /** 构建基础fileNode */
     // createBaseFileNode(pathName:string):fileNode
     /** 将本地拉取的模版目录编译成fileTree */
@@ -24,7 +26,12 @@ export default class CoreComplier implements CoreComplierInterface{
         this.fileTree = this.createBaseFileNode(path);
         this.complierLocalTemplate(path)
     }
-
+    /**
+     * 返回一个只读的fileTree
+     */
+    getFileTree(){
+        return Object.freeze(this.fileTree)
+    }
     /**
      * 构建fileTree顶端节点
      * @param pathName 根文件入口路径
