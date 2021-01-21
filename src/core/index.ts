@@ -69,6 +69,7 @@ export class ClCore {
 
        // 拉取成功后，应该开始将本地目录解析为fileTree
        // -------
-       await HookController.emitter('parse',[this.ctx,Utils,CoreParser.ruleSetter])
+       await HookController.emitter('parse',[this.ctx,Utils,CoreParser.ruleSetter]);
+       const parseTree = CoreParser.getParseTree();
     }
 }
