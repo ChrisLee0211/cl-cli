@@ -2,7 +2,7 @@ import Utils, { fileNode } from '../helpers/UtilsLib';
 
 type ruleSetterFn = (fileTree:fileNode)=>fileNode|void
 export class CoreParser {
-    parseTree:{[key:string]:fileNode}[] = [];
+    parseTree:{[key:string]:ruleSetterFn}[] = [];
 
 
     constructor(){

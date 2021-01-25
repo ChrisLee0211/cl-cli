@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import {readFileContent,scanFolder} from '../../utils/file';
 import {Stack} from '../../utils/stack'
+import {CoreParser} from '../parser'
 
 interface CoreComplierInterface {
     fileTree : fileNode | undefined,
@@ -13,15 +14,16 @@ interface CoreComplierInterface {
     /** 将本地拉取的模版目录编译成fileTree */
     complierLocalTemplate(path):void;
     /** 将传入的fileList依次插入到fileTree */
-    complierExtra(fileList:fileNode[]):void
+    complierExtra(fileList:CoreParser['parseTree']):void
     /** 将fileTree生成为真实文件 */
     output():void
 }
 
-
+type fileNodeType = fileNode
 
 export default class CoreComplier implements CoreComplierInterface{
     fileTree:fileNode | undefined = undefined;
+    extraTree:fileNode | undefined = undefined;
     constructor(path:string){
         this.fileTree = this.createBaseFileNode(path);
         this.complierLocalTemplate(path)
@@ -98,8 +100,49 @@ export default class CoreComplier implements CoreComplierInterface{
         }
     };
 
-    complierExtra(list){
+    complierExtra(list:CoreParser['parseTree']){
+        const fileList = list;
+        if(fileList.length && this.fileTree){
+            this.extraTree = this.fileTree;
+        }
+        while(fileList.length){
+            const cb = fileList.pop();
+            if(cb){
+                const key = Object.keys(cb??{})[0];
+                const fn = cb[key]
+                try{
+                    if(this.fileTreeIsDone(this.extraTree,list)){
+                        const result = fn(this.extraTree);
+                        if(this.isFileNode(result)){
+                            this.extraTree = result
+                        }
+                    }
+                }catch(e){
+    
+                }
+            }
+        }
+    }
 
+    fileTreeIsDone(tree, list:any[]): tree is fileNode {
+        if(list.length){
+            return true
+        }
+        return false
+    }
+
+    isFileNode(node): node is fileNode {
+        const keys = ['path', 'rootPath', 'fileName', 'isFolder', 'content', 'parent', 'children'];
+        const nodeKeys = Object.keys(node);
+        if(keys.length !== nodeKeys.length) return false
+        let res = true;
+        for(let i=0;i<keys.length;i++){
+            if(nodeKeys.includes(keys[i])===false){
+                res = false;
+                break
+            }
+        }
+        return res
     }
 
     output(){
