@@ -1,13 +1,14 @@
 import Utils from './UtilsLib';
 import {Ctx} from '../context'
 import {CoreParser} from '../parser'
+import CoreComplier from '../complier'
 export interface HookCL<T = any> {
     register<T>(type:'init',fn:initFn<T>):void
     register<T>(type:'parse',fn:parseFn<T>):void
     register<T >(type:'transform',fn:transFn<T>):void
     emitter<T>(type:'init',args:[T,typeof Utils]);
     emitter<T>(type:'parse',args:[T,typeof Utils,rset]);
-    emitter<T>(type:'transform',args:[]);
+    emitter<T>(type:'transform',args:[typeof Utils,CoreComplier['setEeffect']]);
 }
 
 type lifeType = 'init' | 'parse' | 'transform' 
@@ -58,7 +59,7 @@ class HookController implements HookCL{
      */
     public emitter<T>(type:'init',args:[T,typeof Utils]);
     public emitter<T>(type:'parse',args:[T,typeof Utils,rset]);
-    public emitter<T>(type:'transform',args:[]);
+    public emitter<T>(type:'transform',args:[typeof Utils,CoreComplier['setEeffect']]);
     public async emitter(type:lifeType,args:any[]){
         let cb:Function | undefined;
         let queue: Array<Function>;

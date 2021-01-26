@@ -71,6 +71,7 @@ export class ClCore {
        // -------
        await HookController.emitter('parse',[this.ctx,Utils,CoreParser.ruleSetter]);
        const parseTree = CoreParser.getParseTree();
-       complier.complierExtra(parseTree)
+       const finalFileTree =  await complier.complierExtra(parseTree);
+       await HookController.emitter('transform', [Utils,complier.setEeffect])
     }
 }

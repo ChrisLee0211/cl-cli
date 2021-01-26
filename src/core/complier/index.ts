@@ -15,15 +15,18 @@ interface CoreComplierInterface {
     complierLocalTemplate(path):void;
     /** 将传入的fileList依次插入到fileTree */
     complierExtra(fileList:CoreParser['parseTree']):void
+    /** 注册一个在output期间遍历fileTree时的需要执行副作用的回调函数 */
+    setEeffect(fn:outputCallback):void
     /** 将fileTree生成为真实文件 */
     output():void
 }
 
 type fileNodeType = fileNode
-
+type outputCallback = (cur:fileNode) => void;
 export default class CoreComplier implements CoreComplierInterface{
     fileTree:fileNode | undefined = undefined;
     extraTree:fileNode | undefined = undefined;
+    outputCbs:Array<outputCallback> = [];
     constructor(path:string){
         this.fileTree = this.createBaseFileNode(path);
         this.complierLocalTemplate(path)
@@ -86,7 +89,7 @@ export default class CoreComplier implements CoreComplierInterface{
                             try{
                                 curNode.content = await readFileContent(curNode.path);
                             }catch(e){
-                                console.error(e)
+                                throw new Error(e)
                             }
                         }
                         
@@ -100,7 +103,7 @@ export default class CoreComplier implements CoreComplierInterface{
         }
     };
 
-    complierExtra(list:CoreParser['parseTree']){
+    async complierExtra(list:CoreParser['parseTree']){
         const fileList = list;
         if(fileList.length && this.fileTree){
             this.extraTree = this.fileTree;
@@ -112,26 +115,28 @@ export default class CoreComplier implements CoreComplierInterface{
                 const fn = cb[key]
                 try{
                     if(this.fileTreeIsDone(this.extraTree,list)){
-                        const result = fn(this.extraTree);
+                        const result = await fn(this.extraTree);
                         if(this.isFileNode(result)){
                             this.extraTree = result
                         }
                     }
                 }catch(e){
-    
+                    throw new Error(e)
                 }
             }
-        }
+        };
+        this.fileTree = this.extraTree;
+        return this.fileTree
     }
 
-    fileTreeIsDone(tree, list:any[]): tree is fileNode {
+    private fileTreeIsDone(tree, list:any[]): tree is fileNode {
         if(list.length){
             return true
         }
         return false
     }
 
-    isFileNode(node): node is fileNode {
+    private isFileNode(node): node is fileNode {
         const keys = ['path', 'rootPath', 'fileName', 'isFolder', 'content', 'parent', 'children'];
         const nodeKeys = Object.keys(node);
         if(keys.length !== nodeKeys.length) return false
@@ -143,6 +148,10 @@ export default class CoreComplier implements CoreComplierInterface{
             }
         }
         return res
+    }
+
+    setEeffect(fn:outputCallback) {
+        this.outputCbs.push(fn)
     }
 
     output(){
