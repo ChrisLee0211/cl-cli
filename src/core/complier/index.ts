@@ -21,7 +21,6 @@ interface CoreComplierInterface {
     output():void
 }
 
-type fileNodeType = fileNode
 type outputCallback = (cur:fileNode) => void;
 export default class CoreComplier implements CoreComplierInterface{
     fileTree:fileNode | undefined = undefined;

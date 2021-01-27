@@ -89,3 +89,26 @@ export async function scanFolder(path:string):Promise<fs.Dirent[]> {
         }
     })
 }
+
+/**
+ * 删除指定文件
+ * @param {string} path 文件名(包含路径)
+ * @returns {boolean}
+ * @author chris lee
+ * @Time 2021/01/28
+ */
+export async function removeFile(path):Promise<boolean> {
+    return new Promise((resolve,reject) => {
+        try{
+            fs.unlink(path,(err) => {
+                if(!err){
+                    resolve(true)
+                }else{
+                    resolve(false)
+                }
+            })
+        }catch(e){
+            reject(e)
+        }
+    })
+}
