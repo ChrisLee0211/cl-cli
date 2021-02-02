@@ -16,6 +16,8 @@ export interface fileNodeContent {
     parent:fileNode | null,
     /** 子级目录包含的文件节点 */
     children:fileNode[]
+    /** 附加属性 */
+    [key:string]:any
 }
 
 class fileNode {
@@ -33,6 +35,7 @@ class fileNode {
             content:_content,
             isFolder:_isFolder,
             parent:parent,
+            isChanged:false,
             children:[]
         }
         this.main = this.setProxy(node);
@@ -41,7 +44,21 @@ class fileNode {
 
     setProxy(fnode:fileNodeContent){
         return new Proxy(fnode,{
-
+            set(target,key,value){
+                if(key === 'isChanged') return false
+                if(typeof(key)==='string'&& !['content','children','parent'].includes(key)){
+                    if(target[key] !== value){
+                        target['isChanged'] = true
+                    }else{
+                        return false
+                    }
+                }
+                target['isChanged'] = true
+                return Reflect.set(target,key,value)
+            },
+            get(target,key,value){
+                if(key === 'isChanged') return
+            }
         })
     }
 
