@@ -25,8 +25,8 @@ export interface fileNodeContent {
 }
 
 export default class fileNode implements fileNodeContent {
-    parent = null;
-    children = [];
+    parent:fileNode | null = null;
+    children:fileNode[] = [];
     content;
     isFolder = false;
     fileName = '';
@@ -41,11 +41,45 @@ export default class fileNode implements fileNodeContent {
         this.isFolder = isFolder??false;
     }
 
-    appendChild(fnode){
+    appendChild(fnode:fileNode){
+        if(this.isFileNode(fnode) === false){
+            throw new Error(`expect type fileNode, but got other,please use create createFileNode function`)
+        }
+        this.children.push(this.normalizeFileNode(fnode))
         return this
     }
-    
+
     remove(){
-        
+        if(this.isFileNode(this.parent)){
+            this.parent.children = this.parent.children.filter(node => node.fileName!==this.fileName)
+        };
+    }
+
+    /**
+     * 对path、rootPath、parent属性进行校验与格式化
+     * @param fnode 
+     * @return {fileNode}
+     * @author chris lee
+     * @Time 2021/02/06
+     */
+    private normalizeFileNode(fnode:fileNode):fileNode {
+        // check path
+        // check parent
+        // check rootPath
+        return fnode
+    }
+    
+    /**
+     * 判断是否为fileNode
+     * @param target 
+     * @author chris lee
+     * @Time 2021/02/06
+     */
+    isFileNode(target:null|fileNode):target is fileNode {
+        let result = false
+        if(target!==null && target.path && target.fileName && target.rootPath){
+            result = true
+        }
+        return result
     }
 }
