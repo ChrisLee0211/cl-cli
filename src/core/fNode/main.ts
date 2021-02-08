@@ -1,4 +1,4 @@
-import {checkPathIsUseful,getCurrentPath, parseRootPath} from '../../utils/path'
+import {checkPathIsUseful,getCurrentPath, parseRootPath,concatPath} from '../../utils/path'
 
 /** 文件节点内容 */
 export interface fileNodeContent {
@@ -45,7 +45,11 @@ export default class fileNode implements fileNodeContent {
         if(this.isFileNode(fnode) === false){
             throw new Error(`expect type fileNode, but got other,please use create createFileNode function`)
         }
-        this.children.push(this.normalizeFileNode(fnode))
+        if(this.isFolder === false){
+            throw new Error(`${this.fileName} is not a folder!`)
+        }
+        this.children.push(this.normalizeChildFileNode(fnode));
+        this.isChanged = true;
         return this
     }
 
@@ -62,10 +66,14 @@ export default class fileNode implements fileNodeContent {
      * @author chris lee
      * @Time 2021/02/06
      */
-    private normalizeFileNode(fnode:fileNode):fileNode {
-        // check path
-        // check parent
-        // check rootPath
+    private normalizeChildFileNode(fnode:fileNode):fileNode {
+        if(fnode.path !== this.path){
+            fnode.path = concatPath(this.path,this.fileName)
+        }
+        if(fnode.rootPath !== this.rootPath){
+            fnode.rootPath = this.rootPath;
+        }
+        fnode.parent = this;
         return fnode
     }
     
@@ -75,11 +83,19 @@ export default class fileNode implements fileNodeContent {
      * @author chris lee
      * @Time 2021/02/06
      */
-    isFileNode(target:null|fileNode):target is fileNode {
+    private isFileNode(target:null|fileNode):target is fileNode {
         let result = false
         if(target!==null && target.path && target.fileName && target.rootPath){
             result = true
         }
         return result
+    }
+
+    /**
+     * 
+     * @param res 
+     */
+    private formatPath(res){
+        this.path = res
     }
 }
