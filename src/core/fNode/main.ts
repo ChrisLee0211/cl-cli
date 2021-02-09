@@ -22,6 +22,8 @@ export interface fileNodeContent {
     appendChild(fileNode:fileNodeContent):fileNodeContent
     /** 移除本身 */
     remove():void
+    /** 设置文件内容 */
+    setContent(newContent:any):boolean
 }
 
 export default class fileNode implements fileNodeContent {
@@ -56,7 +58,20 @@ export default class fileNode implements fileNodeContent {
     remove(){
         if(this.isFileNode(this.parent)){
             this.parent.children = this.parent.children.filter(node => node.fileName!==this.fileName)
+            this.parent.isChanged = true;
         };
+    }
+
+    setContent(newContent){
+        let res:boolean = true;
+        try{
+            this.content = newContent
+            this.isChanged = true;
+        }catch(e){
+            console.error(e);
+            res = false
+        }
+        return res
     }
 
     /**
