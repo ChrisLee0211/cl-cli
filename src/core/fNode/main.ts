@@ -43,6 +43,7 @@ export default class fileNode implements fileNodeContent {
         this.rootPath = rootPath?rootPath:parseRootPath(this.path);
         this.content = content?? '';
         this.isFolder = isFolder??false;
+        return this
     }
 
     appendChild(fnode:fileNode){
@@ -65,6 +66,7 @@ export default class fileNode implements fileNodeContent {
         }
         this.children.push(this.normalizeChildFileNode(fnode));
         this.isChanged = true;
+        this.freezeMethod();
         return this
     }
 
@@ -73,11 +75,13 @@ export default class fileNode implements fileNodeContent {
             this.parent.removeChild(this);
             this.parent = null;
         };
+        this.freezeMethod()
     }
 
     removeChild(fnode:fileNode){
         this.children = this.children.filter(node => node.fileName!==fnode.fileName);
         this.isChanged = true;
+        this.freezeMethod()
     }
 
     setContent(newContent){
@@ -89,6 +93,7 @@ export default class fileNode implements fileNodeContent {
             console.error(e);
             res = false
         }
+        this.freezeMethod()
         return res
     }
 
@@ -124,11 +129,7 @@ export default class fileNode implements fileNodeContent {
         return result
     }
 
-    /**
-     * 
-     * @param res 
-     */
-    private formatPath(res){
-        this.path = res
+    private freezeMethod(){
+        return false
     }
 }

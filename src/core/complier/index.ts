@@ -1,16 +1,16 @@
-import utils, { fileNode } from "../helpers/UtilsLib";
+import utils from "../helpers/UtilsLib";
 import * as path from 'path';
-import * as fs from 'fs';
 import {readFileContent,scanFolder} from '../../utils/file';
+import FileNode from '../fNode/main'; 
 import {Stack} from '../../utils/stack'
 import {CoreParser} from '../parser'
 
 interface CoreComplierInterface {
-    fileTree : fileNode | undefined,
+    fileTree : FileNode | undefined,
     /** 获取fileTree */
-    getFileTree():fileNode|undefined,
+    getFileTree():Readonly<FileNode>|undefined,
     /** 构建基础fileNode */
-    // createBaseFileNode(pathName:string):fileNode
+    // createBaseFileNode(pathName:string):FileNode
     /** 将本地拉取的模版目录编译成fileTree */
     complierLocalTemplate(path):void;
     /** 将传入的fileList依次插入到fileTree */
@@ -21,10 +21,10 @@ interface CoreComplierInterface {
     output():void
 }
 
-type outputCallback = (cur:fileNode) => void;
+type outputCallback = (cur:FileNode) => void;
 export default class CoreComplier implements CoreComplierInterface{
-    fileTree:fileNode | undefined = undefined;
-    extraTree:fileNode | undefined = undefined;
+    fileTree:FileNode | undefined = undefined;
+    extraTree:FileNode | undefined = undefined;
     outputCbs:Array<outputCallback> = [];
     constructor(path:string){
         this.fileTree = this.createBaseFileNode(path);
@@ -42,7 +42,7 @@ export default class CoreComplier implements CoreComplierInterface{
      * @author chris lee
      * @Time 2021/01/14
      */
-    private createBaseFileNode(pathName):fileNode{
+    private createBaseFileNode(pathName):FileNode{
         const rootFileNode = utils.createFileNode(
             path.basename(pathName),
             pathName,
@@ -65,7 +65,7 @@ export default class CoreComplier implements CoreComplierInterface{
             if(this.fileTree!==undefined){
                 stack.push(this.fileTree);
                 while(stack.length>0){
-                    const curNode = stack.pop() as fileNode;
+                    const curNode = stack.pop() as FileNode;
                     if(curNode.isFolder){
                         // 如果是文件夹类型，那么先创建一个不含content的fileNode完成树结构，等下一轮遍历再补全content
                         const files = await scanFolder(pathName);
@@ -128,14 +128,14 @@ export default class CoreComplier implements CoreComplierInterface{
         return this.fileTree
     }
 
-    private fileTreeIsDone(tree, list:any[]): tree is fileNode {
+    private fileTreeIsDone(tree, list:any[]): tree is FileNode {
         if(list.length){
             return true
         }
         return false
     }
 
-    private isFileNode(node): node is fileNode {
+    private isFileNode(node): node is FileNode {
         const keys = ['path', 'rootPath', 'fileName', 'isFolder', 'content', 'parent', 'children'];
         const nodeKeys = Object.keys(node);
         if(keys.length !== nodeKeys.length) return false

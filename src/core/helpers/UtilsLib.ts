@@ -1,24 +1,10 @@
 import * as inquirer from 'inquirer';
-import {log} from '../../utils/log';
 import * as gitDownload from 'download-git-repo';
+import {log} from '../../utils/log';
+import FileNode, {fileNodeContent} from '../fNode/main';
+import proxyWrapper from '../fNode/proxy';
 import {checkPathIsUseful,getCurrentPath, parseRootPath} from '../../utils/path'
-/** 文件节点 */
-export interface fileNode {
-    /** 文件路径 */
-    path:string,
-    /** 根路径 */
-    rootPath:string,
-    /** 文件名称 */
-    fileName:string,
-    /** 是否文件夹 */
-    isFolder:boolean
-    /** 文件内容 string或buffer */
-    content:any,
-    /** 父级目录 */
-    parent:fileNode | null,
-    /** 子级目录包含的文件节点 */
-    children:fileNode[]
-}
+
 /**
  * 使用命令交互指令
  * @param question 命令行提问配置
@@ -43,22 +29,14 @@ const templateDownload = async (url:string,path:string):Promise<void>  => {
     })
 }
 
-const createFileNode = (name:string,path?:string,rootPath?:string,content?:any,isFolder?:boolean,parent:fileNode|null=null):fileNode => {
+const createFileNode = (name:string,path?:string,rootPath?:string,content?:any,isFolder?:boolean,parent:FileNode|null=null):FileNode => {
     const fileName:string = name;
     const _path = checkPathIsUseful(path)? path: getCurrentPath();
     const _rootPath = rootPath?rootPath:parseRootPath(_path);
     const _content = content?? '';
     const _isFolder = isFolder??false;
-    const node:fileNode = {
-        path:_path,
-        fileName,
-        rootPath:_rootPath,
-        content:_content,
-        isFolder:_isFolder,
-        parent:parent,
-        children:[]
-    }
-    return node
+    const node:FileNode = new FileNode(fileName,_path,_rootPath,_content,_isFolder);
+    return proxyWrapper(node)
 }
 
 export default {

@@ -1,5 +1,5 @@
 import fileNodeCtr from './main';
-export default function proxyWrapper(fnode: typeof fileNodeCtr) {
+export default function proxyWrapper(fnode:fileNodeCtr) {
     const frozenProps: string[] = ['parent',
         'children',
         'content',
@@ -8,20 +8,24 @@ export default function proxyWrapper(fnode: typeof fileNodeCtr) {
         'rootPath',
         'path',
         'isChanged',];
+    const triggerKeys: string[] = ['appendChild', 'destroy', 'removeChild', 'setContent'];
     let enableEdit = false;
-    const handler:ProxyHandler<typeof fnode> = {
-        set(target,keyName,receiver){
-            if(!enableEdit){
+    const handler: ProxyHandler<typeof fnode> = {
+        set(target, keyName, receiver) {
+            if (!enableEdit) {
                 return false
-            }else{
-                if(typeof(keyName)=== 'string' && frozenProps.includes(keyName)){
-                    return false
-                }
+            } else {
                 return true
             }
         },
-        get(target,keyName,receiver){
-
+        get(target, keyName, receiver) {
+            if (typeof (keyName) === 'string' && triggerKeys.includes(keyName)) {
+                enableEdit = true;
+            }
+            if (keyName === 'freezeMethod') {
+                enableEdit = false
+            }
+            return Reflect.get(target, keyName, receiver)
         }
     };
     return new Proxy(fnode, handler)
