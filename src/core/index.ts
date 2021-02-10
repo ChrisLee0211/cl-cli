@@ -65,13 +65,13 @@ export class ClCore {
            console.error(e)
        }
        Utils.log(`拉取模版成功，开始编译额外配置`,'success');
-       const complier = new CoreComplier(projectPath);
+       const complier = new CoreComplier(projectName,process.cwd());
 
        // 拉取成功后，应该开始将本地目录解析为fileTree
        // -------
        await HookController.emitter('parse',[this.ctx,Utils,CoreParser.ruleSetter]);
        const parseTree = CoreParser.getParseTree();
        const finalFileTree =  await complier.complierExtra(parseTree);
-       await HookController.emitter('transform', [Utils,complier.setEeffect])
+       await HookController.emitter('transform', [Utils,complier.setEeffect]);
     }
 }

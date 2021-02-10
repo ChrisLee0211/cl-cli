@@ -12,8 +12,8 @@ interface CoreComplierInterface {
     /** 构建基础fileNode */
     // createBaseFileNode(pathName:string):FileNode
     /** 将本地拉取的模版目录编译成fileTree */
-    complierLocalTemplate(path):void;
-    /** 将传入的fileList依次插入到fileTree */
+    complierLocalTemplate(name,path):void;
+    /** 将传入的fileList依次解析覆盖最新的fileTree */
     complierExtra(fileList:CoreParser['parseTree']):void
     /** 注册一个在output期间遍历fileTree时的需要执行副作用的回调函数 */
     setEeffect(fn:outputCallback):void
@@ -26,9 +26,10 @@ export default class CoreComplier implements CoreComplierInterface{
     fileTree:FileNode | undefined = undefined;
     extraTree:FileNode | undefined = undefined;
     outputCbs:Array<outputCallback> = [];
-    constructor(path:string){
-        this.fileTree = this.createBaseFileNode(path);
-        this.complierLocalTemplate(path)
+    constructor(name:string,path:string){
+        this.fileTree = this.createBaseFileNode(name,path);
+        this.complierLocalTemplate(name,path);
+        this.setEeffect = this.setEeffect.bind(this)
     }
     /**
      * 返回一个只读的fileTree
@@ -42,9 +43,9 @@ export default class CoreComplier implements CoreComplierInterface{
      * @author chris lee
      * @Time 2021/01/14
      */
-    private createBaseFileNode(pathName):FileNode{
+    private createBaseFileNode(fileName,pathName):FileNode{
         const rootFileNode = utils.createFileNode(
-            path.basename(pathName),
+            fileName,
             pathName,
             pathName,
             null,
@@ -59,7 +60,8 @@ export default class CoreComplier implements CoreComplierInterface{
      * @author chrislee
      * @Time 2021/01/14
      */
-    async complierLocalTemplate(pathName:string){
+    async complierLocalTemplate(projectName:string,projectPath:string){
+        const pathName = path.join(projectPath,projectName)
         try{
             const stack = new Stack();
             if(this.fileTree!==undefined){
@@ -72,8 +74,8 @@ export default class CoreComplier implements CoreComplierInterface{
                         if(files.length){
                             const len = files.length;
                             for(let i=0;i<len;i++){
-                                const curPath = path.join(curNode.path,files[i].name);
-                                const rootPath = pathName;
+                                const curPath = path.join(curNode.path);
+                                const rootPath = projectPath;
                                 const isFolder = files[i].isDirectory();
                                 const fileName = files[i].name;
                                 const parent = curNode;

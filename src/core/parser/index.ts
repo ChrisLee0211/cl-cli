@@ -1,6 +1,7 @@
-import Utils, { fileNode } from '../helpers/UtilsLib';
+import FileNode from "../fNode/main";
 
-type ruleSetterFn = (fileTree:fileNode)=>fileNode|void
+
+type ruleSetterFn = (fileTree:FileNode)=>Promise<FileNode>
 export class CoreParser {
     parseTree:{[key:string]:ruleSetterFn}[] = [];
 
