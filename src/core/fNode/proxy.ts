@@ -19,6 +19,9 @@ export default function proxyWrapper(fnode: typeof fileNodeCtr) {
                 }
                 return true
             }
+        },
+        get(target,keyName,receiver){
+
         }
     };
     return new Proxy(fnode, handler)

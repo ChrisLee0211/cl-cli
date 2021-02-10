@@ -20,8 +20,10 @@ export interface fileNodeContent {
     isChanged:boolean
     /** 添加一个fileNode到children中 */
     appendChild(fileNode:fileNodeContent):fileNodeContent
-    /** 移除本身 */
-    remove():void
+    /** 销毁本身 */
+    destroy():void
+    /** 销毁指定子节点 */
+    removeChild(fnode:fileNodeContent):void
     /** 设置文件内容 */
     setContent(newContent:any):boolean
 }
@@ -50,16 +52,32 @@ export default class fileNode implements fileNodeContent {
         if(this.isFolder === false){
             throw new Error(`${this.fileName} is not a folder!`)
         }
+        try{
+            const len = this.children.length;
+            for(let i=0;i<len;i++){
+                const child = this.children[i];
+                if(child.fileName === fnode.fileName){
+                    throw new Error(`The file ${fnode.fileName} was already exist!`);
+                }
+            }
+        }catch(e){
+            console.error(e);
+        }
         this.children.push(this.normalizeChildFileNode(fnode));
         this.isChanged = true;
         return this
     }
 
-    remove(){
+    destroy(){
         if(this.isFileNode(this.parent)){
-            this.parent.children = this.parent.children.filter(node => node.fileName!==this.fileName)
-            this.parent.isChanged = true;
+            this.parent.removeChild(this);
+            this.parent = null;
         };
+    }
+
+    removeChild(fnode:fileNode){
+        this.children = this.children.filter(node => node.fileName!==fnode.fileName);
+        this.isChanged = true;
     }
 
     setContent(newContent){
