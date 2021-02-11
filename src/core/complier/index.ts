@@ -16,12 +16,12 @@ interface CoreComplierInterface {
     /** 将传入的fileList依次解析覆盖最新的fileTree */
     complierExtra(fileList:CoreParser['parseTree']):void
     /** 注册一个在output期间遍历fileTree时的需要执行副作用的回调函数 */
-    setEeffect(fn:outputCallback):void
+    setEffect(fn:outputCallback):void
     /** 将fileTree生成为真实文件 */
     output():void
 }
 
-type outputCallback = (cur:FileNode) => void;
+type outputCallback = (cur:FileNode) => Promise<void>;
 export default class CoreComplier implements CoreComplierInterface{
     fileTree:FileNode | undefined = undefined;
     extraTree:FileNode | undefined = undefined;
@@ -29,7 +29,7 @@ export default class CoreComplier implements CoreComplierInterface{
     constructor(name:string,path:string){
         this.fileTree = this.createBaseFileNode(name,path);
         this.complierLocalTemplate(name,path);
-        this.setEeffect = this.setEeffect.bind(this)
+        this.setEffect = this.setEffect.bind(this)
     }
     /**
      * 返回一个只读的fileTree
@@ -151,11 +151,26 @@ export default class CoreComplier implements CoreComplierInterface{
         return res
     }
 
-    setEeffect(fn:outputCallback) {
+    setEffect(fn:outputCallback) {
         this.outputCbs.push(fn)
     }
 
-    output(){
+    private async useEffect(fnode:FileNode, effects:outputCallback[]) {
+        try{
+            while(effects.length){
+                const fn = effects.pop();
+                if(fn){
+                    await fn(fnode)
+                }
+            }
+        }catch(e){
+            throw new Error(`Fail to call effect! please checked the param in setEffect`)
+        }
+        return fnode
+    }
 
+    output(){
+        const stack = new Stack();
+        
     }
 }
