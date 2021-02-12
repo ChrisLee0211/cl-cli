@@ -1,6 +1,6 @@
 import utils from "../helpers/UtilsLib";
 import * as path from 'path';
-import {readFileContent,scanFolder} from '../../utils/file';
+import {readFileContent,scanFolder,createFile} from '../../utils/file';
 import FileNode from '../fNode/main'; 
 import {Stack} from '../../utils/stack'
 import {CoreParser} from '../parser'
@@ -169,8 +169,25 @@ export default class CoreComplier implements CoreComplierInterface{
         return fnode
     }
 
-    output(){
+    async output(){
         const stack = new Stack();
-        
+        stack.push(this.fileTree);
+        while(stack.length){
+            const curNode = stack.pop() as FileNode;
+            this.useEffect(curNode,this.outputCbs);
+            if(curNode.children.length){
+                for(let i = 0; i < curNode.children.length; i++){
+                    stack.push(curNode.children[i])
+                }
+            }
+            if(curNode.isChanged===false){
+                continue
+            }
+            try{
+                await createFile(curNode.path,curNode.fileName,curNode.content)
+            }catch(e){
+                throw new Error(`Fail to create file named ${curNode.fileName}, please its path or other porperty`)
+            }
+        }
     }
 }

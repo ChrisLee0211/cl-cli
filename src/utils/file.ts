@@ -112,3 +112,27 @@ export async function removeFile(path):Promise<boolean> {
         }
     })
 }
+
+/**
+ * 在指定目录下创建文件
+ * @param {string} path 路径
+ * @param {string} fileName 文件名
+ * @param {any} content 内容
+ * @author chris lee
+ * @Time 2021/02/12
+ */
+export async function createFile(filePath:string,fileName:string,content:any):Promise<void> {
+    return new Promise((resolve,reject) => {
+        try{
+            fs.writeFile(path.join(filePath,fileName),content, (err) => {
+                if(!err){
+                    resolve()
+                }else{
+                    reject(err)
+                }
+            })
+        }catch(e){
+            reject(e)
+        }
+    })
+}
