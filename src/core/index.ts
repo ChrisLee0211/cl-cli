@@ -71,7 +71,9 @@ export class ClCore {
        // -------
        await HookController.emitter('parse',[this.ctx,Utils,CoreParser.ruleSetter]);
        const parseTree = CoreParser.getParseTree();
-       const finalFileTree =  await complier.complierExtra(parseTree);
+       await complier.complierExtra(parseTree);
        await HookController.emitter('transform', [Utils,complier.setEffect]);
+       Utils.log(`开始生成项目目录......`,'success');
+       await complier.output();
     }
 }

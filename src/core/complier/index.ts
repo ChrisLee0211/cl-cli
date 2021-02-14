@@ -104,6 +104,12 @@ export default class CoreComplier implements CoreComplierInterface{
         }
     };
 
+    /**
+     * 解析parse阶段的树变为fileNode
+     * @param list parse阶段解析出来的parseTree
+     * @author chris lee
+     * @Time 2021/02/14
+     */
     async complierExtra(list:CoreParser['parseTree']){
         const fileList = list;
         if(fileList.length && this.fileTree){
@@ -151,10 +157,23 @@ export default class CoreComplier implements CoreComplierInterface{
         return res
     }
 
+    /**
+     * 注册副作用函数供编译outpuy时调用
+     * @param fn 副作用函数
+     * @author chris lee
+     * @Time 2021/02/14
+     */
     setEffect(fn:outputCallback) {
         this.outputCbs.push(fn)
     }
 
+    /**
+     * 执行副作用函数
+     * @param fnode 当前遍历的fnode
+     * @param effects 副作用函数队列
+     * @author chris lee
+     * @Time 2021/02/14
+     */
     private async useEffect(fnode:FileNode, effects:outputCallback[]) {
         try{
             while(effects.length){
@@ -168,7 +187,7 @@ export default class CoreComplier implements CoreComplierInterface{
         }
         return fnode
     }
-
+    
     async output(){
         const stack = new Stack();
         stack.push(this.fileTree);
@@ -180,13 +199,12 @@ export default class CoreComplier implements CoreComplierInterface{
                     stack.push(curNode.children[i])
                 }
             }
-            if(curNode.isChanged===false){
-                continue
-            }
-            try{
-                await createFile(curNode.path,curNode.fileName,curNode.content)
-            }catch(e){
-                throw new Error(`Fail to create file named ${curNode.fileName}, please its path or other porperty`)
+            if(curNode.isChanged){
+                try{
+                    await createFile(curNode.path,curNode.fileName,curNode.content)
+                }catch(e){
+                    throw new Error(`Fail to create file named ${curNode.fileName}, please its path or other porperty`)
+                }
             }
         }
     }
