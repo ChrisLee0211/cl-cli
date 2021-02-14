@@ -1,7 +1,6 @@
 import * as inquirer from 'inquirer';
-import * as gitDownload from 'download-git-repo';
-import {log} from '../../utils/log';
-import FileNode, {fileNodeContent} from '../fNode/main';
+import {log,progressBar} from '../../utils/log';
+import FileNode from '../fNode/main';
 import proxyWrapper from '../fNode/proxy';
 import {checkPathIsUseful,getCurrentPath, parseRootPath} from '../../utils/path'
 
@@ -13,20 +12,6 @@ import {checkPathIsUseful,getCurrentPath, parseRootPath} from '../../utils/path'
 const useCommand = async <T>(question:inquirer.Question<T>, property:string):Promise<any> => {
     const result = await inquirer.prompt([question]);
     return result[property]
-}
-
-const templateDownload = async (url:string,path:string):Promise<void>  => {
-    // console.log("url=============>",url)
-    return new Promise((resolve, reject) => {
-            gitDownload(url,path,{clone:true},(err) => {
-                if(err){
-                    reject(err)
-                }else{
-                    resolve()
-                }
-            })
-        
-    })
 }
 
 const createFileNode = (name:string,path?:string,rootPath?:string,content?:any,isFolder?:boolean,parent:FileNode|null=null):FileNode => {
@@ -42,6 +27,6 @@ const createFileNode = (name:string,path?:string,rootPath?:string,content?:any,i
 export default {
     useCommand,
     log,
-    templateDownload,
+    progressBar,
     createFileNode
 }

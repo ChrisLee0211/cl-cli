@@ -2,6 +2,7 @@ import {typeValidate} from '../utils/typeValidate';
 import HookController,{HookCL} from './helpers/HookController';
 import {Ctx} from './context';
 import Utils from './helpers/UtilsLib';
+import {templateDownload} from '../utils/git';
 import {checkFileIsBuilt, createFolder} from '../utils/file';
 import {getCurrentPath,concatPath} from '../utils/path';
 import CoreParser from './parser'
@@ -17,6 +18,8 @@ function isPluginFn(fn): fn is PluginFunction {
 export class ClCore {
     pluginsQueue:Array<Plugin> = [];
     ctx:any;
+    barTimer:null|NodeJS.Timeout = null;
+    OutPutPercent:number = 0;
 
     public use(plugin:Plugin){
         this.pluginsQueue.push(plugin);
@@ -60,7 +63,7 @@ export class ClCore {
        const projectPath = await createFolder(projectName);
        Utils.log(`开始拉取模版`,'warning');
        try{
-           await Utils.templateDownload(this.ctx.template,projectPath);
+           await templateDownload(this.ctx.template,projectPath);
        }catch(e){
            console.error(e)
        }
@@ -74,6 +77,25 @@ export class ClCore {
        await complier.complierExtra(parseTree);
        await HookController.emitter('transform', [Utils,complier.setEffect]);
        Utils.log(`开始生成项目目录......`,'success');
+       this.renderProgressBar()
        await complier.output();
+       this.destoryProgerssBar();
+       Utils.log(`正在初始化项目依赖......`,'success');
+       
+    }
+
+    renderProgressBar(){
+        this.barTimer = setInterval(()=>{
+            if(this.OutPutPercent<100){
+                const random = Math.random().toFixed(2)
+                this.OutPutPercent += Number(random);
+                Utils.progressBar(`当前进度`,this.OutPutPercent)
+            }
+        },1000)
+    }
+
+    destoryProgerssBar(){
+        this.OutPutPercent = 100;
+        this.barTimer && clearInterval(this.barTimer);
     }
 }
