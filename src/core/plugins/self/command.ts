@@ -1,30 +1,30 @@
-import * as inquirer from 'inquirer';
+import * as inquirer from "inquirer";
 /** 语言类型 */
-type lang = 'typescript' | 'javascript'
+type lang = "typescript" | "javascript"
 /** 项目类型 */
-type projectType = 'component' | 'admin' | 'utils' | 'server'
+type projectType = "component" | "admin" | "utils" | "server"
 /** 框架类型 */
-type frame = 'vue' | 'react' 
+type frame = "vue" | "react" 
 /** 宿主类型 */
-type env = 'node' | 'browser'
+type env = "node" | "browser"
 /** UI框架 */
-type uiFrameForVue = 'element' | 'antd-vue' |'none'
-type uiFrameForReact = 'antd'| 'none'
-type ui = uiFrameForVue | uiFrameForReact | 'none'
+type uiFrameForVue = "element" | "antd-vue" |"none"
+type uiFrameForReact = "antd"| "none"
+type ui = uiFrameForVue | uiFrameForReact | "none"
 
 interface selectQuestion<T, key extends keyof T> extends inquirer.Question<T> {
-    type:'list',
+    type:"list",
     message:string,
     name:string,
     choices:Array<T[key]>
 }
 
-type langQuestion = selectQuestion<{'lang':lang},'lang'>
-type projectTypeQuestion = selectQuestion<{'projectType':projectType},'projectType'>
-type frameTypeQuestion = selectQuestion<{'frame':frame},'frame'>
-type envQuestion = selectQuestion<{'env':env},'env'>
-type uiforVueQuestion = selectQuestion<{'ui':uiFrameForVue},'ui'>
-type uiforReactQuestion = selectQuestion<{'ui':uiFrameForReact},'ui'>
+type langQuestion = selectQuestion<{"lang":lang}, "lang">
+type projectTypeQuestion = selectQuestion<{"projectType":projectType}, "projectType">
+type frameTypeQuestion = selectQuestion<{"frame":frame}, "frame">
+type envQuestion = selectQuestion<{"env":env}, "env">
+type uiforVueQuestion = selectQuestion<{"ui":uiFrameForVue}, "ui">
+type uiforReactQuestion = selectQuestion<{"ui":uiFrameForReact}, "ui">
 
 interface promptConfig {
     lang:langQuestion
@@ -37,39 +37,39 @@ interface promptConfig {
 
 export const prompt:promptConfig = {
     lang:{
-        type: 'list',
-        message: '使用哪种语言进行开发',
-        name: 'lang',
-        choices: ['typescript', 'javascript'],
+        type: "list",
+        message: "使用哪种语言进行开发",
+        name: "lang",
+        choices: ["typescript", "javascript"],
     },
     projectType:{
-        type: 'list',
-        message: '创建那种类型项目',
-        name: 'projectType',
-        choices: ['component', 'admin', 'utils', 'server'],
+        type: "list",
+        message: "创建那种类型项目",
+        name: "projectType",
+        choices: ["component", "admin", "utils", "server"],
     },
     frame:{
-        type: 'list',
-        message: '使用哪种web框架',
-        name: 'frame',
-        choices: ['react','vue'],
+        type: "list",
+        message: "使用哪种web框架",
+        name: "frame",
+        choices: ["react", "vue"],
     },
     env: {
-        type: 'list',
-        message: '项目用于以下哪种运行环境',
-        name: 'env',
-        choices: ['browser','node'],
+        type: "list",
+        message: "项目用于以下哪种运行环境",
+        name: "env",
+        choices: ["browser", "node"],
     },
     uiForVue: {
-        type: 'list',
-        message: '使用以下何种UI框架',
-        name: 'ui',
-        choices: ['antd-vue', 'element', 'none'],
+        type: "list",
+        message: "使用以下何种UI框架",
+        name: "ui",
+        choices: ["antd-vue", "element", "none"],
     },
     uiForReact: {
-        type: 'list',
-        message: '使用以下何种UI框架',
-        name: 'ui',
-        choices: ['antd', 'none'],
+        type: "list",
+        message: "使用以下何种UI框架",
+        name: "ui",
+        choices: ["antd", "none"],
     }
-}
+};

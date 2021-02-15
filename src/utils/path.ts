@@ -1,9 +1,9 @@
-import * as path from 'path';
+import * as path from "path";
 
 
 export const getCurrentPath = ():string => {
-    return process.cwd()
-}
+    return process.cwd();
+};
 
 /**
  * 拼接文件到当前路径
@@ -13,9 +13,9 @@ export const getCurrentPath = ():string => {
  * @author chris lee
  * @Time 2021/02/08
  */
-export const concatPath = (currentPath,name) => {
-    return path.join(currentPath,name)
-}
+export const concatPath = (currentPath, name) => {
+    return path.join(currentPath, name);
+};
 
 /**
  * 校验路径是否可用
@@ -25,9 +25,9 @@ export const concatPath = (currentPath,name) => {
  * @Time 2021/02/08
  */
 export const checkPathIsUseful = (path:string|undefined): path is string => {
-    if(path === '' || !path) return false;
-    return true
-}
+    if(path === "" || !path) return false;
+    return true;
+};
 
 /**
  * 获取当前路径的根路径
@@ -37,6 +37,6 @@ export const checkPathIsUseful = (path:string|undefined): path is string => {
  * @Time 2021/02/08
  */
 export const parseRootPath = (pathname:string) => {
-    return path.parse(pathname).root
-}
+    return path.parse(pathname).root;
+};
 

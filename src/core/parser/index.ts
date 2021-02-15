@@ -11,13 +11,13 @@ export class CoreParser {
     }
     ruleSetter<C>(key:keyof C, fn:ruleSetterFn){
         const result = {} as any;
-        result[key] = fn
-        this.parseTree.push(result)
+        result[key] = fn;
+        this.parseTree.push(result);
     }
 
     getParseTree(){
-        return this.parseTree
+        return this.parseTree;
     }
 }
 
-export default new CoreParser()
+export default new CoreParser();

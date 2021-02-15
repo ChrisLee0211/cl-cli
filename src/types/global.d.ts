@@ -1,15 +1,15 @@
 /** 语言类型 */
-type lang = 'typescript' | 'javascript'
+type lang = "typescript" | "javascript"
 /** 项目类型 */
-type projectType = 'component' | 'admin' | 'utils' | 'server'
+type projectType = "component" | "admin" | "utils" | "server"
 /** 框架类型 */
-type frame = 'vue' | 'react' 
+type frame = "vue" | "react" 
 /** 宿主类型 */
-type env = 'node' | 'browser'
+type env = "node" | "browser"
 /** UI框架 */
-type uiFrameForVue = 'element' | 'antd-vue' |'none'
-type uiFrameForReact = 'antd'| 'none'
-type ui = uiFrameForVue | uiFrameForReact | 'none'
+type uiFrameForVue = "element" | "antd-vue" |"none"
+type uiFrameForReact = "antd"| "none"
+type ui = uiFrameForVue | uiFrameForReact | "none"
 interface config {
     /** 项目名称 */
     name: string;

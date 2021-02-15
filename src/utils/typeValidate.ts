@@ -21,7 +21,7 @@ const typeEnum = {
  */
 export const isObject:(obj:unknown)=>boolean = (obj) =>{
     let res = true;
-    if(Object.prototype.toString.call(obj) === '[object Object]'){
+    if(Object.prototype.toString.call(obj) === "[object Object]"){
         res = true;
     }else{
         res = false;
@@ -80,12 +80,12 @@ export const isBoolean:(obj:unknown) => boolean = (obj) => {
     return res;
 };
 
-export const typeValidate:(obj:unknown,type:keyof typeof typeEnum,constant?:string)=>boolean = (obj,type,constant=`The value of target`) =>{
+export const typeValidate:(obj:unknown, type:keyof typeof typeEnum, constant?:string)=>boolean = (obj, type, constant="The value of target") =>{
     let res:boolean;
     if(Object.prototype.toString.call(obj)=== typeEnum[type]){
         res = true;
     }else{
-        let currentType = `undefined`;
+        let currentType = "undefined";
         for(const key in typeEnum){
             if(typeEnum[key as keyof typeof typeEnum] === Object.prototype.toString.call(obj)){
                 currentType = key;
@@ -105,4 +105,4 @@ export const typeValidate:(obj:unknown,type:keyof typeof typeEnum,constant?:stri
  */
 export const getVariableType:(obj:any)=> string= (obj)=>{
     return Object.prototype.toString.call(obj);
-}
+};

@@ -29,91 +29,91 @@ interface doubleLink {
 export class DoubleLinkList implements doubleLink {
     head: node|null
     tail: node|null
-    size: number = 0
+    size = 0
 
     constructor() {
         this.head = null;
-        this.tail = null
+        this.tail = null;
     }
     //向头部增加节点
     addOnHead(node: any) {
-        let _node: node = new Node(node);
+        const _node: node = new Node(node);
         if (this.size === 0) {
             this.head = _node;
             this.tail = _node;
             _node.pre = null;
             _node.next = null;
-            this.size += 1
+            this.size += 1;
         } else {
-            let old_head: node = this.head as node;
+            const old_head: node = this.head as node;
             this.head = _node;
-            _node.next = old_head
+            _node.next = old_head;
             old_head.pre = _node;
-            this.size += 1
+            this.size += 1;
         }
     }
     //向尾部增加节点
     addOnTail(node: any) {
-        let _node: node = new Node(node);
+        const _node: node = new Node(node);
         if (this.size === 0) {
             this.head = _node;
             this.tail = _node;
             _node.pre = null;
             _node.next = null;
-            this.size += 1
+            this.size += 1;
         } else {
-            let old_tail: node = this.tail as node;
+            const old_tail: node = this.tail as node;
             this.tail = _node;
             _node.pre = old_tail;
             old_tail.next = _node;
-            this.size += 1
+            this.size += 1;
         }
     }
     //头部删除节点
     deleteOnHead() {
         if (this.size === 0) {
-            console.error('No Node In DoubleLinkList!')
-            return
+            console.error("No Node In DoubleLinkList!");
+            return;
         }
         if (this.size < 2) {
-            let currentNode: node = this.head as node;
+            const currentNode: node = this.head as node;
             this.head = null;
             this.tail = null;
             this.size = 0;
-            return currentNode
+            return currentNode;
         }
         if (this.size >= 2) {
-            let old_head: node = this.head as node;
-            let new_head: node = old_head.next;
+            const old_head: node = this.head as node;
+            const new_head: node = old_head.next;
             if (this.size === 2) {
                 this.size = 0;
                 this.head = null;
                 this.tail = null;
-                this.addOnHead(new_head.target)
+                this.addOnHead(new_head.target);
             } else {
                 this.head = new_head;
                 new_head.pre = null;
                 this.size = this.size - 1;
             }
-            return new_head
+            return new_head;
         }
     }
     //尾部删除节点
     deleteOnTail() {
         if (this.size === 0) {
-            console.error('No Node In DoubleLinkList!')
-            return
+            console.error("No Node In DoubleLinkList!");
+            return;
         }
         if (this.size < 2) {
-            let currentNode: node = this.tail as node;
+            const currentNode: node = this.tail as node;
             this.head = null;
             this.tail = null;
             this.size = 0;
-            return currentNode
+            return currentNode;
         }
         if (this.size >= 2) {
-            let old_tail: node = this.tail as node;
-            let new_tail: node = old_tail.pre;
+            const old_tail: node = this.tail as node;
+            const new_tail: node = old_tail.pre;
             if (this.size === 2) {
                 this.size = 0;
                 this.head = null;
@@ -122,71 +122,71 @@ export class DoubleLinkList implements doubleLink {
             } else {
                 this.tail = new_tail;
                 new_tail.next = null;
-                this.size = this.size - 1
+                this.size = this.size - 1;
             }
-            return new_tail
+            return new_tail;
         }
     }
     //判断节点是否在链表中
     getNode(val: any) {
-        let _node: node = new Node(val)
+        const _node: node = new Node(val);
         let currentNode: node = this.head as node;
         if (this.size === 0) {
-            return false
+            return false;
         } else {
             let length: number = this.size;
             let c: string = JSON.stringify(currentNode.target);
-            let n: string = JSON.stringify(_node.target);
+            const n: string = JSON.stringify(_node.target);
             while (c != n) {
                 if (length > 1) {
                     currentNode = currentNode.next;
                     c = JSON.stringify(currentNode.target);
-                    length = length - 1
+                    length = length - 1;
                 } else {
-                    return false
+                    return false;
                 }
             }
-            return true
+            return true;
         }
     }
 
     //删除指定的节点
     removeNode(val: any) {
-        let _node: node = new Node(val)
-        let judgeNode: boolean = this.getNode(val);
+        const _node: node = new Node(val);
+        const judgeNode: boolean = this.getNode(val);
         if (judgeNode === false) {
-            console.error('No This Node In DoubleLinkList!');
-            return
+            console.error("No This Node In DoubleLinkList!");
+            return;
         }
         if (this.size === 1) {
-            let h: string = JSON.stringify((this.head as node).target);
-            let n: string = JSON.stringify(_node.target)
+            const h: string = JSON.stringify((this.head as node).target);
+            const n: string = JSON.stringify(_node.target);
             if (h === n) {
                 this.head = null;
             }
             if (h === n) {
-                this.tail = null
+                this.tail = null;
             }
-            this.size = 0
+            this.size = 0;
         } else {
             let currentNode = this.head;
-            let c: string = JSON.stringify((currentNode as node).target)
-            let n: string = JSON.stringify(_node.target)
+            let c: string = JSON.stringify((currentNode as node).target);
+            const n: string = JSON.stringify(_node.target);
             while (c != n) {
                 currentNode = (currentNode as node).next;
-                c = JSON.stringify((currentNode as node).target)
-            };
-            let preNode: node = (currentNode as node).pre === null ? null : (currentNode as node).pre;
-            let nextNode: node = (currentNode as node).next === null ? null : (currentNode as node).next;
+                c = JSON.stringify((currentNode as node).target);
+            }
+            const preNode: node = (currentNode as node).pre === null ? null : (currentNode as node).pre;
+            const nextNode: node = (currentNode as node).next === null ? null : (currentNode as node).next;
             if (preNode === null) {
-                this.deleteOnHead()
+                this.deleteOnHead();
             }
             if (nextNode === null) {
-                this.deleteOnTail()
+                this.deleteOnTail();
             }
             if (preNode !== null && nextNode !== null) {
                 preNode.next = nextNode;
-                nextNode.pre = preNode
+                nextNode.pre = preNode;
             }
         }
     }
@@ -199,76 +199,76 @@ export class DoubleLinkList implements doubleLink {
      */
     insertNode(val: any, ele: any, type: string) {
         let _ele: node = new Node(ele);
-        let _node: node = new Node(val);
+        const _node: node = new Node(val);
         let currentNode: node = this.head as node;
         let c: string = JSON.stringify(currentNode.target);
-        let e: string = JSON.stringify(_ele.target);
+        const e: string = JSON.stringify(_ele.target);
         if (!this.getNode(ele)) {
             console.error(`Can Not Find Node ${e}`);
-            return
+            return;
         }
         while (c !== e) {
             currentNode = currentNode.next;
-            c = JSON.stringify(currentNode.target)
+            c = JSON.stringify(currentNode.target);
         }
         _ele = currentNode;
-        if (type === 'next') {
+        if (type === "next") {
             if (_ele.next === null) {
                 this.addOnTail(_node.target);
-                return
+                return;
             }
-            let nextNode: node = _ele.next;
-            let nextNextNode: node = nextNode.next;
+            const nextNode: node = _ele.next;
+            const nextNextNode: node = nextNode.next;
             _node.pre = nextNode;
             _node.next = nextNextNode;
             nextNode.next = _node;
             nextNextNode.pre = _node;
         }
-        if (type === 'pre') {
+        if (type === "pre") {
             if (_ele.pre === null) {
                 this.addOnHead(_node.target);
-                return
+                return;
             }
-            let preNode: node = _ele.pre;
-            let prePreNode: node = preNode.pre;
+            const preNode: node = _ele.pre;
+            const prePreNode: node = preNode.pre;
             _node.pre = prePreNode;
             _node.next = preNode;
             prePreNode.next = _node;
-            preNode.pre = _node
+            preNode.pre = _node;
         }
-        return _node
+        return _node;
     }
 
     //获取链表的节点个数
     countNodes() {
-        return this.size
+        return this.size;
     }
 
     //打印所有节点
     getAllNode() {
-        let str: string = '';
+        let str = "";
         let currentNode: node = this.head as node;
-        if (currentNode === null) return
+        if (currentNode === null) return;
         while (currentNode.next !== null) {
-            let targetContent:string = typeof(currentNode.target) === 'function'?String(currentNode.target):JSON.stringify(currentNode.target);
+            const targetContent:string = typeof(currentNode.target) === "function"?String(currentNode.target):JSON.stringify(currentNode.target);
             str = str + targetContent;
-            currentNode = currentNode.next
+            currentNode = currentNode.next;
         }
-        str = str + JSON.stringify((this.tail as node).target)
-        console.log(str)
+        str = str + JSON.stringify((this.tail as node).target);
+        console.log(str);
     }
 
     //反转链表
     reverseAll():void{
-        let new_doubleLinkList = new DoubleLinkList();
+        const new_doubleLinkList = new DoubleLinkList();
         let cur:node = this.head as node;
         while(cur.next!=null){
-            let next:Node = cur.next;
+            const next:Node = cur.next;
             new_doubleLinkList.addOnHead(cur.target);
             cur = next;
-        };
+        }
         this.head = new_doubleLinkList.head;
-        this.addOnHead(cur.target)
+        this.addOnHead(cur.target);
         this.tail = new_doubleLinkList.tail;
         
     }
@@ -293,10 +293,10 @@ export class Node implements node {
     next: any = null
     constructor(obj: any) {
         this.target = obj;
-        this.val()
+        this.val();
     }
     val() {
-        return this.target
+        return this.target;
     }
 }
 
@@ -312,13 +312,13 @@ interface stack {
 }
 
 export class Stack implements stack {
-    length:number = 0
+    length = 0
     doubleLink:DoubleLinkList 
     constructor(){
         this.doubleLink = new DoubleLinkList();
         this.length = this.doubleLink.countNodes();
 
-    };
+    }
 
     /**
      * 把一个元素推入栈中
@@ -326,13 +326,13 @@ export class Stack implements stack {
      * @returns {number} 此时栈内元素的数量
      */
     push(item:any):number{
-        let index:number = NaN;
-        let currentItem:node = item;
-        let size:number = this.doubleLink.countNodes();
+        let index = NaN;
+        const currentItem:node = item;
+        const size:number = this.doubleLink.countNodes();
         this.doubleLink.addOnHead(currentItem);
-        this.length = this.doubleLink.countNodes()
-        index = size + 1
-        return index
+        this.length = this.doubleLink.countNodes();
+        index = size + 1;
+        return index;
     }
 
     /**
@@ -341,12 +341,12 @@ export class Stack implements stack {
      * @returns {any} 被弹出的元素
      */
     pop(){
-        if(this.length === 0) return null
+        if(this.length === 0) return null;
         let result:node;
         result = this.doubleLink.head as node;
         this.doubleLink.deleteOnHead();
         this.length = this.doubleLink.countNodes();
-        return result.target
+        return result.target;
     }
 
     /**
@@ -356,10 +356,10 @@ export class Stack implements stack {
         let size:number = this.doubleLink.countNodes();
         while(size > 1){
             this.doubleLink.deleteOnHead();
-            size = this.doubleLink.countNodes()
-        };
-        this.length = this.doubleLink.countNodes()
-        return
+            size = this.doubleLink.countNodes();
+        }
+        this.length = this.doubleLink.countNodes();
+        return;
     }
 
     /**
@@ -367,17 +367,17 @@ export class Stack implements stack {
      */
     getAll():Array<any>{
         let head:node = this.doubleLink.head as node;
-        let arr:Array<any> = []
+        const arr:Array<any> = [];
         let current:node;
-        let size:number = this.doubleLink.countNodes();
-        let count:number = 0;
+        const size:number = this.doubleLink.countNodes();
+        let count = 0;
         while(count < size){
-            let cur:any = head;
+            const cur:any = head;
             arr.push(cur.target);
             head = cur.next;
-            count ++
+            count ++;
         }
-        return arr
+        return arr;
     }
 
 }

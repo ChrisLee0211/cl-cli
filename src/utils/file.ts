@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 /**
  * 判断一个文件是否已经在当前目录下存在
  * @param path 文件路径
@@ -7,20 +7,20 @@ import * as path from 'path';
  * @Time 2020/11/23
  */
 export function checkFileIsBuilt(path:string):Promise<boolean>{
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         try{
-            fs.access(path,fs.constants.F_OK,(err)=>{
+            fs.access(path, fs.constants.F_OK, (err)=>{
                 if(!err){
-                    resolve(true)
+                    resolve(true);
                 }else{
-                    resolve(false)
+                    resolve(false);
                 }
-            })
+            });
         }catch(e){
             console.error(e);
-            reject(e)
+            reject(e);
         }
-    })
+    });
 }
 
 /**
@@ -31,19 +31,19 @@ export function checkFileIsBuilt(path:string):Promise<boolean>{
  */
 export async function createFolder(name:string):Promise<string>{
     const curPath = process.cwd();
-    const folderPath = path.join(curPath,name)
+    const folderPath = path.join(curPath, name);
     return new Promise((resolve, reject) => {
         try{
-            fs.mkdir(folderPath,{recursive:true},(err) => {
+            fs.mkdir(folderPath, {recursive:true}, (err) => {
                 if(!err){
-                    resolve(folderPath)
+                    resolve(folderPath);
                 }
-            })
+            });
         }catch(e){
             reject(e);
-            console.error(e)
+            console.error(e);
         }
-    })
+    });
 }
 
 /**
@@ -54,18 +54,18 @@ export async function createFolder(name:string):Promise<string>{
  * @Time 2021/01/14
  */
 export async function readFileContent(path:string):Promise<Buffer> {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         try{
-            fs.readFile(path,(err,data) => {
+            fs.readFile(path, (err, data) => {
                 if(!err){
-                    resolve(data)
+                    resolve(data);
                 }
-            })
+            });
         }catch(e){
             reject(e);
-            console.error(e)
+            console.error(e);
         }
-    })
+    });
 }
 
 /**
@@ -76,18 +76,18 @@ export async function readFileContent(path:string):Promise<Buffer> {
  * @TIme 2020/01/14
  */
 export async function scanFolder(path:string):Promise<fs.Dirent[]> {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         try{
-            fs.readdir(path,{withFileTypes:true},(err,files)=>{
+            fs.readdir(path, {withFileTypes:true}, (err, files)=>{
                 if(!err){
-                    resolve(files)
+                    resolve(files);
                 }
-            })
+            });
         }catch(e){
             reject(e);
-            console.error(e)
+            console.error(e);
         }
-    })
+    });
 }
 
 /**
@@ -98,19 +98,19 @@ export async function scanFolder(path:string):Promise<fs.Dirent[]> {
  * @Time 2021/01/28
  */
 export async function removeFile(path):Promise<boolean> {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         try{
-            fs.unlink(path,(err) => {
+            fs.unlink(path, (err) => {
                 if(!err){
-                    resolve(true)
+                    resolve(true);
                 }else{
-                    resolve(false)
+                    resolve(false);
                 }
-            })
+            });
         }catch(e){
-            reject(e)
+            reject(e);
         }
-    })
+    });
 }
 
 /**
@@ -121,18 +121,18 @@ export async function removeFile(path):Promise<boolean> {
  * @author chris lee
  * @Time 2021/02/12
  */
-export async function createFile(filePath:string,fileName:string,content:any):Promise<void> {
-    return new Promise((resolve,reject) => {
+export async function createFile(filePath:string, fileName:string, content:any):Promise<void> {
+    return new Promise((resolve, reject) => {
         try{
-            fs.writeFile(path.join(filePath,fileName),content, (err) => {
+            fs.writeFile(path.join(filePath, fileName), content, (err) => {
                 if(!err){
-                    resolve()
+                    resolve();
                 }else{
-                    reject(err)
+                    reject(err);
                 }
-            })
+            });
         }catch(e){
-            reject(e)
+            reject(e);
         }
-    })
+    });
 }

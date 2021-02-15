@@ -1,9 +1,9 @@
 import utils from "../helpers/UtilsLib";
-import * as path from 'path';
-import {readFileContent,scanFolder,createFile} from '../../utils/file';
-import FileNode from '../fNode/main'; 
-import {Stack} from '../../utils/stack'
-import {CoreParser} from '../parser'
+import * as path from "path";
+import {readFileContent, scanFolder, createFile} from "../../utils/file";
+import FileNode from "../fNode/main"; 
+import {Stack} from "../../utils/stack";
+import {CoreParser} from "../parser";
 
 interface CoreComplierInterface {
     fileTree : FileNode | undefined,
@@ -12,9 +12,9 @@ interface CoreComplierInterface {
     /** 构建基础fileNode */
     // createBaseFileNode(pathName:string):FileNode
     /** 将本地拉取的模版目录编译成fileTree */
-    complierLocalTemplate(name,path):void;
+    complierLocalTemplate(name, path):void;
     /** 将传入的fileList依次解析覆盖最新的fileTree */
-    complierExtra(fileList:CoreParser['parseTree']):void
+    complierExtra(fileList:CoreParser["parseTree"]):void
     /** 注册一个在output期间遍历fileTree时的需要执行副作用的回调函数 */
     setEffect(fn:outputCallback):void
     /** 将fileTree生成为真实文件 */
@@ -26,16 +26,16 @@ export default class CoreComplier implements CoreComplierInterface{
     fileTree:FileNode | undefined = undefined;
     extraTree:FileNode | undefined = undefined;
     outputCbs:Array<outputCallback> = [];
-    constructor(name:string,path:string){
-        this.fileTree = this.createBaseFileNode(name,path);
-        this.complierLocalTemplate(name,path);
-        this.setEffect = this.setEffect.bind(this)
+    constructor(name:string, path:string){
+        this.fileTree = this.createBaseFileNode(name, path);
+        this.complierLocalTemplate(name, path);
+        this.setEffect = this.setEffect.bind(this);
     }
     /**
      * 返回一个只读的fileTree
      */
     getFileTree(){
-        return Object.freeze(this.fileTree)
+        return Object.freeze(this.fileTree);
     }
     /**
      * 构建fileTree顶端节点
@@ -43,15 +43,15 @@ export default class CoreComplier implements CoreComplierInterface{
      * @author chris lee
      * @Time 2021/01/14
      */
-    private createBaseFileNode(fileName,pathName):FileNode{
+    private createBaseFileNode(fileName, pathName):FileNode{
         const rootFileNode = utils.createFileNode(
             fileName,
             pathName,
             pathName,
             null,
             true,
-            );
-        return rootFileNode
+        );
+        return rootFileNode;
     }
 
     /**
@@ -60,12 +60,13 @@ export default class CoreComplier implements CoreComplierInterface{
      * @author chrislee
      * @Time 2021/01/14
      */
-    async complierLocalTemplate(projectName:string,projectPath:string){
-        const pathName = path.join(projectPath,projectName)
+    async complierLocalTemplate(projectName:string, projectPath:string){
+        const pathName = path.join(projectPath, projectName);
         try{
             const stack = new Stack();
             if(this.fileTree!==undefined){
                 stack.push(this.fileTree);
+                let preFileNode: FileNode|null = null;
                 while(stack.length>0){
                     const curNode = stack.pop() as FileNode;
                     if(curNode.isFolder){
@@ -79,30 +80,33 @@ export default class CoreComplier implements CoreComplierInterface{
                                 const isFolder = files[i].isDirectory();
                                 const fileName = files[i].name;
                                 const parent = curNode;
-                                const curFileNode = utils.createFileNode(fileName,curPath,rootPath,null,isFolder,parent);
-                                curNode.children.push(curFileNode);
-                                stack.push(curFileNode)
+                                const curFileNode = utils.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);
+                                curNode.appendChild(curFileNode);
+                                stack.push(curFileNode);
+                                preFileNode = curNode;
                             }
                         }
                     }else{
                         // 如果不是文件夹类型，那么就开始尝试读取content
                         if(curNode.content === null){
                             try{
-                                curNode.content = await readFileContent(curNode.path);
+                                const content = await readFileContent(curNode.path);
+                                curNode.setContent(content);
+                                this.isFileNode(preFileNode) && curNode.setParent(preFileNode);
                             }catch(e){
-                                throw new Error(e)
+                                throw new Error(e);
                             }
                         }
                         
                     }
                 }
             }else{
-                throw new Error(`Fail to complier local template`)
+                throw new Error("Fail to complier local template");
             }
         }catch(e){
-            console.error(e)
+            console.error(e);
         }
-    };
+    }
 
     /**
      * 解析parse阶段的树变为fileNode
@@ -110,7 +114,7 @@ export default class CoreComplier implements CoreComplierInterface{
      * @author chris lee
      * @Time 2021/02/14
      */
-    async complierExtra(list:CoreParser['parseTree']){
+    async complierExtra(list:CoreParser["parseTree"]){
         const fileList = list;
         if(fileList.length && this.fileTree){
             this.extraTree = this.fileTree;
@@ -119,42 +123,42 @@ export default class CoreComplier implements CoreComplierInterface{
             const cb = fileList.pop();
             if(cb){
                 const key = Object.keys(cb??{})[0];
-                const fn = cb[key]
+                const fn = cb[key];
                 try{
-                    if(this.fileTreeIsDone(this.extraTree,list)){
+                    if(this.fileTreeIsDone(this.extraTree, list)){
                         const result = await fn(this.extraTree);
                         if(this.isFileNode(result)){
-                            this.extraTree = result
+                            this.extraTree = result;
                         }
                     }
                 }catch(e){
-                    throw new Error(e)
+                    throw new Error(e);
                 }
             }
-        };
+        }
         this.fileTree = this.extraTree;
-        return this.fileTree
+        return this.fileTree;
     }
 
     private fileTreeIsDone(tree, list:any[]): tree is FileNode {
         if(list.length){
-            return true
+            return true;
         }
-        return false
+        return false;
     }
 
     private isFileNode(node): node is FileNode {
-        const keys = ['path', 'rootPath', 'fileName', 'isFolder', 'content', 'parent', 'children'];
+        const keys = ["path", "rootPath", "fileName", "isFolder", "content", "parent", "children"];
         const nodeKeys = Object.keys(node);
-        if(keys.length !== nodeKeys.length) return false
+        if(keys.length !== nodeKeys.length) return false;
         let res = true;
         for(let i=0;i<keys.length;i++){
             if(nodeKeys.includes(keys[i])===false){
                 res = false;
-                break
+                break;
             }
         }
-        return res
+        return res;
     }
 
     /**
@@ -164,7 +168,7 @@ export default class CoreComplier implements CoreComplierInterface{
      * @Time 2021/02/14
      */
     setEffect(fn:outputCallback) {
-        this.outputCbs.push(fn)
+        this.outputCbs.push(fn);
     }
 
     /**
@@ -179,13 +183,13 @@ export default class CoreComplier implements CoreComplierInterface{
             while(effects.length){
                 const fn = effects.pop();
                 if(fn){
-                    await fn(fnode)
+                    await fn(fnode);
                 }
             }
         }catch(e){
-            throw new Error(`Fail to call effect! please checked the param in setEffect`)
+            throw new Error("Fail to call effect! please checked the param in setEffect");
         }
-        return fnode
+        return fnode;
     }
     
     async output(){
@@ -193,17 +197,17 @@ export default class CoreComplier implements CoreComplierInterface{
         stack.push(this.fileTree);
         while(stack.length){
             const curNode = stack.pop() as FileNode;
-            this.useEffect(curNode,this.outputCbs);
+            this.useEffect(curNode, this.outputCbs);
             if(curNode.children.length){
                 for(let i = 0; i < curNode.children.length; i++){
-                    stack.push(curNode.children[i])
+                    stack.push(curNode.children[i]);
                 }
             }
             if(curNode.isChanged){
                 try{
-                    await createFile(curNode.path,curNode.fileName,curNode.content)
+                    await createFile(curNode.path, curNode.fileName, curNode.content);
                 }catch(e){
-                    throw new Error(`Fail to create file named ${curNode.fileName}, please its path or other porperty`)
+                    throw new Error(`Fail to create file named ${curNode.fileName}, please its path or other porperty`);
                 }
             }
         }
