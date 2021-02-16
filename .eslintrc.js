@@ -23,6 +23,7 @@ module.exports = {
         "indent":[1, 4],
         "semi":[2, "always"],
         "quotes":[2, "double"],
-        "no-duplicate-imports":["error"]
+        "no-duplicate-imports":["error"],
+        "no-case-declarations":0
     }                            
 };

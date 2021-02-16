@@ -30,7 +30,7 @@ export const basePlugin:Plugin<config> = (register, utils) => {
         ctx.add("projectType", projectType);
     });
     register<config>("parse", async (cfg, utils, ruleSetter)=>{
-            
+        console.log(cfg);
     });
 };
 
