@@ -45,19 +45,7 @@ export class ClCore {
     public async createCli(name) {
         this.installPlugins();
         const path = getCurrentPath();
-        const isBuild = await checkFileIsBuilt(concatPath(path, name));
-        let projectName = name;
-        if(isBuild){
-            Utils.log("项目已在当前目录已存在，请重新命名", "warning");
-            const renameCommand = {
-                type:"input",
-                message: "请输入项目名",
-                name: "name",
-                default: "my-project"
-            };
-            const answer = await  Utils.useCommand<{"name":string}>(renameCommand, "name");
-            projectName = answer;
-        }
+        let projectName = await this.getProjectName(name)
         this.ctx = new Ctx(projectName);
 
         await HookController.emitter("init", [this.ctx, Utils]);
@@ -82,7 +70,32 @@ export class ClCore {
         await complier.output();
         this.destoryProgerssBar();
         Utils.log("正在初始化项目依赖......", "success");
-       
+        const fileTree = await complier.getFileTree();
+        await HookController.emitter("finish",[fileTree,Utils]);
+        Utils.log("项目搭建成功!", "success");
+    }
+
+    async getProjectName(name):Promise<string>{
+        const path = getCurrentPath();
+        const isBuild = await checkFileIsBuilt(concatPath(path, name));
+        let projectName = name;
+        if(isBuild){
+            Utils.log("项目已在当前目录已存在，请重新命名", "warning");
+            const renameCommand = {
+                type:"input",
+                message: "请输入项目名",
+                name: "name",
+                default: "my-project"
+            };
+            const answer = await  Utils.useCommand<{"name":string}>(renameCommand, "name");
+            const exsited = await checkFileIsBuilt(concatPath(path, answer));
+            if(exsited){
+                projectName = this.getProjectName(answer)
+            }else{
+                projectName = answer;
+            }
+        };
+        return projectName
     }
 
     renderProgressBar(){

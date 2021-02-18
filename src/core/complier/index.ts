@@ -23,7 +23,7 @@ interface CoreComplierInterface {
 
 type outputCallback = (cur:FileNode) => Promise<void>;
 export default class CoreComplier implements CoreComplierInterface{
-    fileTree:FileNode | undefined = undefined;
+    fileTree:FileNode;
     extraTree:FileNode | undefined = undefined;
     outputCbs:Array<outputCallback> = [];
     constructor(name:string, path:string){
@@ -136,7 +136,7 @@ export default class CoreComplier implements CoreComplierInterface{
                 }
             }
         }
-        this.fileTree = this.extraTree;
+        this.fileTree = this.extraTree as FileNode;
         return this.fileTree;
     }
 
