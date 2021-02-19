@@ -6,9 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --build tsconfig.json",
-    "lint": "eslint src --fix"
-
+    "build": "tsc --build tsconfig.json"
   },
   "bin": {
     "cl": "./dist/bin/index.js"
@@ -27,8 +25,6 @@
   },
   "homepage": "https://github.com/ChrisLee0211/cl-cli#readme",
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.15.0",
-    "@typescript-eslint/parser": "^4.15.0",
     "chalk": "^4.1.0",
     "commander": "^6.2.0",
     "download-git-repo": "^3.0.2",
@@ -38,10 +34,8 @@
     "typescript": "^4.0.5"
   },
   "devDependencies": {
-    "@types/chalk": "^2.2.0",
     "@types/inquirer": "^7.3.1",
     "@types/node": "^14.14.8",
-    "eslint": "^7.13.0",
     "tsconfig-paths": "^3.9.0"
   }
 }
