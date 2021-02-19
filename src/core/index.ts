@@ -52,9 +52,12 @@ export class ClCore {
         const projectPath = await createFolder(projectName);
         Utils.log("开始拉取模版", "warning");
         try{
+            console.log('this.ctx.template',this.ctx.template);
             await templateDownload(this.ctx.template, projectPath);
         }catch(e){
             console.error(e);
+            Utils.log("拉取模版失败，请检查git地址配置是否正确", "danger");
+            return;
         }
         Utils.log("拉取模版成功，开始编译额外配置", "success");
         const complier = new CoreComplier(projectName, process.cwd());
@@ -63,6 +66,7 @@ export class ClCore {
         // -------
         await HookController.emitter("parse", [this.ctx, Utils, CoreParser.ruleSetter]);
         const parseTree = CoreParser.getParseTree();
+        console.log('parseTree',parseTree)
         await complier.complierExtra(parseTree);
         await HookController.emitter("transform", [Utils, complier.setEffect]);
         Utils.log("开始生成项目目录......", "success");

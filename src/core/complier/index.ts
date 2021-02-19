@@ -195,6 +195,7 @@ export default class CoreComplier implements CoreComplierInterface{
     async output(){
         const stack = new Stack();
         stack.push(this.fileTree);
+        console.log(this.fileTree);
         while(stack.length){
             const curNode = stack.pop() as FileNode;
             this.useEffect(curNode, this.outputCbs);
