@@ -1,12 +1,13 @@
-import { fileNode } from '../helpers/UtilsLib';
+import FileNode from "../fNode/main";
+declare type ruleSetterFn = (fileTree: FileNode) => Promise<FileNode>;
 export declare class CoreParser {
     parseTree: {
-        [key: string]: fileNode;
+        [key: string]: ruleSetterFn;
     }[];
     constructor();
-    ruleSetter<C>(key: keyof C, fileNode: fileNode): void;
+    ruleSetter<C>(key: keyof C, fn: ruleSetterFn): void;
     getParseTree(): {
-        [key: string]: fileNode;
+        [key: string]: ruleSetterFn;
     }[];
 }
 declare const _default: CoreParser;

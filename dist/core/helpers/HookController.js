@@ -14,6 +14,7 @@ class HookController {
         this.initEvents = [];
         this.parseEvents = [];
         this.transformEvents = [];
+        this.finishEvents = [];
         this.register = this.register.bind(this);
         this.emitter = this.emitter.bind(this);
     }
@@ -27,6 +28,9 @@ class HookController {
                 break;
             case "transform":
                 this.transformEvents.push(fn);
+                break;
+            case "finish":
+                this.finishEvents.push(fn);
                 break;
             default:
                 this.checkHookType(type);
@@ -46,6 +50,9 @@ class HookController {
                 case "transform":
                     queue = this.transformEvents;
                     break;
+                case "finish":
+                    queue = this.finishEvents;
+                    break;
                 default:
                     this.checkHookType(type);
                     queue = [];
@@ -56,13 +63,13 @@ class HookController {
                     yield cb(...args);
                 }
                 else {
-                    throw new Error(`The lifeCylce callback expect a Function!`);
+                    throw new Error("The lifeCylce callback expect a Function!");
                 }
             }
         });
     }
     checkHookType(type) {
-        if (!["init", "parse", "transform"].includes(type)) {
+        if (!["init", "parse", "transform", "finish"].includes(type)) {
             throw new Error(`No such type like ${type}!`);
         }
         return type;

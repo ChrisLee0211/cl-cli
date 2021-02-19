@@ -22,7 +22,7 @@ const typeEnum = {
  */
 exports.isObject = (obj) => {
     let res = true;
-    if (Object.prototype.toString.call(obj) === '[object Object]') {
+    if (Object.prototype.toString.call(obj) === "[object Object]") {
         res = true;
     }
     else {
@@ -81,13 +81,13 @@ exports.isBoolean = (obj) => {
     }
     return res;
 };
-exports.typeValidate = (obj, type, constant = `The value of target`) => {
+exports.typeValidate = (obj, type, constant = "The value of target") => {
     let res;
     if (Object.prototype.toString.call(obj) === typeEnum[type]) {
         res = true;
     }
     else {
-        let currentType = `undefined`;
+        let currentType = "undefined";
         for (const key in typeEnum) {
             if (typeEnum[key] === Object.prototype.toString.call(obj)) {
                 currentType = key;

@@ -6,9 +6,9 @@ class CoreParser {
         this.parseTree = [];
         this.ruleSetter = this.ruleSetter.bind(this);
     }
-    ruleSetter(key, fileNode) {
+    ruleSetter(key, fn) {
         const result = {};
-        result[key] = fileNode;
+        result[key] = fn;
         this.parseTree.push(result);
     }
     getParseTree() {

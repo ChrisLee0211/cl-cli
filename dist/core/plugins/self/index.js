@@ -13,30 +13,31 @@ exports.uiPlugin = exports.framePlugin = exports.basePlugin = void 0;
 const command_1 = require("./command");
 exports.basePlugin = (register, utils) => {
     const { useCommand } = utils;
-    register('init', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const lang = yield useCommand(command_1.prompt['lang'], 'lang');
-        const projectType = yield useCommand(command_1.prompt['projectType'], 'projectType');
-        ctx.add('lang', lang);
-        ctx.add('projectType', projectType);
+    register("init", (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+        const lang = yield useCommand(command_1.prompt["lang"], "lang");
+        const projectType = yield useCommand(command_1.prompt["projectType"], "projectType");
+        ctx.add("lang", lang);
+        ctx.add("projectType", projectType);
     }));
-    register('parse', (cfg, utils, ruleSetter) => __awaiter(void 0, void 0, void 0, function* () {
+    register("parse", (cfg, utils, ruleSetter) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log(cfg);
     }));
 };
 exports.framePlugin = (register, utils) => {
     const { useCommand } = utils;
-    register('init', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+    register("init", (ctx) => __awaiter(void 0, void 0, void 0, function* () {
         const config = ctx.getConfig();
         switch (config.projectType) {
             case "admin":
             case "component":
-                const frame = yield useCommand(command_1.prompt['frame'], 'frame');
-                ctx.add('frame', frame);
+                const frame = yield useCommand(command_1.prompt["frame"], "frame");
+                ctx.add("frame", frame);
                 break;
             case "utils":
-                ctx.add('env', 'browser');
+                ctx.add("env", "browser");
                 break;
             case "server":
-                ctx.add('env', 'node');
+                ctx.add("env", "node");
                 break;
             default:
         }
@@ -44,17 +45,17 @@ exports.framePlugin = (register, utils) => {
 };
 exports.uiPlugin = (register, utils) => {
     const { useCommand } = utils;
-    register('init', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+    register("init", (ctx) => __awaiter(void 0, void 0, void 0, function* () {
         const config = ctx.getConfig();
         switch (config.frame) {
             case "react": {
-                const uiFrame = yield useCommand(command_1.prompt['uiForReact'], 'ui');
-                ctx.add('ui', uiFrame);
+                const uiFrame = yield useCommand(command_1.prompt["uiForReact"], "ui");
+                ctx.add("ui", uiFrame);
                 break;
             }
             case "vue": {
-                const uiFrame = yield useCommand(command_1.prompt['uiForVue'], 'ui');
-                ctx.add('ui', uiFrame);
+                const uiFrame = yield useCommand(command_1.prompt["uiForVue"], "ui");
+                ctx.add("ui", uiFrame);
                 break;
             }
             default:

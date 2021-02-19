@@ -14,10 +14,18 @@ const path = require("path");
 const file_1 = require("../../utils/file");
 const stack_1 = require("../../utils/stack");
 class CoreComplier {
-    constructor(path) {
-        this.fileTree = undefined;
-        this.fileTree = this.createBaseFileNode(path);
-        this.complierLocalTemplate(path);
+    constructor(name, path) {
+        this.extraTree = undefined;
+        this.outputCbs = [];
+        this.fileTree = this.createBaseFileNode(name, path);
+        this.complierLocalTemplate(name, path);
+        this.setEffect = this.setEffect.bind(this);
+    }
+    /**
+     * 返回一个只读的fileTree
+     */
+    getFileTree() {
+        return Object.freeze(this.fileTree);
     }
     /**
      * 构建fileTree顶端节点
@@ -25,8 +33,8 @@ class CoreComplier {
      * @author chris lee
      * @Time 2021/01/14
      */
-    createBaseFileNode(pathName) {
-        const rootFileNode = UtilsLib_1.default.createFileNode(path.basename(pathName), pathName, pathName, null, true);
+    createBaseFileNode(fileName, pathName) {
+        const rootFileNode = UtilsLib_1.default.createFileNode(fileName, pathName, pathName, null, true);
         return rootFileNode;
     }
     /**
@@ -35,12 +43,14 @@ class CoreComplier {
      * @author chrislee
      * @Time 2021/01/14
      */
-    complierLocalTemplate(pathName) {
+    complierLocalTemplate(projectName, projectPath) {
         return __awaiter(this, void 0, void 0, function* () {
+            const pathName = path.join(projectPath, projectName);
             try {
                 const stack = new stack_1.Stack();
                 if (this.fileTree !== undefined) {
                     stack.push(this.fileTree);
+                    let preFileNode = null;
                     while (stack.length > 0) {
                         const curNode = stack.pop();
                         if (curNode.isFolder) {
@@ -49,14 +59,15 @@ class CoreComplier {
                             if (files.length) {
                                 const len = files.length;
                                 for (let i = 0; i < len; i++) {
-                                    const curPath = path.join(curNode.path, files[i].name);
-                                    const rootPath = pathName;
+                                    const curPath = path.join(curNode.path);
+                                    const rootPath = projectPath;
                                     const isFolder = files[i].isDirectory();
                                     const fileName = files[i].name;
                                     const parent = curNode;
                                     const curFileNode = UtilsLib_1.default.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);
-                                    curNode.children.push(curFileNode);
+                                    curNode.appendChild(curFileNode);
                                     stack.push(curFileNode);
+                                    preFileNode = curNode;
                                 }
                             }
                         }
@@ -64,17 +75,19 @@ class CoreComplier {
                             // 如果不是文件夹类型，那么就开始尝试读取content
                             if (curNode.content === null) {
                                 try {
-                                    curNode.content = yield file_1.readFileContent(curNode.path);
+                                    const content = yield file_1.readFileContent(curNode.path);
+                                    curNode.setContent(content);
+                                    this.isFileNode(preFileNode) && curNode.setParent(preFileNode);
                                 }
                                 catch (e) {
-                                    console.error(e);
+                                    throw new Error(e);
                                 }
                             }
                         }
                     }
                 }
                 else {
-                    throw new Error(`Fail to complier local template`);
+                    throw new Error("Fail to complier local template");
                 }
             }
             catch (e) {
@@ -82,10 +95,115 @@ class CoreComplier {
             }
         });
     }
-    ;
+    /**
+     * 解析parse阶段的树变为fileNode
+     * @param list parse阶段解析出来的parseTree
+     * @author chris lee
+     * @Time 2021/02/14
+     */
     complierExtra(list) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fileList = list;
+            if (fileList.length && this.fileTree) {
+                this.extraTree = this.fileTree;
+            }
+            while (fileList.length) {
+                const cb = fileList.pop();
+                if (cb) {
+                    const key = Object.keys(cb !== null && cb !== void 0 ? cb : {})[0];
+                    const fn = cb[key];
+                    try {
+                        if (this.fileTreeIsDone(this.extraTree, list)) {
+                            const result = yield fn(this.extraTree);
+                            if (this.isFileNode(result)) {
+                                this.extraTree = result;
+                            }
+                        }
+                    }
+                    catch (e) {
+                        throw new Error(e);
+                    }
+                }
+            }
+            this.fileTree = this.extraTree;
+            return this.fileTree;
+        });
+    }
+    fileTreeIsDone(tree, list) {
+        if (list.length) {
+            return true;
+        }
+        return false;
+    }
+    isFileNode(node) {
+        const keys = ["path", "rootPath", "fileName", "isFolder", "content", "parent", "children"];
+        const nodeKeys = Object.keys(node);
+        if (keys.length !== nodeKeys.length)
+            return false;
+        let res = true;
+        for (let i = 0; i < keys.length; i++) {
+            if (nodeKeys.includes(keys[i]) === false) {
+                res = false;
+                break;
+            }
+        }
+        return res;
+    }
+    /**
+     * 注册副作用函数供编译outpuy时调用
+     * @param fn 副作用函数
+     * @author chris lee
+     * @Time 2021/02/14
+     */
+    setEffect(fn) {
+        this.outputCbs.push(fn);
+    }
+    /**
+     * 执行副作用函数
+     * @param fnode 当前遍历的fnode
+     * @param effects 副作用函数队列
+     * @author chris lee
+     * @Time 2021/02/14
+     */
+    useEffect(fnode, effects) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                while (effects.length) {
+                    const fn = effects.pop();
+                    if (fn) {
+                        yield fn(fnode);
+                    }
+                }
+            }
+            catch (e) {
+                throw new Error("Fail to call effect! please checked the param in setEffect");
+            }
+            return fnode;
+        });
     }
     output() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const stack = new stack_1.Stack();
+            stack.push(this.fileTree);
+            console.log(this.fileTree);
+            while (stack.length) {
+                const curNode = stack.pop();
+                this.useEffect(curNode, this.outputCbs);
+                if (curNode.children.length) {
+                    for (let i = 0; i < curNode.children.length; i++) {
+                        stack.push(curNode.children[i]);
+                    }
+                }
+                if (curNode.isChanged) {
+                    try {
+                        yield file_1.createFile(curNode.path, curNode.fileName, curNode.content);
+                    }
+                    catch (e) {
+                        throw new Error(`Fail to create file named ${curNode.fileName}, please its path or other porperty`);
+                    }
+                }
+            }
+        });
     }
 }
 exports.default = CoreComplier;

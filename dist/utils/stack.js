@@ -23,7 +23,7 @@ class DoubleLinkList {
     }
     //向头部增加节点
     addOnHead(node) {
-        let _node = new Node(node);
+        const _node = new Node(node);
         if (this.size === 0) {
             this.head = _node;
             this.tail = _node;
@@ -32,7 +32,7 @@ class DoubleLinkList {
             this.size += 1;
         }
         else {
-            let old_head = this.head;
+            const old_head = this.head;
             this.head = _node;
             _node.next = old_head;
             old_head.pre = _node;
@@ -41,7 +41,7 @@ class DoubleLinkList {
     }
     //向尾部增加节点
     addOnTail(node) {
-        let _node = new Node(node);
+        const _node = new Node(node);
         if (this.size === 0) {
             this.head = _node;
             this.tail = _node;
@@ -50,7 +50,7 @@ class DoubleLinkList {
             this.size += 1;
         }
         else {
-            let old_tail = this.tail;
+            const old_tail = this.tail;
             this.tail = _node;
             _node.pre = old_tail;
             old_tail.next = _node;
@@ -60,19 +60,19 @@ class DoubleLinkList {
     //头部删除节点
     deleteOnHead() {
         if (this.size === 0) {
-            console.error('No Node In DoubleLinkList!');
+            console.error("No Node In DoubleLinkList!");
             return;
         }
         if (this.size < 2) {
-            let currentNode = this.head;
+            const currentNode = this.head;
             this.head = null;
             this.tail = null;
             this.size = 0;
             return currentNode;
         }
         if (this.size >= 2) {
-            let old_head = this.head;
-            let new_head = old_head.next;
+            const old_head = this.head;
+            const new_head = old_head.next;
             if (this.size === 2) {
                 this.size = 0;
                 this.head = null;
@@ -90,19 +90,19 @@ class DoubleLinkList {
     //尾部删除节点
     deleteOnTail() {
         if (this.size === 0) {
-            console.error('No Node In DoubleLinkList!');
+            console.error("No Node In DoubleLinkList!");
             return;
         }
         if (this.size < 2) {
-            let currentNode = this.tail;
+            const currentNode = this.tail;
             this.head = null;
             this.tail = null;
             this.size = 0;
             return currentNode;
         }
         if (this.size >= 2) {
-            let old_tail = this.tail;
-            let new_tail = old_tail.pre;
+            const old_tail = this.tail;
+            const new_tail = old_tail.pre;
             if (this.size === 2) {
                 this.size = 0;
                 this.head = null;
@@ -119,7 +119,7 @@ class DoubleLinkList {
     }
     //判断节点是否在链表中
     getNode(val) {
-        let _node = new Node(val);
+        const _node = new Node(val);
         let currentNode = this.head;
         if (this.size === 0) {
             return false;
@@ -127,7 +127,7 @@ class DoubleLinkList {
         else {
             let length = this.size;
             let c = JSON.stringify(currentNode.target);
-            let n = JSON.stringify(_node.target);
+            const n = JSON.stringify(_node.target);
             while (c != n) {
                 if (length > 1) {
                     currentNode = currentNode.next;
@@ -143,15 +143,15 @@ class DoubleLinkList {
     }
     //删除指定的节点
     removeNode(val) {
-        let _node = new Node(val);
-        let judgeNode = this.getNode(val);
+        const _node = new Node(val);
+        const judgeNode = this.getNode(val);
         if (judgeNode === false) {
-            console.error('No This Node In DoubleLinkList!');
+            console.error("No This Node In DoubleLinkList!");
             return;
         }
         if (this.size === 1) {
-            let h = JSON.stringify(this.head.target);
-            let n = JSON.stringify(_node.target);
+            const h = JSON.stringify(this.head.target);
+            const n = JSON.stringify(_node.target);
             if (h === n) {
                 this.head = null;
             }
@@ -163,14 +163,13 @@ class DoubleLinkList {
         else {
             let currentNode = this.head;
             let c = JSON.stringify(currentNode.target);
-            let n = JSON.stringify(_node.target);
+            const n = JSON.stringify(_node.target);
             while (c != n) {
                 currentNode = currentNode.next;
                 c = JSON.stringify(currentNode.target);
             }
-            ;
-            let preNode = currentNode.pre === null ? null : currentNode.pre;
-            let nextNode = currentNode.next === null ? null : currentNode.next;
+            const preNode = currentNode.pre === null ? null : currentNode.pre;
+            const nextNode = currentNode.next === null ? null : currentNode.next;
             if (preNode === null) {
                 this.deleteOnHead();
             }
@@ -191,10 +190,10 @@ class DoubleLinkList {
      */
     insertNode(val, ele, type) {
         let _ele = new Node(ele);
-        let _node = new Node(val);
+        const _node = new Node(val);
         let currentNode = this.head;
         let c = JSON.stringify(currentNode.target);
-        let e = JSON.stringify(_ele.target);
+        const e = JSON.stringify(_ele.target);
         if (!this.getNode(ele)) {
             console.error(`Can Not Find Node ${e}`);
             return;
@@ -204,25 +203,25 @@ class DoubleLinkList {
             c = JSON.stringify(currentNode.target);
         }
         _ele = currentNode;
-        if (type === 'next') {
+        if (type === "next") {
             if (_ele.next === null) {
                 this.addOnTail(_node.target);
                 return;
             }
-            let nextNode = _ele.next;
-            let nextNextNode = nextNode.next;
+            const nextNode = _ele.next;
+            const nextNextNode = nextNode.next;
             _node.pre = nextNode;
             _node.next = nextNextNode;
             nextNode.next = _node;
             nextNextNode.pre = _node;
         }
-        if (type === 'pre') {
+        if (type === "pre") {
             if (_ele.pre === null) {
                 this.addOnHead(_node.target);
                 return;
             }
-            let preNode = _ele.pre;
-            let prePreNode = preNode.pre;
+            const preNode = _ele.pre;
+            const prePreNode = preNode.pre;
             _node.pre = prePreNode;
             _node.next = preNode;
             prePreNode.next = _node;
@@ -236,12 +235,12 @@ class DoubleLinkList {
     }
     //打印所有节点
     getAllNode() {
-        let str = '';
+        let str = "";
         let currentNode = this.head;
         if (currentNode === null)
             return;
         while (currentNode.next !== null) {
-            let targetContent = typeof (currentNode.target) === 'function' ? String(currentNode.target) : JSON.stringify(currentNode.target);
+            const targetContent = typeof (currentNode.target) === "function" ? String(currentNode.target) : JSON.stringify(currentNode.target);
             str = str + targetContent;
             currentNode = currentNode.next;
         }
@@ -250,14 +249,13 @@ class DoubleLinkList {
     }
     //反转链表
     reverseAll() {
-        let new_doubleLinkList = new DoubleLinkList();
+        const new_doubleLinkList = new DoubleLinkList();
         let cur = this.head;
         while (cur.next != null) {
-            let next = cur.next;
+            const next = cur.next;
             new_doubleLinkList.addOnHead(cur.target);
             cur = next;
         }
-        ;
         this.head = new_doubleLinkList.head;
         this.addOnHead(cur.target);
         this.tail = new_doubleLinkList.tail;
@@ -282,7 +280,6 @@ class Stack {
         this.doubleLink = new DoubleLinkList();
         this.length = this.doubleLink.countNodes();
     }
-    ;
     /**
      * 把一个元素推入栈中
      * @param item :推入栈顶的元素
@@ -290,8 +287,8 @@ class Stack {
      */
     push(item) {
         let index = NaN;
-        let currentItem = item;
-        let size = this.doubleLink.countNodes();
+        const currentItem = item;
+        const size = this.doubleLink.countNodes();
         this.doubleLink.addOnHead(currentItem);
         this.length = this.doubleLink.countNodes();
         index = size + 1;
@@ -320,7 +317,6 @@ class Stack {
             this.doubleLink.deleteOnHead();
             size = this.doubleLink.countNodes();
         }
-        ;
         this.length = this.doubleLink.countNodes();
         return;
     }
@@ -329,12 +325,12 @@ class Stack {
      */
     getAll() {
         let head = this.doubleLink.head;
-        let arr = [];
+        const arr = [];
         let current;
-        let size = this.doubleLink.countNodes();
+        const size = this.doubleLink.countNodes();
         let count = 0;
         while (count < size) {
-            let cur = head;
+            const cur = head;
             arr.push(cur.target);
             head = cur.next;
             count++;

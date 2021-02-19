@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scanFolder = exports.readFileContent = exports.createFolder = exports.checkFileIsBuilt = void 0;
+exports.createFile = exports.removeFile = exports.scanFolder = exports.readFileContent = exports.createFolder = exports.checkFileIsBuilt = void 0;
 const fs = require("fs");
 const path = require("path");
 /**
@@ -113,4 +113,59 @@ function scanFolder(path) {
     });
 }
 exports.scanFolder = scanFolder;
+/**
+ * 删除指定文件
+ * @param {string} path 文件名(包含路径)
+ * @returns {boolean}
+ * @author chris lee
+ * @Time 2021/01/28
+ */
+function removeFile(path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            try {
+                fs.unlink(path, (err) => {
+                    if (!err) {
+                        resolve(true);
+                    }
+                    else {
+                        resolve(false);
+                    }
+                });
+            }
+            catch (e) {
+                reject(e);
+            }
+        });
+    });
+}
+exports.removeFile = removeFile;
+/**
+ * 在指定目录下创建文件
+ * @param {string} path 路径
+ * @param {string} fileName 文件名
+ * @param {any} content 内容
+ * @author chris lee
+ * @Time 2021/02/12
+ */
+function createFile(filePath, fileName, content) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            try {
+                fs.writeFile(path.join(filePath, fileName), content, (err) => {
+                    if (!err) {
+                        resolve();
+                    }
+                    else {
+                        reject(err);
+                    }
+                });
+            }
+            catch (e) {
+                reject(e);
+            }
+        });
+    });
+}
+exports.createFile = createFile;
 //# sourceMappingURL=file.js.map
