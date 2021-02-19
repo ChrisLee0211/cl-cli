@@ -45,15 +45,17 @@ export class ClCore {
     public async createCli(name) {
         this.installPlugins();
         const path = getCurrentPath();
-        let projectName = await this.getProjectName(name)
+        const projectName = await this.getProjectName(name);
         this.ctx = new Ctx(projectName);
 
         await HookController.emitter("init", [this.ctx, Utils]);
         const projectPath = await createFolder(projectName);
         Utils.log("开始拉取模版", "warning");
         try{
-            console.log('this.ctx.template',this.ctx.template);
+            console.log("this.ctx.template", this.ctx.template);
+            this.renderProgressBar();
             await templateDownload(this.ctx.template, projectPath);
+            this.destoryProgerssBar();
         }catch(e){
             console.error(e);
             Utils.log("拉取模版失败，请检查git地址配置是否正确", "danger");
@@ -66,7 +68,7 @@ export class ClCore {
         // -------
         await HookController.emitter("parse", [this.ctx, Utils, CoreParser.ruleSetter]);
         const parseTree = CoreParser.getParseTree();
-        console.log('parseTree',parseTree)
+        console.log("parseTree", parseTree);
         await complier.complierExtra(parseTree);
         await HookController.emitter("transform", [Utils, complier.setEffect]);
         Utils.log("开始生成项目目录......", "success");
@@ -75,8 +77,9 @@ export class ClCore {
         this.destoryProgerssBar();
         Utils.log("正在初始化项目依赖......", "success");
         const fileTree = await complier.getFileTree();
-        await HookController.emitter("finish",[fileTree,Utils]);
+        await HookController.emitter("finish", [fileTree, Utils]);
         Utils.log("项目搭建成功!", "success");
+        return;
     }
 
     async getProjectName(name):Promise<string>{
@@ -94,18 +97,19 @@ export class ClCore {
             const answer = await  Utils.useCommand<{"name":string}>(renameCommand, "name");
             const exsited = await checkFileIsBuilt(concatPath(path, answer));
             if(exsited){
-                projectName = this.getProjectName(answer)
+                projectName = this.getProjectName(answer);
             }else{
                 projectName = answer;
             }
-        };
-        return projectName
+        }
+        return projectName;
     }
 
     renderProgressBar(){
         this.barTimer = setInterval(()=>{
             if(this.OutPutPercent<100){
                 const random = Math.random().toFixed(2);
+                console.log("OutPutPercent", this.OutPutPercent);
                 this.OutPutPercent += Number(random);
                 Utils.progressBar("当前进度", this.OutPutPercent);
             }

@@ -8,7 +8,7 @@ export default function proxyWrapper(fnode:fileNodeCtr) {
         "rootPath",
         "path",
         "isChanged", ];
-    const triggerKeys: string[] = ["appendChild", "destroy", "removeChild", "setContent"];
+    const triggerKeys: string[] = ["appendChild", "destroy", "removeChild", "setContent", "setParent"];
     let enableEdit = false;
     const handler: ProxyHandler<typeof fnode> = {
         set(target, keyName, receiver) {
@@ -21,6 +21,7 @@ export default function proxyWrapper(fnode:fileNodeCtr) {
         get(target, keyName, receiver) {
             if (typeof (keyName) === "string" && triggerKeys.includes(keyName)) {
                 enableEdit = true;
+                target["isChanged"] = true;
             }
             if (keyName === "freezeMethod") {
                 enableEdit = false;

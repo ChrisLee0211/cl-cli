@@ -36,13 +36,14 @@ export default class fileNode implements fileNodeContent {
     fileName = "";
     rootPath = "";
     path = "";
-    isChanged = false
+    isChanged;
     constructor(name:string, path?:string, rootPath?:string, content?:any, isFolder?:boolean, parent:fileNode|null=null){
         this.fileName = name;
         this.path = checkPathIsUseful(path)? path: getCurrentPath();
         this.rootPath = rootPath?rootPath:parseRootPath(this.path);
         this.content = content?? "";
         this.isFolder = isFolder??false;
+        this.isChanged = false;
         return this;
     }
 
@@ -65,7 +66,7 @@ export default class fileNode implements fileNodeContent {
             console.error(e);
         }
         this.children.push(this.normalizeChildFileNode(fnode));
-        this.isChanged = true;
+        // this.isChanged = true;
         this.freezeMethod();
         return this;
     }
@@ -73,14 +74,14 @@ export default class fileNode implements fileNodeContent {
     destroy(){
         if(this.isFileNode(this.parent)){
             this.parent.removeChild(this);
-            this.parent = null;
+            this.setParent(null);
         }
         this.freezeMethod();
     }
 
     removeChild(fnode:fileNode){
         this.children = this.children.filter(node => node.fileName!==fnode.fileName);
-        this.isChanged = true;
+        // this.isChanged = true;
         this.freezeMethod();
     }
 
@@ -88,7 +89,7 @@ export default class fileNode implements fileNodeContent {
         let res = true;
         try{
             this.content = newContent;
-            this.isChanged = true;
+            // this.isChanged = true;
         }catch(e){
             console.error(e);
             res = false;
@@ -97,7 +98,7 @@ export default class fileNode implements fileNodeContent {
         return res;
     }
 
-    setParent(fnode:fileNode) {
+    setParent(fnode:fileNode|null) {
         this.parent = fnode;
     }
 
@@ -115,7 +116,7 @@ export default class fileNode implements fileNodeContent {
         if(fnode.rootPath !== this.rootPath){
             fnode.rootPath = this.rootPath;
         }
-        fnode.parent = this;
+        fnode.setParent(this);
         return fnode;
     }
     

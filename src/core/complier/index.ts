@@ -35,7 +35,7 @@ export default class CoreComplier implements CoreComplierInterface{
      * 返回一个只读的fileTree
      */
     getFileTree(){
-        return Object.freeze(this.fileTree);
+        return this.fileTree;
     }
     /**
      * 构建fileTree顶端节点
@@ -51,6 +51,7 @@ export default class CoreComplier implements CoreComplierInterface{
             null,
             true,
         );
+        console.log("rootFileNode", rootFileNode);
         return rootFileNode;
     }
 
@@ -116,6 +117,7 @@ export default class CoreComplier implements CoreComplierInterface{
      */
     async complierExtra(list:CoreParser["parseTree"]){
         const fileList = list;
+        if(!fileList.length) return this.fileTree;
         if(fileList.length && this.fileTree){
             this.extraTree = this.fileTree;
         }
