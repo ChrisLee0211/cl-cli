@@ -65,7 +65,7 @@ export default class fileNode implements fileNodeContent {
         }catch(e){
             console.error(e);
         }
-        this.children.push(this.normalizeChildFileNode(fnode));
+        this.children.push(fnode);
         // this.isChanged = true;
         this.freezeMethod();
         return this;
@@ -101,23 +101,11 @@ export default class fileNode implements fileNodeContent {
     setParent(fnode:fileNode|null) {
         this.parent = fnode;
     }
-
-    /**
-     * 对path、rootPath、parent属性进行校验与格式化
-     * @param fnode 
-     * @return {fileNode}
-     * @author chris lee
-     * @Time 2021/02/06
-     */
-    private normalizeChildFileNode(fnode:fileNode):fileNode {
-        if(fnode.path !== this.path){
-            fnode.path = concatPath(this.path, this.fileName);
-        }
-        if(fnode.rootPath !== this.rootPath){
-            fnode.rootPath = this.rootPath;
-        }
-        fnode.setParent(this);
-        return fnode;
+    setPath(path:string){
+        this.path = path
+    }
+    setRootPath(rPath:string){
+        this.rootPath = rPath
     }
     
     /**

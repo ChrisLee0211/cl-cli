@@ -11,7 +11,7 @@ program.version("1.0.0")
 program
     .command("create <name>")
     .option("-p --pluginConfig <name>", "plugin config")
-    .action(function(name,cmd) {
+    .action(async function(name,cmd) {
         // 通过插件配置文件方式生成脚手架
         if(Object.keys(cmd).includes('pluginConfig')){
             const pluhinConfigPath = cmd.plugin;
@@ -19,7 +19,8 @@ program
         }
         const ins = new ClCore();
         ins.use(basePlugin).use(framePlugin).use(uiPlugin);
-        ins.createCli(name);
-    });
-
+        await ins.createCli(name);
+        return
+    })
 program.parse(process.argv);
+

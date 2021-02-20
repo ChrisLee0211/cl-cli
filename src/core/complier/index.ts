@@ -4,6 +4,7 @@ import {readFileContent, scanFolder, createFile} from "../../utils/file";
 import FileNode from "../fNode/main"; 
 import {Stack} from "../../utils/stack";
 import {CoreParser} from "../parser";
+import {concatPath} from "../../utils/path";
 
 interface CoreComplierInterface {
     fileTree : FileNode | undefined,
@@ -51,7 +52,6 @@ export default class CoreComplier implements CoreComplierInterface{
             null,
             true,
         );
-        console.log("rootFileNode", rootFileNode);
         return rootFileNode;
     }
 
@@ -83,6 +83,8 @@ export default class CoreComplier implements CoreComplierInterface{
                                 const parent = curNode;
                                 const curFileNode = utils.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);
                                 curNode.appendChild(curFileNode);
+                                curFileNode.setParent(curNode);
+                                curFileNode.setPath(concatPath(curNode.path, curFileNode.fileName))
                                 stack.push(curFileNode);
                                 preFileNode = curNode;
                             }
@@ -197,7 +199,6 @@ export default class CoreComplier implements CoreComplierInterface{
     async output(){
         const stack = new Stack();
         stack.push(this.fileTree);
-        console.log(this.fileTree);
         while(stack.length){
             const curNode = stack.pop() as FileNode;
             this.useEffect(curNode, this.outputCbs);

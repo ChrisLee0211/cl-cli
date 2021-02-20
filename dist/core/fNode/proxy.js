@@ -9,7 +9,7 @@ function proxyWrapper(fnode) {
         "rootPath",
         "path",
         "isChanged",];
-    const triggerKeys = ["appendChild", "destroy", "removeChild", "setContent"];
+    const triggerKeys = ["appendChild", "destroy", "removeChild", "setContent", "setParent", "setPath", "setRootPath"];
     let enableEdit = false;
     const handler = {
         set(target, keyName, receiver) {
@@ -23,6 +23,7 @@ function proxyWrapper(fnode) {
         get(target, keyName, receiver) {
             if (typeof (keyName) === "string" && triggerKeys.includes(keyName)) {
                 enableEdit = true;
+                target["isChanged"] = true;
             }
             if (keyName === "freezeMethod") {
                 enableEdit = false;

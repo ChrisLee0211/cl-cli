@@ -1,22 +1,36 @@
 #!/usr/bin/env node
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const program = require("commander");
 const core_1 = require("../core");
 const self_1 = require("../core/plugins/self");
 // 设置版本号和参数，通过 mycli --help 查看
-program.version("1.0.0")
-    .option("-t, --type <name>", "project type")
-    .option("-n, --projectName <name>", "project name")
-    .option("-p --plugin <name>", "plugin config");
+program.version("1.0.0");
 // 捕获命令和参数 eg： mycli create test -t vue
 program
     .command("create <name>")
-    .action(function (name) {
-    // initProject(name)
-    const ins = new core_1.ClCore();
-    ins.use(self_1.basePlugin).use(self_1.framePlugin).use(self_1.uiPlugin);
-    ins.createCli(name);
+    .option("-p --pluginConfig <name>", "plugin config")
+    .action(function (name, cmd) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // 通过插件配置文件方式生成脚手架
+        if (Object.keys(cmd).includes('pluginConfig')) {
+            const pluhinConfigPath = cmd.plugin;
+            // 通过读取文件执行ins.use
+        }
+        const ins = new core_1.ClCore();
+        ins.use(self_1.basePlugin).use(self_1.framePlugin).use(self_1.uiPlugin);
+        yield ins.createCli(name);
+        return;
+    });
 });
 program.parse(process.argv);
 //# sourceMappingURL=index.js.map

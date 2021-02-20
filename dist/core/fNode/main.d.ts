@@ -33,21 +33,15 @@ export default class fileNode implements fileNodeContent {
     fileName: string;
     rootPath: string;
     path: string;
-    isChanged: boolean;
+    isChanged: any;
     constructor(name: string, path?: string, rootPath?: string, content?: any, isFolder?: boolean, parent?: fileNode | null);
     appendChild(fnode: fileNode): this;
     destroy(): void;
     removeChild(fnode: fileNode): void;
     setContent(newContent: any): boolean;
-    setParent(fnode: fileNode): void;
-    /**
-     * 对path、rootPath、parent属性进行校验与格式化
-     * @param fnode
-     * @return {fileNode}
-     * @author chris lee
-     * @Time 2021/02/06
-     */
-    private normalizeChildFileNode;
+    setParent(fnode: fileNode | null): void;
+    setPath(path: string): void;
+    setRootPath(rPath: string): void;
     /**
      * 判断是否为fileNode
      * @param target

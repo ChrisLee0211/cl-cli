@@ -52,7 +52,6 @@ export class ClCore {
         const projectPath = await createFolder(projectName);
         Utils.log("开始拉取模版", "warning");
         try{
-            console.log("this.ctx.template", this.ctx.template);
             this.renderProgressBar();
             await templateDownload(this.ctx.template, projectPath);
             this.destoryProgerssBar();
@@ -68,7 +67,6 @@ export class ClCore {
         // -------
         await HookController.emitter("parse", [this.ctx, Utils, CoreParser.ruleSetter]);
         const parseTree = CoreParser.getParseTree();
-        console.log("parseTree", parseTree);
         await complier.complierExtra(parseTree);
         await HookController.emitter("transform", [Utils, complier.setEffect]);
         Utils.log("开始生成项目目录......", "success");
@@ -106,18 +104,18 @@ export class ClCore {
     }
 
     renderProgressBar(){
-        this.barTimer = setInterval(()=>{
+        this.barTimer = setTimeout(()=>{
             if(this.OutPutPercent<100){
                 const random = Math.random().toFixed(2);
-                console.log("OutPutPercent", this.OutPutPercent);
                 this.OutPutPercent += Number(random);
                 Utils.progressBar("当前进度", this.OutPutPercent);
+                this.renderProgressBar();
             }
         }, 1000);
     }
 
     destoryProgerssBar(){
         this.OutPutPercent = 100;
-        this.barTimer && clearInterval(this.barTimer);
+        this.barTimer && clearTimeout(this.barTimer);
     }
 }

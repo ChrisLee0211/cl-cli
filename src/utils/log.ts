@@ -21,7 +21,7 @@ export const log = (txt:string, infoType:infoColor) => {
 
 export const progressBar = (desc:string, num:number, total=100) => {
     const len = 25;
-    const percent = num/total;
+    const percent = (num/total);
     const cellLength = Math.floor(percent * len);
     let cellItem = "█";
     let emptyItem = "░";
@@ -33,5 +33,5 @@ export const progressBar = (desc:string, num:number, total=100) => {
         }
     }
 
-    sLog(chalk.green.bold(`${desc}: ${cellItem}${emptyItem} ${percent}%`));
+    sLog.stdout(chalk.green.bold(`${desc}: ${cellItem}${emptyItem} ${percent.toFixed(2)}%`));
 };

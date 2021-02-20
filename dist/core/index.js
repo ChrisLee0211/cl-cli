@@ -50,14 +50,15 @@ class ClCore {
         return __awaiter(this, void 0, void 0, function* () {
             this.installPlugins();
             const path = path_1.getCurrentPath();
-            let projectName = yield this.getProjectName(name);
+            const projectName = yield this.getProjectName(name);
             this.ctx = new context_1.Ctx(projectName);
             yield HookController_1.default.emitter("init", [this.ctx, UtilsLib_1.default]);
             const projectPath = yield file_1.createFolder(projectName);
             UtilsLib_1.default.log("开始拉取模版", "warning");
             try {
-                console.log('this.ctx.template', this.ctx.template);
+                this.renderProgressBar();
                 yield git_1.templateDownload(this.ctx.template, projectPath);
+                this.destoryProgerssBar();
             }
             catch (e) {
                 console.error(e);
@@ -70,7 +71,6 @@ class ClCore {
             // -------
             yield HookController_1.default.emitter("parse", [this.ctx, UtilsLib_1.default, parser_1.default.ruleSetter]);
             const parseTree = parser_1.default.getParseTree();
-            console.log('parseTree', parseTree);
             yield complier.complierExtra(parseTree);
             yield HookController_1.default.emitter("transform", [UtilsLib_1.default, complier.setEffect]);
             UtilsLib_1.default.log("开始生成项目目录......", "success");
@@ -81,6 +81,7 @@ class ClCore {
             const fileTree = yield complier.getFileTree();
             yield HookController_1.default.emitter("finish", [fileTree, UtilsLib_1.default]);
             UtilsLib_1.default.log("项目搭建成功!", "success");
+            return;
         });
     }
     getProjectName(name) {
@@ -105,22 +106,22 @@ class ClCore {
                     projectName = answer;
                 }
             }
-            ;
             return projectName;
         });
     }
     renderProgressBar() {
-        this.barTimer = setInterval(() => {
+        this.barTimer = setTimeout(() => {
             if (this.OutPutPercent < 100) {
                 const random = Math.random().toFixed(2);
                 this.OutPutPercent += Number(random);
                 UtilsLib_1.default.progressBar("当前进度", this.OutPutPercent);
+                this.renderProgressBar();
             }
         }, 1000);
     }
     destoryProgerssBar() {
         this.OutPutPercent = 100;
-        this.barTimer && clearInterval(this.barTimer);
+        this.barTimer && clearTimeout(this.barTimer);
     }
 }
 exports.ClCore = ClCore;

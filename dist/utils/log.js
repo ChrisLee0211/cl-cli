@@ -20,7 +20,7 @@ exports.log = (txt, infoType) => {
 };
 exports.progressBar = (desc, num, total = 100) => {
     const len = 25;
-    const percent = num / total;
+    const percent = (num / total);
     const cellLength = Math.floor(percent * len);
     let cellItem = "█";
     let emptyItem = "░";
@@ -32,6 +32,6 @@ exports.progressBar = (desc, num, total = 100) => {
             emptyItem += "░";
         }
     }
-    sLog(chalk.green.bold(`${desc}: ${cellItem}${emptyItem} ${percent}%`));
+    sLog.stdout(chalk.green.bold(`${desc}: ${cellItem}${emptyItem} ${percent.toFixed(2)}%`));
 };
 //# sourceMappingURL=log.js.map

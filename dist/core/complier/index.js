@@ -13,6 +13,7 @@ const UtilsLib_1 = require("../helpers/UtilsLib");
 const path = require("path");
 const file_1 = require("../../utils/file");
 const stack_1 = require("../../utils/stack");
+const path_1 = require("../../utils/path");
 class CoreComplier {
     constructor(name, path) {
         this.extraTree = undefined;
@@ -25,7 +26,7 @@ class CoreComplier {
      * 返回一个只读的fileTree
      */
     getFileTree() {
-        return Object.freeze(this.fileTree);
+        return this.fileTree;
     }
     /**
      * 构建fileTree顶端节点
@@ -66,6 +67,8 @@ class CoreComplier {
                                     const parent = curNode;
                                     const curFileNode = UtilsLib_1.default.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);
                                     curNode.appendChild(curFileNode);
+                                    curFileNode.setParent(curNode);
+                                    curFileNode.setPath(path_1.concatPath(curNode.path, curFileNode.fileName));
                                     stack.push(curFileNode);
                                     preFileNode = curNode;
                                 }
@@ -104,6 +107,8 @@ class CoreComplier {
     complierExtra(list) {
         return __awaiter(this, void 0, void 0, function* () {
             const fileList = list;
+            if (!fileList.length)
+                return this.fileTree;
             if (fileList.length && this.fileTree) {
                 this.extraTree = this.fileTree;
             }
@@ -185,7 +190,6 @@ class CoreComplier {
         return __awaiter(this, void 0, void 0, function* () {
             const stack = new stack_1.Stack();
             stack.push(this.fileTree);
-            console.log(this.fileTree);
             while (stack.length) {
                 const curNode = stack.pop();
                 this.useEffect(curNode, this.outputCbs);

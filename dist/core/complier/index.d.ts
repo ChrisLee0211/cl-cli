@@ -23,7 +23,7 @@ export default class CoreComplier implements CoreComplierInterface {
     /**
      * 返回一个只读的fileTree
      */
-    getFileTree(): Readonly<FileNode>;
+    getFileTree(): FileNode;
     /**
      * 构建fileTree顶端节点
      * @param pathName 根文件入口路径

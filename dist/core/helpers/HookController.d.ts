@@ -2,7 +2,7 @@ import Utils from "./UtilsLib";
 import { Ctx } from "../context";
 import { CoreParser } from "../parser";
 import CoreComplier from "../complier";
-import fileNode from '../fNode/main';
+import fileNode from "../fNode/main";
 export interface HookCL<T = any> {
     register<T>(type: "init", fn: initFn<T>): void;
     register<T>(type: "parse", fn: parseFn<T>): void;

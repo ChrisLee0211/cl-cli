@@ -8,7 +8,7 @@ export default function proxyWrapper(fnode:fileNodeCtr) {
         "rootPath",
         "path",
         "isChanged", ];
-    const triggerKeys: string[] = ["appendChild", "destroy", "removeChild", "setContent", "setParent"];
+    const triggerKeys: string[] = ["appendChild", "destroy", "removeChild", "setContent", "setParent","setPath","setRootPath"];
     let enableEdit = false;
     const handler: ProxyHandler<typeof fnode> = {
         set(target, keyName, receiver) {
