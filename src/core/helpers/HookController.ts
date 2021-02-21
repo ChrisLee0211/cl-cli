@@ -12,7 +12,7 @@ export interface HookCL<T = any> {
     emitter<T>(type:"init", args:[T, typeof Utils]);
     emitter<T>(type:"parse", args:[T, typeof Utils, rset]);
     emitter<T>(type:"transform", args:[typeof Utils, CoreComplier["setEffect"]]);
-    emitter<T>(type:"finish", args:[Readonly<fileNode>, typeof Utils])
+    emitter<T>(type:"finish", args:[Readonly<fileNode>|undefined, typeof Utils])
 }
 
 type lifeType = "init" | "parse" | "transform" | "finish"
@@ -71,7 +71,7 @@ class HookController implements HookCL{
      public emitter<T>(type:"init", args:[T, typeof Utils]);
      public emitter<T>(type:"parse", args:[T, typeof Utils, rset]);
      public emitter<T>(type:"transform", args:[typeof Utils, CoreComplier["setEffect"]]);
-     public emitter<T>(type:"finish", args:[Readonly<fileNode>, typeof Utils])
+     public emitter<T>(type:"finish", args:[Readonly<fileNode>|undefined, typeof Utils])
      public async emitter(type:lifeType, args:any[]){
          let cb:Function | undefined;
          let queue: Array<Function>;

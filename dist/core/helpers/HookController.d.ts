@@ -11,7 +11,7 @@ export interface HookCL<T = any> {
     emitter<T>(type: "init", args: [T, typeof Utils]): any;
     emitter<T>(type: "parse", args: [T, typeof Utils, rset]): any;
     emitter<T>(type: "transform", args: [typeof Utils, CoreComplier["setEffect"]]): any;
-    emitter<T>(type: "finish", args: [Readonly<fileNode>, typeof Utils]): any;
+    emitter<T>(type: "finish", args: [Readonly<fileNode> | undefined, typeof Utils]): any;
 }
 declare type rset = CoreParser["ruleSetter"];
 /** 通过ctx增删复写配置 */
@@ -45,7 +45,7 @@ declare class HookController implements HookCL {
     emitter<T>(type: "init", args: [T, typeof Utils]): any;
     emitter<T>(type: "parse", args: [T, typeof Utils, rset]): any;
     emitter<T>(type: "transform", args: [typeof Utils, CoreComplier["setEffect"]]): any;
-    emitter<T>(type: "finish", args: [Readonly<fileNode>, typeof Utils]): any;
+    emitter<T>(type: "finish", args: [Readonly<fileNode> | undefined, typeof Utils]): any;
     private checkHookType;
 }
 declare const _default: HookController;

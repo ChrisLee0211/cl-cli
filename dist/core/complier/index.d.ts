@@ -6,7 +6,7 @@ interface CoreComplierInterface {
     getFileTree(): Readonly<FileNode> | undefined;
     /** 构建基础fileNode */
     /** 将本地拉取的模版目录编译成fileTree */
-    complierLocalTemplate(name: any, path: any): void;
+    complieLocalTemplate(): void;
     /** 将传入的fileList依次解析覆盖最新的fileTree */
     complierExtra(fileList: CoreParser["parseTree"]): void;
     /** 注册一个在output期间遍历fileTree时的需要执行副作用的回调函数 */
@@ -16,14 +16,16 @@ interface CoreComplierInterface {
 }
 declare type outputCallback = (cur: FileNode) => Promise<void>;
 export default class CoreComplier implements CoreComplierInterface {
-    fileTree: FileNode;
+    fileTree: FileNode | undefined;
     extraTree: FileNode | undefined;
     outputCbs: Array<outputCallback>;
+    projectName: string;
+    projectPath: string;
     constructor(name: string, path: string);
     /**
      * 返回一个只读的fileTree
      */
-    getFileTree(): FileNode;
+    getFileTree(): Readonly<FileNode> | undefined;
     /**
      * 构建fileTree顶端节点
      * @param pathName 根文件入口路径
@@ -37,14 +39,14 @@ export default class CoreComplier implements CoreComplierInterface {
      * @author chrislee
      * @Time 2021/01/14
      */
-    complierLocalTemplate(projectName: string, projectPath: string): Promise<void>;
+    complieLocalTemplate(): Promise<void>;
     /**
      * 解析parse阶段的树变为fileNode
      * @param list parse阶段解析出来的parseTree
      * @author chris lee
      * @Time 2021/02/14
      */
-    complierExtra(list: CoreParser["parseTree"]): Promise<FileNode>;
+    complierExtra(list: CoreParser["parseTree"]): Promise<FileNode | undefined>;
     private fileTreeIsDone;
     private isFileNode;
     /**

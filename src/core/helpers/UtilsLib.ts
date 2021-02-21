@@ -20,7 +20,7 @@ const createFileNode = (name:string, path?:string, rootPath?:string, content?:an
     const _rootPath = rootPath?rootPath:parseRootPath(_path);
     const _content = content?? "";
     const _isFolder = isFolder??false;
-    const node:FileNode = new FileNode(fileName, _path, _rootPath, _content, _isFolder);
+    const node:FileNode = new FileNode(fileName, _path, _rootPath, _content, _isFolder,parent);
     return proxyWrapper(node);
 };
 

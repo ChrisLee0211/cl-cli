@@ -66,7 +66,8 @@ class ClCore {
                 return;
             }
             UtilsLib_1.default.log("拉取模版成功，开始编译额外配置", "success");
-            const complier = new complier_1.default(projectName, process.cwd());
+            const complier = new complier_1.default(projectName, projectPath);
+            yield complier.complieLocalTemplate();
             // 拉取成功后，应该开始将本地目录解析为fileTree
             // -------
             yield HookController_1.default.emitter("parse", [this.ctx, UtilsLib_1.default, parser_1.default.ruleSetter]);

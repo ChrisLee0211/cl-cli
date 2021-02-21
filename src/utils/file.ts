@@ -81,6 +81,8 @@ export async function scanFolder(path:string):Promise<fs.Dirent[]> {
             fs.readdir(path, {withFileTypes:true}, (err, files)=>{
                 if(!err){
                     resolve(files);
+                }else{
+                    reject(err)
                 }
             });
         }catch(e){

@@ -13,13 +13,13 @@ const UtilsLib_1 = require("../helpers/UtilsLib");
 const path = require("path");
 const file_1 = require("../../utils/file");
 const stack_1 = require("../../utils/stack");
-const path_1 = require("../../utils/path");
 class CoreComplier {
     constructor(name, path) {
         this.extraTree = undefined;
         this.outputCbs = [];
         this.fileTree = this.createBaseFileNode(name, path);
-        this.complierLocalTemplate(name, path);
+        this.projectName = name;
+        this.projectPath = path;
         this.setEffect = this.setEffect.bind(this);
     }
     /**
@@ -44,9 +44,9 @@ class CoreComplier {
      * @author chrislee
      * @Time 2021/01/14
      */
-    complierLocalTemplate(projectName, projectPath) {
+    complieLocalTemplate() {
         return __awaiter(this, void 0, void 0, function* () {
-            const pathName = path.join(projectPath, projectName);
+            const projectPath = this.projectPath;
             try {
                 const stack = new stack_1.Stack();
                 if (this.fileTree !== undefined) {
@@ -54,23 +54,23 @@ class CoreComplier {
                     let preFileNode = null;
                     while (stack.length > 0) {
                         const curNode = stack.pop();
+                        preFileNode = curNode;
                         if (curNode.isFolder) {
                             // 如果是文件夹类型，那么先创建一个不含content的fileNode完成树结构，等下一轮遍历再补全content
-                            const files = yield file_1.scanFolder(pathName);
+                            const files = yield file_1.scanFolder(path.join(curNode.path, curNode.fileName));
                             if (files.length) {
                                 const len = files.length;
                                 for (let i = 0; i < len; i++) {
-                                    const curPath = path.join(curNode.path);
-                                    const rootPath = projectPath;
-                                    const isFolder = files[i].isDirectory();
                                     const fileName = files[i].name;
+                                    const isFolder = files[i].isDirectory();
+                                    const curPath = isFolder ? path.join(curNode.path) : path.join(curNode.path, fileName);
+                                    const rootPath = (projectPath);
                                     const parent = curNode;
                                     const curFileNode = UtilsLib_1.default.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);
                                     curNode.appendChild(curFileNode);
                                     curFileNode.setParent(curNode);
-                                    curFileNode.setPath(path_1.concatPath(curNode.path, curFileNode.fileName));
+                                    // curFileNode.setPath(concatPath(curNode.path, curFileNode.fileName))
                                     stack.push(curFileNode);
-                                    preFileNode = curNode;
                                 }
                             }
                         }
@@ -78,9 +78,9 @@ class CoreComplier {
                             // 如果不是文件夹类型，那么就开始尝试读取content
                             if (curNode.content === null) {
                                 try {
-                                    const content = yield file_1.readFileContent(curNode.path);
-                                    curNode.setContent(content);
-                                    this.isFileNode(preFileNode) && curNode.setParent(preFileNode);
+                                    // const content = await readFileContent(curNode.path);
+                                    // curNode.setContent(content);
+                                    // this.isFileNode(preFileNode) && curNode.setParent(preFileNode);
                                 }
                                 catch (e) {
                                     throw new Error(e);
@@ -207,6 +207,8 @@ class CoreComplier {
                     }
                 }
             }
+            ;
+            this.fileTree = undefined;
         });
     }
 }

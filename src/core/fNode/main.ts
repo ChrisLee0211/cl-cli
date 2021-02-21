@@ -44,6 +44,7 @@ export default class fileNode implements fileNodeContent {
         this.content = content?? "";
         this.isFolder = isFolder??false;
         this.isChanged = false;
+        this.parent = parent;
         return this;
     }
 

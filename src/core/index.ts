@@ -61,8 +61,8 @@ export class ClCore {
             return;
         }
         Utils.log("拉取模版成功，开始编译额外配置", "success");
-        const complier = new CoreComplier(projectName, process.cwd());
-
+        const complier = new CoreComplier(projectName, projectPath);
+        await complier.complieLocalTemplate()
         // 拉取成功后，应该开始将本地目录解析为fileTree
         // -------
         await HookController.emitter("parse", [this.ctx, Utils, CoreParser.ruleSetter]);

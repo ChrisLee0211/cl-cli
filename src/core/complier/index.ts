@@ -13,7 +13,7 @@ interface CoreComplierInterface {
     /** 构建基础fileNode */
     // createBaseFileNode(pathName:string):FileNode
     /** 将本地拉取的模版目录编译成fileTree */
-    complierLocalTemplate(name, path):void;
+    complieLocalTemplate():void;
     /** 将传入的fileList依次解析覆盖最新的fileTree */
     complierExtra(fileList:CoreParser["parseTree"]):void
     /** 注册一个在output期间遍历fileTree时的需要执行副作用的回调函数 */
@@ -24,18 +24,21 @@ interface CoreComplierInterface {
 
 type outputCallback = (cur:FileNode) => Promise<void>;
 export default class CoreComplier implements CoreComplierInterface{
-    fileTree:FileNode;
+    fileTree:FileNode|undefined;
     extraTree:FileNode | undefined = undefined;
     outputCbs:Array<outputCallback> = [];
+    projectName:string;
+    projectPath:string;
     constructor(name:string, path:string){
         this.fileTree = this.createBaseFileNode(name, path);
-        this.complierLocalTemplate(name, path);
+        this.projectName = name;
+        this.projectPath = path;
         this.setEffect = this.setEffect.bind(this);
     }
     /**
      * 返回一个只读的fileTree
      */
-    getFileTree(){
+    getFileTree():Readonly<FileNode>|undefined{
         return this.fileTree;
     }
     /**
@@ -47,7 +50,7 @@ export default class CoreComplier implements CoreComplierInterface{
     private createBaseFileNode(fileName, pathName):FileNode{
         const rootFileNode = utils.createFileNode(
             fileName,
-            pathName,
+            process.cwd(),
             pathName,
             null,
             true,
@@ -61,8 +64,8 @@ export default class CoreComplier implements CoreComplierInterface{
      * @author chrislee
      * @Time 2021/01/14
      */
-    async complierLocalTemplate(projectName:string, projectPath:string){
-        const pathName = path.join(projectPath, projectName);
+    async complieLocalTemplate(){
+        const projectPath = this.projectPath
         try{
             const stack = new Stack();
             if(this.fileTree!==undefined){
@@ -70,32 +73,33 @@ export default class CoreComplier implements CoreComplierInterface{
                 let preFileNode: FileNode|null = null;
                 while(stack.length>0){
                     const curNode = stack.pop() as FileNode;
+                    preFileNode = curNode;
                     if(curNode.isFolder){
                         // 如果是文件夹类型，那么先创建一个不含content的fileNode完成树结构，等下一轮遍历再补全content
-                        const files = await scanFolder(pathName);
+                        const files = await scanFolder(path.join(curNode.path,curNode.fileName));
                         if(files.length){
                             const len = files.length;
                             for(let i=0;i<len;i++){
-                                const curPath = path.join(curNode.path);
-                                const rootPath = projectPath;
-                                const isFolder = files[i].isDirectory();
                                 const fileName = files[i].name;
+                                const isFolder = files[i].isDirectory();
+                                const curPath = isFolder? path.join(curNode.path):path.join(curNode.path,curNode.fileName,fileName);
+                                const rootPath = (projectPath);
                                 const parent = curNode;
                                 const curFileNode = utils.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);
+                                // appendChild依然会触发isChange的改变导致output优化无效
                                 curNode.appendChild(curFileNode);
-                                curFileNode.setParent(curNode);
-                                curFileNode.setPath(concatPath(curNode.path, curFileNode.fileName))
+                                // curFileNode.setParent(curNode);
+                                // curFileNode.setPath(concatPath(curNode.path, curFileNode.fileName))
                                 stack.push(curFileNode);
-                                preFileNode = curNode;
                             }
                         }
                     }else{
                         // 如果不是文件夹类型，那么就开始尝试读取content
                         if(curNode.content === null){
                             try{
-                                const content = await readFileContent(curNode.path);
-                                curNode.setContent(content);
-                                this.isFileNode(preFileNode) && curNode.setParent(preFileNode);
+                                // const content = await readFileContent(curNode.path);
+                                // curNode.setContent(content);
+                                // this.isFileNode(preFileNode) && curNode.setParent(preFileNode);
                             }catch(e){
                                 throw new Error(e);
                             }
@@ -214,6 +218,7 @@ export default class CoreComplier implements CoreComplierInterface{
                     throw new Error(`Fail to create file named ${curNode.fileName}, please its path or other porperty`);
                 }
             }
-        }
+        };
+        this.fileTree = undefined;
     }
 }
