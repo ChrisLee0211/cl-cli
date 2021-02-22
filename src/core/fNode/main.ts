@@ -41,7 +41,7 @@ export default class fileNode implements fileNodeContent {
         this.fileName = name;
         this.path = checkPathIsUseful(path)? path: getCurrentPath();
         this.rootPath = rootPath?rootPath:parseRootPath(this.path);
-        this.content = content?? "";
+        this.content = content?? null;
         this.isFolder = isFolder??false;
         this.isChanged = false;
         this.parent = parent;

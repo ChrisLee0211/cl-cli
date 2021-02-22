@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const HookController_1 = require("../helpers/HookController");
 function proxyWrapper(fnode) {
     const frozenProps = ["parent",
         "children",
@@ -11,6 +12,7 @@ function proxyWrapper(fnode) {
         "isChanged",];
     const triggerKeys = ["appendChild", "destroy", "removeChild", "setContent", "setParent", "setPath", "setRootPath"];
     let enableEdit = false;
+    let curStep = HookController_1.default.currentStep;
     const handler = {
         set(target, keyName, receiver) {
             if (!enableEdit) {
@@ -23,7 +25,9 @@ function proxyWrapper(fnode) {
         get(target, keyName, receiver) {
             if (typeof (keyName) === "string" && triggerKeys.includes(keyName)) {
                 enableEdit = true;
-                target["isChanged"] = true;
+                if (curStep !== "init") {
+                    target["isChanged"] = true;
+                }
             }
             if (keyName === "freezeMethod") {
                 enableEdit = false;

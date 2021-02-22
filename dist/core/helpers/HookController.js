@@ -15,6 +15,7 @@ class HookController {
         this.parseEvents = [];
         this.transformEvents = [];
         this.finishEvents = [];
+        this.currentStep = "init";
         this.register = this.register.bind(this);
         this.emitter = this.emitter.bind(this);
     }
@@ -22,15 +23,19 @@ class HookController {
         switch (type) {
             case "init":
                 this.initEvents.push(fn);
+                this.currentStep = "init";
                 break;
             case "parse":
                 this.parseEvents.push(fn);
+                this.currentStep = "parse";
                 break;
             case "transform":
                 this.transformEvents.push(fn);
+                this.currentStep = "transform";
                 break;
             case "finish":
                 this.finishEvents.push(fn);
+                this.currentStep = "finish";
                 break;
             default:
                 this.checkHookType(type);

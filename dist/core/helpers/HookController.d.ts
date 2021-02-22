@@ -13,6 +13,7 @@ export interface HookCL<T = any> {
     emitter<T>(type: "transform", args: [typeof Utils, CoreComplier["setEffect"]]): any;
     emitter<T>(type: "finish", args: [Readonly<fileNode> | undefined, typeof Utils]): any;
 }
+declare type lifeType = "init" | "parse" | "transform" | "finish";
 declare type rset = CoreParser["ruleSetter"];
 /** 通过ctx增删复写配置 */
 export declare type initFn<T> = (ctx: Ctx<T>) => void;
@@ -27,6 +28,7 @@ declare class HookController implements HookCL {
     parseEvents: Array<Function>;
     transformEvents: Array<Function>;
     finishEvents: Array<Function>;
+    currentStep: lifeType;
     constructor();
     /**
     * 注册钩子

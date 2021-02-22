@@ -27,15 +27,16 @@ const createFileNode = (name, path, rootPath, content, isFolder, parent = null) 
     const fileName = name;
     const _path = path_1.checkPathIsUseful(path) ? path : path_1.getCurrentPath();
     const _rootPath = rootPath ? rootPath : path_1.parseRootPath(_path);
-    const _content = content !== null && content !== void 0 ? content : "";
+    const _content = content !== null && content !== void 0 ? content : null;
     const _isFolder = isFolder !== null && isFolder !== void 0 ? isFolder : false;
-    const node = new main_1.default(fileName, _path, _rootPath, _content, _isFolder);
+    const node = new main_1.default(fileName, _path, _rootPath, _content, _isFolder, parent);
     return proxy_1.default(node);
 };
 exports.default = {
     useCommand,
     log: log_1.log,
     progressBar: log_1.progressBar,
-    createFileNode
+    createFileNode,
+    clearLog: log_1.clearLog
 };
 //# sourceMappingURL=UtilsLib.js.map

@@ -18,7 +18,7 @@ const createFileNode = (name:string, path?:string, rootPath?:string, content?:an
     const fileName:string = name;
     const _path = checkPathIsUseful(path)? path: getCurrentPath();
     const _rootPath = rootPath?rootPath:parseRootPath(_path);
-    const _content = content?? "";
+    const _content = content?? null;
     const _isFolder = isFolder??false;
     const node:FileNode = new FileNode(fileName, _path, _rootPath, _content, _isFolder,parent);
     return proxyWrapper(node);

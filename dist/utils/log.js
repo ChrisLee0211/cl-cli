@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.progressBar = exports.log = void 0;
+exports.clearLog = exports.progressBar = exports.log = void 0;
 const chalk = require("chalk");
 const sLog = require("single-line-log2");
 exports.log = (txt, infoType) => {
@@ -22,6 +22,7 @@ exports.progressBar = (desc, num, total = 100) => {
     const len = 25;
     const percent = (num / total);
     const cellLength = Math.floor(percent * len);
+    console.log("cellLength", cellLength);
     let cellItem = "█";
     let emptyItem = "░";
     for (let i = 0; i < len; i++) {
@@ -32,6 +33,9 @@ exports.progressBar = (desc, num, total = 100) => {
             emptyItem += "░";
         }
     }
-    sLog.stdout(chalk.green.bold(`${desc}: ${cellItem}${emptyItem} ${percent.toFixed(2)}%`));
+    sLog.stdout(chalk.green.bold(`${desc}: ${cellItem}${emptyItem} ${(percent * 100).toFixed(2)}%`));
+};
+exports.clearLog = () => {
+    sLog.stdout.clear();
 };
 //# sourceMappingURL=log.js.map

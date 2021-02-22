@@ -103,6 +103,9 @@ function scanFolder(path) {
                     if (!err) {
                         resolve(files);
                     }
+                    else {
+                        reject(err);
+                    }
                 });
             }
             catch (e) {

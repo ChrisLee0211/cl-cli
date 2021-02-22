@@ -12,9 +12,10 @@ class fileNode {
         this.fileName = name;
         this.path = path_1.checkPathIsUseful(path) ? path : path_1.getCurrentPath();
         this.rootPath = rootPath ? rootPath : path_1.parseRootPath(this.path);
-        this.content = content !== null && content !== void 0 ? content : "";
+        this.content = content !== null && content !== void 0 ? content : null;
         this.isFolder = isFolder !== null && isFolder !== void 0 ? isFolder : false;
         this.isChanged = false;
+        this.parent = parent;
         return this;
     }
     appendChild(fnode) {

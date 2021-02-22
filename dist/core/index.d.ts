@@ -13,6 +13,6 @@ export declare class ClCore {
     createCli(name: any): Promise<void>;
     getProjectName(name: any): Promise<string>;
     renderProgressBar(): void;
-    destoryProgerssBar(): void;
+    destoryProgerssBar(): Promise<void>;
 }
 export {};

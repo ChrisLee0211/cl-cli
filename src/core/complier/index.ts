@@ -86,7 +86,6 @@ export default class CoreComplier implements CoreComplierInterface{
                                 const rootPath = (projectPath);
                                 const parent = curNode;
                                 const curFileNode = utils.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);
-                                // appendChild依然会触发isChange的改变导致output优化无效
                                 curNode.appendChild(curFileNode);
                                 // curFileNode.setParent(curNode);
                                 // curFileNode.setPath(concatPath(curNode.path, curFileNode.fileName))

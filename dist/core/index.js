@@ -58,11 +58,13 @@ class ClCore {
             try {
                 this.renderProgressBar();
                 yield git_1.templateDownload(this.ctx.template, projectPath);
-                this.destoryProgerssBar();
+                yield this.destoryProgerssBar();
             }
             catch (e) {
                 console.error(e);
                 UtilsLib_1.default.log("拉取模版失败，请检查git地址配置是否正确", "danger");
+                UtilsLib_1.default.clearLog();
+                this.barTimer && clearTimeout(this.barTimer);
                 return;
             }
             UtilsLib_1.default.log("拉取模版成功，开始编译额外配置", "success");
@@ -77,7 +79,7 @@ class ClCore {
             UtilsLib_1.default.log("开始生成项目目录......", "success");
             this.renderProgressBar();
             yield complier.output();
-            this.destoryProgerssBar();
+            yield this.destoryProgerssBar();
             UtilsLib_1.default.log("正在初始化项目依赖......", "success");
             const fileTree = yield complier.getFileTree();
             yield HookController_1.default.emitter("finish", [fileTree, UtilsLib_1.default]);
@@ -113,7 +115,7 @@ class ClCore {
     renderProgressBar() {
         this.barTimer = setTimeout(() => {
             if (this.OutPutPercent < 100) {
-                const random = Math.random().toFixed(2);
+                const random = Math.random();
                 this.OutPutPercent += Number(random);
                 UtilsLib_1.default.progressBar("当前进度", this.OutPutPercent);
                 this.renderProgressBar();
@@ -121,8 +123,15 @@ class ClCore {
         }, 1000);
     }
     destoryProgerssBar() {
-        this.OutPutPercent = 100;
-        this.barTimer && clearTimeout(this.barTimer);
+        return new Promise((rs, rj) => {
+            this.OutPutPercent = 100;
+            UtilsLib_1.default.progressBar("当前进度", this.OutPutPercent);
+            setTimeout(() => {
+                this.barTimer && clearTimeout(this.barTimer);
+                UtilsLib_1.default.clearLog();
+                rs();
+            }, 500);
+        });
     }
 }
 exports.ClCore = ClCore;
