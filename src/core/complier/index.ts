@@ -70,10 +70,8 @@ export default class CoreComplier implements CoreComplierInterface{
             const stack = new Stack();
             if(this.fileTree!==undefined){
                 stack.push(this.fileTree);
-                let preFileNode: FileNode|null = null;
                 while(stack.length>0){
                     const curNode = stack.pop() as FileNode;
-                    preFileNode = curNode;
                     if(curNode.isFolder){
                         // 如果是文件夹类型，那么先创建一个不含content的fileNode完成树结构，等下一轮遍历再补全content
                         const files = await scanFolder(path.join(curNode.path,curNode.fileName));
@@ -92,18 +90,6 @@ export default class CoreComplier implements CoreComplierInterface{
                                 stack.push(curFileNode);
                             }
                         }
-                    }else{
-                        // 如果不是文件夹类型，那么就开始尝试读取content
-                        if(curNode.content === null){
-                            try{
-                                // const content = await readFileContent(curNode.path);
-                                // curNode.setContent(content);
-                                // this.isFileNode(preFileNode) && curNode.setParent(preFileNode);
-                            }catch(e){
-                                throw new Error(e);
-                            }
-                        }
-                        
                     }
                 }
             }else{
