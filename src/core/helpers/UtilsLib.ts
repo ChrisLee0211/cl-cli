@@ -1,5 +1,5 @@
 import * as inquirer from "inquirer";
-import {log, progressBar} from "../../utils/log";
+import {log, progressBar, clearLog} from "../../utils/log";
 import FileNode from "../fNode/main";
 import proxyWrapper from "../fNode/proxy";
 import {checkPathIsUseful, getCurrentPath, parseRootPath} from "../../utils/path";
@@ -28,5 +28,6 @@ export default {
     useCommand,
     log,
     progressBar,
-    createFileNode
+    createFileNode,
+    clearLog
 };

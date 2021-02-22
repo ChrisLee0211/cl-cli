@@ -54,10 +54,12 @@ export class ClCore {
         try{
             this.renderProgressBar();
             await templateDownload(this.ctx.template, projectPath);
-            this.destoryProgerssBar();
+            await this.destoryProgerssBar();
         }catch(e){
             console.error(e);
             Utils.log("拉取模版失败，请检查git地址配置是否正确", "danger");
+            Utils.clearLog();
+            this.barTimer && clearTimeout(this.barTimer)
             return;
         }
         Utils.log("拉取模版成功，开始编译额外配置", "success");
@@ -72,7 +74,7 @@ export class ClCore {
         Utils.log("开始生成项目目录......", "success");
         this.renderProgressBar();
         await complier.output();
-        this.destoryProgerssBar();
+        await this.destoryProgerssBar();
         Utils.log("正在初始化项目依赖......", "success");
         const fileTree = await complier.getFileTree();
         await HookController.emitter("finish", [fileTree, Utils]);
@@ -106,7 +108,7 @@ export class ClCore {
     renderProgressBar(){
         this.barTimer = setTimeout(()=>{
             if(this.OutPutPercent<100){
-                const random = Math.random().toFixed(2);
+                const random = Math.random();
                 this.OutPutPercent += Number(random);
                 Utils.progressBar("当前进度", this.OutPutPercent);
                 this.renderProgressBar();
@@ -115,7 +117,14 @@ export class ClCore {
     }
 
     destoryProgerssBar(){
-        this.OutPutPercent = 100;
-        this.barTimer && clearTimeout(this.barTimer);
+        return new Promise<void>((rs,rj)=>{
+            this.OutPutPercent = 100;
+            Utils.progressBar("当前进度",this.OutPutPercent);
+            setTimeout(() => {
+                this.barTimer && clearTimeout(this.barTimer);
+                Utils.clearLog()
+                rs()
+            },500)
+        })
     }
 }
