@@ -51,10 +51,8 @@ class CoreComplier {
                 const stack = new stack_1.Stack();
                 if (this.fileTree !== undefined) {
                     stack.push(this.fileTree);
-                    let preFileNode = null;
                     while (stack.length > 0) {
                         const curNode = stack.pop();
-                        preFileNode = curNode;
                         if (curNode.isFolder) {
                             // 如果是文件夹类型，那么先创建一个不含content的fileNode完成树结构，等下一轮遍历再补全content
                             const files = yield file_1.scanFolder(path.join(curNode.path, curNode.fileName));
@@ -67,24 +65,10 @@ class CoreComplier {
                                     const rootPath = (projectPath);
                                     const parent = curNode;
                                     const curFileNode = UtilsLib_1.default.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);
-                                    // appendChild依然会触发isChange的改变导致output优化无效
                                     curNode.appendChild(curFileNode);
                                     // curFileNode.setParent(curNode);
                                     // curFileNode.setPath(concatPath(curNode.path, curFileNode.fileName))
                                     stack.push(curFileNode);
-                                }
-                            }
-                        }
-                        else {
-                            // 如果不是文件夹类型，那么就开始尝试读取content
-                            if (curNode.content === null) {
-                                try {
-                                    // const content = await readFileContent(curNode.path);
-                                    // curNode.setContent(content);
-                                    // this.isFileNode(preFileNode) && curNode.setParent(preFileNode);
-                                }
-                                catch (e) {
-                                    throw new Error(e);
                                 }
                             }
                         }
@@ -204,7 +188,7 @@ class CoreComplier {
                         yield file_1.createFile(curNode.path, curNode.fileName, curNode.content);
                     }
                     catch (e) {
-                        throw new Error(`Fail to create file named ${curNode.fileName}, please its path or other porperty`);
+                        throw new Error(`Fail to create file named ${curNode.fileName}, please check its path or other porperty`);
                     }
                 }
             }

@@ -49,19 +49,15 @@ class HookController implements HookCL{
          switch(type){
          case "init":
              this.initEvents.push(fn);
-             this.currentStep = "init";
              break;
          case "parse":
              this.parseEvents.push(fn);
-             this.currentStep = "parse";
              break;
          case "transform":
              this.transformEvents.push(fn);
-             this.currentStep = "transform";
              break;
          case "finish":
              this.finishEvents.push(fn);
-             this.currentStep = "finish";
              break;
          default:
              this.checkHookType(type);
@@ -83,15 +79,19 @@ class HookController implements HookCL{
          switch(type){
          case "init":
              queue = this.initEvents;
+             this.currentStep = "init";
              break;
          case "parse":
              queue = this.parseEvents;
+             this.currentStep = "parse";
              break;
          case "transform":
              queue = this.transformEvents;
+             this.currentStep = "transform";
              break;
          case "finish":
              queue = this.finishEvents;
+             this.currentStep = "finish";
              break;
          default:
              this.checkHookType(type);

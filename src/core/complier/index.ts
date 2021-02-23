@@ -200,7 +200,7 @@ export default class CoreComplier implements CoreComplierInterface{
                 try{
                     await createFile(curNode.path, curNode.fileName, curNode.content);
                 }catch(e){
-                    throw new Error(`Fail to create file named ${curNode.fileName}, please its path or other porperty`);
+                    throw new Error(`Fail to create file named ${curNode.fileName}, please check its path or other porperty`);
                 }
             }
         };

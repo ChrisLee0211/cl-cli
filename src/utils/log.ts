@@ -23,7 +23,6 @@ export const progressBar = (desc:string, num:number, total=100) => {
     const len = 25;
     const percent = (num/total);
     const cellLength = Math.floor(percent * len);
-    console.log("cellLength",cellLength)
     let cellItem = "█";
     let emptyItem = "░";
     for(let i = 0; i < len;i++){
