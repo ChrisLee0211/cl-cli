@@ -7,12 +7,12 @@ import fileNode from "../fNode/main";
 export interface HookCL<T = any> {
     register<T>(type:"init", fn:initFn<T>):void
     register<T>(type:"parse", fn:parseFn<T>):void
-    register<T >(type:"transform", fn:transFn<T>):void
-    register<T>(type:"finish", fn:finishFn<T>): void
+    register(type:"transform", fn:transFn):void
+    register(type:"finish", fn:finishFn): void
     emitter<T>(type:"init", args:[T, typeof Utils]);
     emitter<T>(type:"parse", args:[T, typeof Utils, rset]);
-    emitter<T>(type:"transform", args:[typeof Utils, CoreComplier["setEffect"]]);
-    emitter<T>(type:"finish", args:[Readonly<fileNode>|undefined, typeof Utils])
+    emitter(type:"transform", args:[typeof Utils, CoreComplier["setEffect"]]);
+    emitter(type:"finish", args:[Readonly<fileNode>|undefined, typeof Utils])
 }
 
 type lifeType = "init" | "parse" | "transform" | "finish"
@@ -22,9 +22,9 @@ export type initFn<T> = (ctx:Ctx<T>) => void
 /** 通过ruleSetter自定义配置解析规则 */
 export type parseFn<T> = (ctx:T, utils:typeof Utils, ruleSetter:rset) => void
 /** 最后机会修改输出文件内容 */
-export type transFn<T> = (utils:typeof Utils, setEffectFn:CoreComplier["setEffect"]) => void
+export type transFn = (utils:typeof Utils, setEffectFn:CoreComplier["setEffect"]) => void
 /** 文件输出完成后执行附加操作 */
-export type finishFn<T> = (fileTree:Readonly<fileNode>, utils: typeof Utils) => void
+export type finishFn = (fileTree:Readonly<fileNode>, utils: typeof Utils) => void
 
 class HookController implements HookCL{
      initEvents:Array<Function> = []
@@ -43,8 +43,8 @@ class HookController implements HookCL{
      */
      public register<T>(type:"init", fn:initFn<T>):void
      public register<T>(type:"parse", fn:parseFn<T>):void
-     public register<T >(type:"transform", fn:transFn<T>):void
-     public register<T>(type:"finish", fn:finishFn<T>): void
+     public register<T >(type:"transform", fn:transFn):void
+     public register<T>(type:"finish", fn:finishFn): void
      public register<T>(type:lifeType, fn:Function):void{
          switch(type){
          case "init":
