@@ -85,8 +85,6 @@ export default class CoreComplier implements CoreComplierInterface{
                                 const parent = curNode;
                                 const curFileNode = utils.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);
                                 curNode.appendChild(curFileNode);
-                                // curFileNode.setParent(curNode);
-                                // curFileNode.setPath(concatPath(curNode.path, curFileNode.fileName))
                                 stack.push(curFileNode);
                             }
                         }
@@ -198,7 +196,8 @@ export default class CoreComplier implements CoreComplierInterface{
             }
             if(curNode.isChanged){
                 try{
-                    await createFile(curNode.path, curNode.fileName, curNode.content);
+                    const content = await curNode.getContent();
+                    await createFile(curNode.path, curNode.fileName, content);
                 }catch(e){
                     throw new Error(`Fail to create file named ${curNode.fileName}, please check its path or other porperty`);
                 }

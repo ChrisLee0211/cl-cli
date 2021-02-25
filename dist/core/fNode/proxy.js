@@ -10,7 +10,7 @@ function proxyWrapper(fnode) {
         "rootPath",
         "path",
         "isChanged",];
-    const triggerKeys = ["appendChild", "destroy", "removeChild", "setContent", "setParent", "setPath", "setRootPath"];
+    const triggerKeys = ["getContent", "appendChild", "destroy", "removeChild", "setContent", "setParent", "setPath", "setRootPath"];
     let enableEdit = false;
     let curStep = HookController_1.default.currentStep;
     const handler = {

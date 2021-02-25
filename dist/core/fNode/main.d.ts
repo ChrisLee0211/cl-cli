@@ -9,13 +9,14 @@ export interface fileNodeContent {
     /** 是否文件夹 */
     isFolder: boolean;
     /** 文件内容 string或buffer */
-    content: any;
     /** 父级目录 */
     parent: fileNode | null;
     /** 子级目录包含的文件节点 */
     children: fileNode[];
     /** 是否被改变过 */
     isChanged: boolean;
+    /** 获取文件内容 */
+    getContent(): Promise<any>;
     /** 添加一个fileNode到children中 */
     appendChild(fileNode: fileNodeContent): fileNodeContent;
     /** 销毁本身 */
@@ -28,13 +29,14 @@ export interface fileNodeContent {
 export default class fileNode implements fileNodeContent {
     parent: fileNode | null;
     children: fileNode[];
-    content: any;
+    private content;
     isFolder: boolean;
     fileName: string;
     rootPath: string;
     path: string;
     isChanged: any;
     constructor(name: string, path?: string, rootPath?: string, content?: any, isFolder?: boolean, parent?: fileNode | null);
+    getContent(): Promise<any>;
     appendChild(fnode: fileNode): this;
     destroy(): void;
     removeChild(fnode: fileNode): void;

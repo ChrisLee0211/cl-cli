@@ -1,5 +1,5 @@
 import {checkPathIsUseful, getCurrentPath, parseRootPath, concatPath} from "../../utils/path";
-
+import {readFileContent} from  "../../utils/file";
 /** 文件节点内容 */
 export interface fileNodeContent {
     /** 文件路径 */
@@ -11,13 +11,15 @@ export interface fileNodeContent {
     /** 是否文件夹 */
     isFolder:boolean
     /** 文件内容 string或buffer */
-    content:any,
+    // content:any,
     /** 父级目录 */
     parent:fileNode | null,
     /** 子级目录包含的文件节点 */
     children:fileNode[]
     /** 是否被改变过 */
     isChanged:boolean
+    /** 获取文件内容 */
+    getContent():Promise<any>
     /** 添加一个fileNode到children中 */
     appendChild(fileNode:fileNodeContent):fileNodeContent
     /** 销毁本身 */
@@ -31,7 +33,7 @@ export interface fileNodeContent {
 export default class fileNode implements fileNodeContent {
     parent:fileNode | null = null;
     children:fileNode[] = [];
-    content;
+    private content;
     isFolder = false;
     fileName = "";
     rootPath = "";
@@ -41,12 +43,30 @@ export default class fileNode implements fileNodeContent {
         this.fileName = name;
         this.path = checkPathIsUseful(path)? path: getCurrentPath();
         this.rootPath = rootPath?rootPath:parseRootPath(this.path);
-        this.content = content?? null;
         this.isFolder = isFolder??false;
         this.isChanged = false;
         this.parent = parent;
+        this.setContent(content??null)
         return this;
     }
+
+    async getContent(){
+        if(this.isFolder) return null
+        if(this.content===null){
+            const targetPath = concatPath(this.path,this.fileName);
+            try{
+                const content = await readFileContent(targetPath);
+                this.content = content;
+                this.freezeMethod()
+                return content
+            }catch(e){
+                throw new Error(e)
+            }
+        }else{
+            return this.content
+        }
+    }
+
 
     appendChild(fnode:fileNode){
         if(this.isFileNode(fnode) === false){

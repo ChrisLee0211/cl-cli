@@ -66,8 +66,6 @@ class CoreComplier {
                                     const parent = curNode;
                                     const curFileNode = UtilsLib_1.default.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);
                                     curNode.appendChild(curFileNode);
-                                    // curFileNode.setParent(curNode);
-                                    // curFileNode.setPath(concatPath(curNode.path, curFileNode.fileName))
                                     stack.push(curFileNode);
                                 }
                             }
@@ -185,7 +183,8 @@ class CoreComplier {
                 }
                 if (curNode.isChanged) {
                     try {
-                        yield file_1.createFile(curNode.path, curNode.fileName, curNode.content);
+                        const content = yield curNode.getContent();
+                        yield file_1.createFile(curNode.path, curNode.fileName, content);
                     }
                     catch (e) {
                         throw new Error(`Fail to create file named ${curNode.fileName}, please check its path or other porperty`);

@@ -12,7 +12,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const program = require("commander");
 const core_1 = require("../core");
-const self_1 = require("../core/plugins/self");
+const configLoader_1 = require("../core/configLoader");
+const path_1 = require("../utils/path");
+const file_1 = require("../utils/file");
 // 设置版本号和参数，通过 mycli --help 查看
 program.version("1.0.0");
 // 捕获命令和参数 eg： mycli create test -t vue
@@ -21,13 +23,31 @@ program
     .option("-p --pluginConfig <name>", "plugin config")
     .action(function (name, cmd) {
     return __awaiter(this, void 0, void 0, function* () {
+        let plugins = [];
         // 通过插件配置文件方式生成脚手架
         if (Object.keys(cmd).includes('pluginConfig')) {
-            const pluhinConfigPath = cmd.plugin;
-            // 通过读取文件执行ins.use
+            const pluginConfigPath = cmd.plugin;
+            if (path_1.checkPathIsUseful(pluginConfigPath)) {
+                try {
+                    const fullPath = path_1.concatPath(path_1.getCurrentPath(), pluginConfigPath);
+                    const isExist = yield file_1.checkFileIsBuilt(fullPath);
+                    if (!isExist) {
+                        throw new Error(`Can not find plugin conifg file by wrong path, please check if is correct`);
+                    }
+                    plugins = yield configLoader_1.configLoader(fullPath);
+                }
+                catch (e) {
+                }
+            }
+            else {
+                throw new Error(`Can not find plugin conifg file by wrong path, please check if is correct`);
+            }
         }
         const ins = new core_1.ClCore();
-        ins.use(self_1.basePlugin).use(self_1.framePlugin).use(self_1.uiPlugin);
+        // ins.use(basePlugin).use(framePlugin).use(uiPlugin);
+        for (let i = 0; i < plugins.length; i++) {
+            ins.use(plugins[i]);
+        }
         yield ins.createCli(name);
         return;
     });
