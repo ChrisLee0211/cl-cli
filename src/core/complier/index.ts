@@ -15,7 +15,7 @@ interface CoreComplierInterface {
     /** 将本地拉取的模版目录编译成fileTree */
     complieLocalTemplate():void;
     /** 将传入的fileList依次解析覆盖最新的fileTree */
-    complierExtra(fileList:CoreParser["parseTree"]):void
+    complierExtra(ctx:any,fileList:CoreParser["parseFnTree"]):void
     /** 注册一个在output期间遍历fileTree时的需要执行副作用的回调函数 */
     setEffect(fn:outputCallback):void
     /** 将fileTree生成为真实文件 */
@@ -104,22 +104,26 @@ export default class CoreComplier implements CoreComplierInterface{
      * @author chris lee
      * @Time 2021/02/14
      */
-    async complierExtra(list:CoreParser["parseTree"]){
+    async complierExtra(ctx:any,list:CoreParser["parseFnTree"]){
         const fileList = list;
         if(!fileList.length) return this.fileTree;
         if(fileList.length && this.fileTree){
             this.extraTree = this.fileTree;
         }
         while(fileList.length){
-            const cb = fileList.pop();
+            const cb = fileList.shift();
             if(cb){
-                const key = Object.keys(cb??{})[0];
-                const fn = cb[key];
+                const fn = cb;
                 try{
                     if(this.fileTreeIsDone(this.extraTree, list)){
-                        const result = await fn(this.extraTree);
-                        if(this.isFileNode(result)){
-                            this.extraTree = result;
+                        const keys = Object.keys(ctx);
+                        for(let i=0;i<keys.length;i++){
+                            const key = keys[i];
+                            const value = ctx[key];
+                            const result = await fn(key,value,this.extraTree);
+                            if(this.isFileNode(result)){
+                                this.extraTree = result;
+                            }
                         }
                     }
                 }catch(e){

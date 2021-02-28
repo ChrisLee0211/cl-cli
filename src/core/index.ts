@@ -47,7 +47,8 @@ export class ClCore {
         const path = getCurrentPath();
         const projectName = await this.getProjectName(name);
         this.ctx = new Ctx(projectName);
-
+        
+        /** 触发init阶段，构造配置项ctx，随后根据配置项拉去基础模版 */
         await HookController.emitter("init", [this.ctx, Utils]);
         const projectPath = await createFolder(projectName);
         Utils.log("开始拉取模版", "warning");
@@ -64,18 +65,23 @@ export class ClCore {
         }
         Utils.log("拉取模版成功，开始编译额外配置", "success");
         const complier = new CoreComplier(projectName, projectPath);
-        await complier.complieLocalTemplate()
         // 拉取成功后，应该开始将本地目录解析为fileTree
-        // -------
+        await complier.complieLocalTemplate()
+
+        /** 开始解析配置项，构造fileTree */
         await HookController.emitter("parse", [this.ctx, Utils, CoreParser.ruleSetter]);
-        const parseTree = CoreParser.getParseTree();
-        await complier.complierExtra(parseTree);
+        const parseFnTree = CoreParser.getParseFnTree();
+        await complier.complierExtra(this.ctx,parseFnTree);
+
+        /** 得到最终的fileTree，开始转化成文件项目目录，期间收集每个fileNode转化前的副作用函数 */
         await HookController.emitter("transform", [Utils, complier.setEffect]);
         Utils.log("开始生成项目目录......", "success");
         this.renderProgressBar();
         await complier.output();
         await this.destoryProgerssBar();
         Utils.log("正在初始化项目依赖......", "success");
+
+        /** 项目构建完成，执行最后副作用，如允许额外指令等 */
         const fileTree = await complier.getFileTree();
         await HookController.emitter("finish", [fileTree, Utils]);
         Utils.log("项目搭建成功!", "success");

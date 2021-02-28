@@ -1,22 +1,20 @@
 import FileNode from "../fNode/main";
 
 
-type ruleSetterFn = (fileTree:FileNode)=>Promise<FileNode>
+type ruleSetterFn = (key:string,value:string,fileTree:FileNode)=>Promise<FileNode>
 export class CoreParser {
-    parseTree:{[key:string]:ruleSetterFn}[] = [];
+    parseFnTree:ruleSetterFn[] = [];
 
 
     constructor(){
         this.ruleSetter = this.ruleSetter.bind(this);
     }
-    ruleSetter<C>(key:keyof C, fn:ruleSetterFn){
-        const result = {} as any;
-        result[key] = fn;
-        this.parseTree.push(result);
+    ruleSetter(fn:ruleSetterFn){
+        this.parseFnTree.push(fn);
     }
 
-    getParseTree(){
-        return this.parseTree;
+    getParseFnTree(){
+        return this.parseFnTree;
     }
 }
 
