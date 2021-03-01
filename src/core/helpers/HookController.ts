@@ -9,10 +9,10 @@ export interface HookCL<T = any> {
     register<T>(type:"parse", fn:parseFn<T>):void
     register(type:"transform", fn:transFn):void
     register(type:"finish", fn:finishFn): void
-    emitter<T>(type:"init", args:[T, typeof Utils]);
-    emitter<T>(type:"parse", args:[T, typeof Utils, rset]);
-    emitter(type:"transform", args:[typeof Utils, CoreComplier["setEffect"]]);
-    emitter(type:"finish", args:[Readonly<fileNode>|undefined, typeof Utils])
+    emitter<T>(type:"init", args:[T,]);
+    emitter<T>(type:"parse", args:[T, rset]);
+    emitter(type:"transform", args:[ CoreComplier["setEffect"]]);
+    emitter(type:"finish", args:[Readonly<fileNode>|undefined])
 }
 
 type lifeType = "init" | "parse" | "transform" | "finish"
@@ -20,11 +20,11 @@ type rset = CoreParser["ruleSetter"]
 /** 通过ctx增删复写配置 */
 export type initFn<T> = (ctx:Ctx<T>) => void
 /** 通过ruleSetter自定义配置解析规则 */
-export type parseFn<T> = (ctx:T, utils:typeof Utils, ruleSetter:rset) => void
+export type parseFn<T> = (ctx:T, ruleSetter:rset) => void
 /** 最后机会修改输出文件内容 */
-export type transFn = (utils:typeof Utils, setEffectFn:CoreComplier["setEffect"]) => void
+export type transFn = ( setEffectFn:CoreComplier["setEffect"]) => void
 /** 文件输出完成后执行附加操作 */
-export type finishFn = (fileTree:Readonly<fileNode>, utils: typeof Utils) => void
+export type finishFn = (fileTree:Readonly<fileNode>) => void
 
 class HookController implements HookCL{
      initEvents:Array<Function> = []
@@ -69,10 +69,10 @@ class HookController implements HookCL{
      * @param type 生命周期钩子类型
      * @returns {void}
      */
-     public emitter<T>(type:"init", args:[T, typeof Utils]);
-     public emitter<T>(type:"parse", args:[T, typeof Utils, rset]);
-     public emitter<T>(type:"transform", args:[typeof Utils, CoreComplier["setEffect"]]);
-     public emitter<T>(type:"finish", args:[Readonly<fileNode>|undefined, typeof Utils])
+     public emitter<T>(type:"init", args:[T]);
+     public emitter<T>(type:"parse", args:[T, rset]);
+     public emitter<T>(type:"transform", args:[ CoreComplier["setEffect"]]);
+     public emitter<T>(type:"finish", args:[Readonly<fileNode>|undefined])
      public async emitter(type:lifeType, args:any[]){
          let cb:Function | undefined;
          let queue: Array<Function>;

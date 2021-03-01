@@ -49,7 +49,7 @@ export class ClCore {
         this.ctx = new Ctx(projectName);
         
         /** 触发init阶段，构造配置项ctx，随后根据配置项拉去基础模版 */
-        await HookController.emitter("init", [this.ctx, Utils]);
+        await HookController.emitter("init", [this.ctx]);
         const projectPath = await createFolder(projectName);
         Utils.log("开始拉取模版", "warning");
         try{
@@ -69,12 +69,12 @@ export class ClCore {
         await complier.complieLocalTemplate()
 
         /** 开始解析配置项，构造fileTree */
-        await HookController.emitter("parse", [this.ctx, Utils, CoreParser.ruleSetter]);
+        await HookController.emitter("parse", [this.ctx, CoreParser.ruleSetter]);
         const parseFnTree = CoreParser.getParseFnTree();
         await complier.complierExtra(this.ctx,parseFnTree);
 
         /** 得到最终的fileTree，开始转化成文件项目目录，期间收集每个fileNode转化前的副作用函数 */
-        await HookController.emitter("transform", [Utils, complier.setEffect]);
+        await HookController.emitter("transform", [complier.setEffect]);
         Utils.log("开始生成项目目录......", "success");
         this.renderProgressBar();
         await complier.output();
@@ -83,11 +83,17 @@ export class ClCore {
 
         /** 项目构建完成，执行最后副作用，如允许额外指令等 */
         const fileTree = await complier.getFileTree();
-        await HookController.emitter("finish", [fileTree, Utils]);
+        await HookController.emitter("finish", [fileTree]);
         Utils.log("项目搭建成功!", "success");
         return;
     }
 
+    /**
+     * 获取项目名称，重复则继续调用自身
+     * @param name 项目名称
+     * @author chris lee
+     * @Time 2021/02/28
+     */
     async getProjectName(name):Promise<string>{
         const path = getCurrentPath();
         const isBuild = await checkFileIsBuilt(concatPath(path, name));
@@ -111,6 +117,11 @@ export class ClCore {
         return projectName;
     }
 
+    /**
+     *  渲染进度条
+     * @author chris lee
+     * @Time 2021/02/28
+     */
     renderProgressBar(){
         this.barTimer = setTimeout(()=>{
             if(this.OutPutPercent<100){
@@ -122,6 +133,11 @@ export class ClCore {
         }, 1000);
     }
 
+    /**
+     *  销毁进度条
+     * @author chris lee
+     * @Time 2021/02/28
+     */
     destoryProgerssBar(){
         return new Promise<void>((rs,rj)=>{
             this.OutPutPercent = 100;

@@ -29,9 +29,19 @@ export const basePlugin:Plugin<config> = (register, utils) => {
         ctx.add("lang", lang);
         ctx.add("projectType", projectType);
     });
-    register<config>("parse", async (cfg, utils, ruleSetter)=>{
+    register<config>("parse", async (cfg, ruleSetter)=>{
         console.log(cfg);
+        ruleSetter( async(key,val,fileTree)=>{
+           
+            return fileTree
+        })
     });
+    register("transform",(setEffect)=>{
+
+    })
+    register("finish",(fileTree) => {
+        
+    })
 };
 
 export const framePlugin:Plugin<config> = (register, utils) => {
