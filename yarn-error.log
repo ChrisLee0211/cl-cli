@@ -14,12 +14,10 @@ Platform:
   darwin x64
 
 Trace: 
-  SyntaxError: /Users/chrislee/Documents/cli/main/package.json: Unexpected token } in JSON at position 251
-      at JSON.parse (<anonymous>)
-      at /usr/local/lib/node_modules/yarn/lib/cli.js:1625:59
-      at Generator.next (<anonymous>)
-      at step (/usr/local/lib/node_modules/yarn/lib/cli.js:310:30)
-      at /usr/local/lib/node_modules/yarn/lib/cli.js:321:13
+  Error: https://registry.yarnpkg.com/chalk: ETIMEDOUT
+      at Timeout._onTimeout (/usr/local/lib/node_modules/yarn/lib/cli.js:141322:19)
+      at listOnTimeout (internal/timers.js:549:17)
+      at processTimers (internal/timers.js:492:7)
 
 npm manifest: 
   {
@@ -30,7 +28,7 @@ npm manifest:
     "main": "index.js",
     "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
-      "build": "tsc --build tsconfig.json",
+      "build": "tsc --build tsconfig.json"
     },
     "bin": {
       "cl": "./dist/bin/index.js"
@@ -58,7 +56,6 @@ npm manifest:
       "typescript": "^4.0.5"
     },
     "devDependencies": {
-      "@types/chalk": "^2.2.0",
       "@types/inquirer": "^7.3.1",
       "@types/node": "^14.14.8",
       "tsconfig-paths": "^3.9.0"

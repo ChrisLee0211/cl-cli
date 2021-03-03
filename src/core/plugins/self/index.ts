@@ -1,6 +1,6 @@
 import {Plugin} from "../../index";
 import {prompt} from "./command";
-
+import * as child_process from "child_process";
 /** 语言类型 */
 type lang = "typescript" | "javascript"
 /** 项目类型 */
@@ -32,15 +32,44 @@ export const basePlugin:Plugin<config> = (register, utils) => {
     register<config>("parse", async (cfg, ruleSetter)=>{
         console.log(cfg);
         ruleSetter( async(key,val,fileTree)=>{
-           
+            if(key === 'projectType' && val === 'server'){
+                try{
+                    const packageJson = fileTree.children.find((fnode) => {fnode.fileName === 'package.json'});
+                    if(packageJson){
+                        const content = await packageJson.getContent();
+                        const json = JSON.stringify(content);
+                        const obj = JSON.parse(json);
+                        const dep = obj['dependencies'];
+                        dep["koa"] = "^2.10.0";
+                        dep["koa-bodyparser"] = "^3.2.0";
+                        dep["koa-router"] = "^7.4.0";
+                        obj["dependencies"] = dep;
+                        packageJson.setContent(JSON.stringify(obj))
+                    }
+                }catch(e){
+                    console.error(e)
+                }
+            }
             return fileTree
         })
     });
     register("transform",(setEffect)=>{
-
+        setEffect( async (fileNode) => {
+            if(fileNode.fileName === '.vscode'){
+                fileNode.destroy()
+            }
+        })
     })
     register("finish",(fileTree) => {
-        
+        const exec = child_process.exec;
+        const cmdStr = `npm install`
+        exec(cmdStr, (err, stdout, stderr) => {
+            if (err){
+                console.error(err);
+            } else {
+                console.log(stdout);
+            }
+        });
     })
 };
 
