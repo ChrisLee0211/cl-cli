@@ -3,16 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CoreParser = void 0;
 class CoreParser {
     constructor() {
-        this.parseTree = [];
+        this.parseFnTree = [];
         this.ruleSetter = this.ruleSetter.bind(this);
     }
-    ruleSetter(key, fn) {
-        const result = {};
-        result[key] = fn;
-        this.parseTree.push(result);
+    ruleSetter(fn) {
+        this.parseFnTree.push(fn);
     }
-    getParseTree() {
-        return this.parseTree;
+    getParseFnTree() {
+        return this.parseFnTree;
     }
 }
 exports.CoreParser = CoreParser;

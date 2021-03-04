@@ -52,7 +52,8 @@ class ClCore {
             const path = path_1.getCurrentPath();
             const projectName = yield this.getProjectName(name);
             this.ctx = new context_1.Ctx(projectName);
-            yield HookController_1.default.emitter("init", [this.ctx, UtilsLib_1.default]);
+            /** 触发init阶段，构造配置项ctx，随后根据配置项拉去基础模版 */
+            yield HookController_1.default.emitter("init", [this.ctx]);
             const projectPath = yield file_1.createFolder(projectName);
             UtilsLib_1.default.log("开始拉取模版", "warning");
             try {
@@ -69,24 +70,32 @@ class ClCore {
             }
             UtilsLib_1.default.log("拉取模版成功，开始编译额外配置", "success");
             const complier = new complier_1.default(projectName, projectPath);
-            yield complier.complieLocalTemplate();
             // 拉取成功后，应该开始将本地目录解析为fileTree
-            // -------
-            yield HookController_1.default.emitter("parse", [this.ctx, UtilsLib_1.default, parser_1.default.ruleSetter]);
-            const parseTree = parser_1.default.getParseTree();
-            yield complier.complierExtra(parseTree);
-            yield HookController_1.default.emitter("transform", [UtilsLib_1.default, complier.setEffect]);
+            yield complier.complieLocalTemplate();
+            /** 开始解析配置项，构造fileTree */
+            yield HookController_1.default.emitter("parse", [this.ctx, parser_1.default.ruleSetter]);
+            const parseFnTree = parser_1.default.getParseFnTree();
+            yield complier.complierExtra(this.ctx, parseFnTree);
+            /** 得到最终的fileTree，开始转化成文件项目目录，期间收集每个fileNode转化前的副作用函数 */
+            yield HookController_1.default.emitter("transform", [complier.setEffect]);
             UtilsLib_1.default.log("开始生成项目目录......", "success");
             this.renderProgressBar();
             yield complier.output();
             yield this.destoryProgerssBar();
             UtilsLib_1.default.log("正在初始化项目依赖......", "success");
+            /** 项目构建完成，执行最后副作用，如允许额外指令等 */
             const fileTree = yield complier.getFileTree();
-            yield HookController_1.default.emitter("finish", [fileTree, UtilsLib_1.default]);
+            yield HookController_1.default.emitter("finish", [fileTree]);
             UtilsLib_1.default.log("项目搭建成功!", "success");
             return;
         });
     }
+    /**
+     * 获取项目名称，重复则继续调用自身
+     * @param name 项目名称
+     * @author chris lee
+     * @Time 2021/02/28
+     */
     getProjectName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             const path = path_1.getCurrentPath();
@@ -112,6 +121,11 @@ class ClCore {
             return projectName;
         });
     }
+    /**
+     *  渲染进度条
+     * @author chris lee
+     * @Time 2021/02/28
+     */
     renderProgressBar() {
         this.barTimer = setTimeout(() => {
             if (this.OutPutPercent < 100) {
@@ -122,6 +136,11 @@ class ClCore {
             }
         }, 1000);
     }
+    /**
+     *  销毁进度条
+     * @author chris lee
+     * @Time 2021/02/28
+     */
     destoryProgerssBar() {
         return new Promise((rs, rj) => {
             this.OutPutPercent = 100;

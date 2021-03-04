@@ -35,7 +35,6 @@ program
             }
         }
         const ins = new ClCore();
-        // ins.use(basePlugin).use(framePlugin).use(uiPlugin);
         for(let i=0;i<plugins.length;i++){
             ins.use(plugins[i])
         }

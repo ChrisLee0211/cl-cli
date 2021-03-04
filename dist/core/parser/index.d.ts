@@ -1,14 +1,10 @@
 import FileNode from "../fNode/main";
-declare type ruleSetterFn = (fileTree: FileNode) => Promise<FileNode>;
+declare type ruleSetterFn = (key: string, value: string, fileTree: FileNode) => Promise<FileNode>;
 export declare class CoreParser {
-    parseTree: {
-        [key: string]: ruleSetterFn;
-    }[];
+    parseFnTree: ruleSetterFn[];
     constructor();
-    ruleSetter<C>(key: keyof C, fn: ruleSetterFn): void;
-    getParseTree(): {
-        [key: string]: ruleSetterFn;
-    }[];
+    ruleSetter(fn: ruleSetterFn): void;
+    getParseFnTree(): ruleSetterFn[];
 }
 declare const _default: CoreParser;
 export default _default;

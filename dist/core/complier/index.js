@@ -87,7 +87,7 @@ class CoreComplier {
      * @author chris lee
      * @Time 2021/02/14
      */
-    complierExtra(list) {
+    complierExtra(ctx, list) {
         return __awaiter(this, void 0, void 0, function* () {
             const fileList = list;
             if (!fileList.length)
@@ -96,15 +96,19 @@ class CoreComplier {
                 this.extraTree = this.fileTree;
             }
             while (fileList.length) {
-                const cb = fileList.pop();
+                const cb = fileList.shift();
                 if (cb) {
-                    const key = Object.keys(cb !== null && cb !== void 0 ? cb : {})[0];
-                    const fn = cb[key];
+                    const fn = cb;
                     try {
                         if (this.fileTreeIsDone(this.extraTree, list)) {
-                            const result = yield fn(this.extraTree);
-                            if (this.isFileNode(result)) {
-                                this.extraTree = result;
+                            const keys = Object.keys(ctx);
+                            for (let i = 0; i < keys.length; i++) {
+                                const key = keys[i];
+                                const value = ctx[key];
+                                const result = yield fn(key, value, this.extraTree);
+                                if (this.isFileNode(result)) {
+                                    this.extraTree = result;
+                                }
                             }
                         }
                     }

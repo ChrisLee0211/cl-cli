@@ -8,7 +8,7 @@ interface CoreComplierInterface {
     /** 将本地拉取的模版目录编译成fileTree */
     complieLocalTemplate(): void;
     /** 将传入的fileList依次解析覆盖最新的fileTree */
-    complierExtra(fileList: CoreParser["parseTree"]): void;
+    complierExtra(ctx: any, fileList: CoreParser["parseFnTree"]): void;
     /** 注册一个在output期间遍历fileTree时的需要执行副作用的回调函数 */
     setEffect(fn: outputCallback): void;
     /** 将fileTree生成为真实文件 */
@@ -46,7 +46,7 @@ export default class CoreComplier implements CoreComplierInterface {
      * @author chris lee
      * @Time 2021/02/14
      */
-    complierExtra(list: CoreParser["parseTree"]): Promise<FileNode | undefined>;
+    complierExtra(ctx: any, list: CoreParser["parseFnTree"]): Promise<FileNode | undefined>;
     private fileTreeIsDone;
     private isFileNode;
     /**

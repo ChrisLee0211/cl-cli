@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.uiPlugin = exports.framePlugin = exports.basePlugin = void 0;
 const command_1 = require("./command");
+const child_process = require("child_process");
 exports.basePlugin = (register, utils) => {
     const { useCommand } = utils;
     register("init", (ctx) => __awaiter(void 0, void 0, void 0, function* () {
@@ -19,9 +20,50 @@ exports.basePlugin = (register, utils) => {
         ctx.add("lang", lang);
         ctx.add("projectType", projectType);
     }));
-    register("parse", (cfg, utils, ruleSetter) => __awaiter(void 0, void 0, void 0, function* () {
+    register("parse", (cfg, ruleSetter) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(cfg);
+        ruleSetter((key, val, fileTree) => __awaiter(void 0, void 0, void 0, function* () {
+            if (key === 'projectType' && val === 'server') {
+                try {
+                    const packageJson = fileTree.children.find((fnode) => { fnode.fileName === 'package.json'; });
+                    if (packageJson) {
+                        const content = yield packageJson.getContent();
+                        const json = JSON.stringify(content);
+                        const obj = JSON.parse(json);
+                        const dep = obj['dependencies'];
+                        dep["koa"] = "^2.10.0";
+                        dep["koa-bodyparser"] = "^3.2.0";
+                        dep["koa-router"] = "^7.4.0";
+                        obj["dependencies"] = dep;
+                        packageJson.setContent(JSON.stringify(obj));
+                    }
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+            return fileTree;
+        }));
     }));
+    register("transform", (setEffect) => {
+        setEffect((fileNode) => __awaiter(void 0, void 0, void 0, function* () {
+            if (fileNode.fileName === '.vscode') {
+                fileNode.destroy();
+            }
+        }));
+    });
+    register("finish", (fileTree) => {
+        const exec = child_process.exec;
+        const cmdStr = `npm install`;
+        exec(cmdStr, (err, stdout, stderr) => {
+            if (err) {
+                console.error(err);
+            }
+            else {
+                console.log(stdout);
+            }
+        });
+    });
 };
 exports.framePlugin = (register, utils) => {
     const { useCommand } = utils;

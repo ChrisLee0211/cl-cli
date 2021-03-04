@@ -46,9 +46,47 @@ export default {
             ctx.add("lang", lang);
             ctx.add("projectType", projectType);
         });
-        register("parse", async (cfg, utils, ruleSetter)=>{
-            console.log(cfg);
+        register("parse", async (cfg, ruleSetter)=>{
+            ruleSetter( async(key,val,fileTree)=>{
+                if(key === 'projectType' && val === 'server'){
+                    try{
+                        const packageJson = fileTree.children.find((fnode) => {fnode.fileName === 'package.json'});
+                        if(packageJson){
+                            const content = await packageJson.getContent();
+                            const json = JSON.stringify(content);
+                            const obj = JSON.parse(json);
+                            const dep = obj['dependencies'];
+                            dep["koa"] = "^2.10.0";
+                            dep["koa-bodyparser"] = "^3.2.0";
+                            dep["koa-router"] = "^7.4.0";
+                            obj["dependencies"] = dep;
+                            packageJson.setContent(JSON.stringify(obj))
+                        }
+                    }catch(e){
+                        console.error(e)
+                    }
+                }
+                return fileTree
+            })
         });
+        register("transform",(setEffect)=>{
+            setEffect( async (fileNode) => {
+                if(fileNode.fileName === '.vscode'){
+                    fileNode.destroy()
+                }
+            })
+        })
+        register("finish",(fileTree) => {
+            const exec = require("child_process").exec;
+            const cmdStr = `npm install`
+            exec(cmdStr, (err, stdout, stderr) => {
+                if (err){
+                    console.error(err);
+                } else {
+                    console.log(stdout);
+                }
+            });
+        })
     },
     framePlugin:function(register, utils){
         const {useCommand} = utils;
