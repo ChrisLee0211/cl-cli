@@ -26,7 +26,7 @@ program
         let plugins = [];
         // 通过插件配置文件方式生成脚手架
         if (Object.keys(cmd).includes('pluginConfig')) {
-            const pluginConfigPath = cmd.plugin;
+            const pluginConfigPath = cmd.pluginConfig;
             if (path_1.checkPathIsUseful(pluginConfigPath)) {
                 try {
                     const fullPath = path_1.concatPath(path_1.getCurrentPath(), pluginConfigPath);
@@ -37,6 +37,7 @@ program
                     plugins = yield configLoader_1.configLoader(fullPath);
                 }
                 catch (e) {
+                    console.error(e);
                 }
             }
             else {

@@ -80,7 +80,7 @@ export default class CoreComplier implements CoreComplierInterface{
                             for(let i=0;i<len;i++){
                                 const fileName = files[i].name;
                                 const isFolder = files[i].isDirectory();
-                                const curPath = isFolder? path.join(curNode.path):path.join(curNode.path,curNode.fileName,fileName);
+                                const curPath = path.join(curNode.path,curNode.fileName)
                                 const rootPath = (projectPath);
                                 const parent = curNode;
                                 const curFileNode = utils.createFileNode(fileName, curPath, rootPath, null, isFolder, parent);

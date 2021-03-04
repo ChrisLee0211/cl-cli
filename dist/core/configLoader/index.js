@@ -10,6 +10,7 @@ exports.configLoader = void 0;
 exports.configLoader = (configPath) => {
     return new Promise((rs, rj) => {
         Promise.resolve().then(() => require(`${configPath}`)).then((res) => {
+            console.log('configLoader', res);
             const keys = Object.keys(res);
             const pluginList = [];
             for (let i = 0; i < keys.length; i++) {
