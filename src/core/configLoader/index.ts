@@ -9,6 +9,7 @@ import {Plugin} from '../index';
 export const configLoader = (configPath:string):Promise<Plugin[]> => {
     return new Promise((rs,rj) => {
         import(`${configPath}`).then((res:{[name:string]:Plugin}) => {
+            console.log('configLoader',res)
             const keys = Object.keys(res);
             const pluginList:Plugin[] = [];
             for(let i=0;i<keys.length;i++){

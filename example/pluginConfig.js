@@ -37,7 +37,7 @@ const prompt = {
     }
 };
 
-export default {
+module.exports = {
     basePlugin:function(register, utils){
         const {useCommand} = utils;
         register("init", async (ctx) => {

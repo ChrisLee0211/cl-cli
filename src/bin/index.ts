@@ -18,7 +18,7 @@ program
         let plugins:Plugin[] = [];
         // 通过插件配置文件方式生成脚手架
         if(Object.keys(cmd).includes('pluginConfig')){
-            const pluginConfigPath = cmd.plugin;
+            const pluginConfigPath = cmd.pluginConfig;
             if(checkPathIsUseful(pluginConfigPath)){
                 try{
                     const fullPath = concatPath(getCurrentPath(),pluginConfigPath);
@@ -28,7 +28,7 @@ program
                     }
                     plugins = await configLoader(fullPath);
                 }catch(e){
-                    
+                    console.error(e)
                 }
             }else{
                 throw new Error(`Can not find plugin conifg file by wrong path, please check if is correct`)
