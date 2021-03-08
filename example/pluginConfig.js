@@ -49,13 +49,17 @@ module.exports = {
         register("parse", async (cfg, ruleSetter)=>{
             ruleSetter( async(key,val,fileTree)=>{
                 try{
-                    const target = fileTree.children.find((fnode) => {fnode.fileName === 'package.json'});
-                    const packageJson = {...target};
+                    const target = fileTree.children.find((fnode) => {return fnode.fileName === 'package.json'});
+                    const packageJson = target
                     console.log('packageJson',packageJson)
                     if(packageJson){
                         const content = await packageJson.getContent();
-                        const json = JSON.stringify(content);
-                        const obj = JSON.parse(json);
+                        const buf = new Buffer.from(JSON.parse(JSON.stringify(content)));
+                        const data = buf.toString();
+                        const obj = JSON.parse(data);
+                        if(!obj['dependencies']){
+                            obj['dependencies'] = {};
+                        }
                         const dep = obj['dependencies'];
                         dep["koa"] = "^2.10.0";
                         dep["koa-bodyparser"] = "^3.2.0";

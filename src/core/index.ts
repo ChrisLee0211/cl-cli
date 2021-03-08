@@ -71,7 +71,7 @@ export class ClCore {
         /** 开始解析配置项，构造fileTree */
         await HookController.emitter("parse", [this.ctx, CoreParser.ruleSetter]);
         const parseFnTree = CoreParser.getParseFnTree();
-        await complier.complierExtra(this.ctx,parseFnTree);
+        await complier.complierExtra(this.ctx.getConfig(),parseFnTree);
 
         /** 得到最终的fileTree，开始转化成文件项目目录，期间收集每个fileNode转化前的副作用函数 */
         await HookController.emitter("transform", [complier.setEffect]);

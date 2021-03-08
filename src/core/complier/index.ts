@@ -105,7 +105,7 @@ export default class CoreComplier implements CoreComplierInterface{
      * @Time 2021/02/14
      */
     async complierExtra(ctx:any,list:CoreParser["parseFnTree"]){
-        const fileList = list;
+        const fileList = [...list];
         if(!fileList.length) return this.fileTree;
         if(fileList.length && this.fileTree){
             this.extraTree = this.fileTree;
