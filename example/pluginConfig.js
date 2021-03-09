@@ -65,7 +65,8 @@ module.exports = {
                         dep["koa-bodyparser"] = "^3.2.0";
                         dep["koa-router"] = "^7.4.0";
                         obj["dependencies"] = dep;
-                        packageJson.setContent(JSON.stringify(obj));
+                        const newContent = JSON.stringify(obj)
+                        packageJson.setContent(newContent);
                         fileTree.removeChild(target);
                         fileTree.appendChild(packageJson)
 

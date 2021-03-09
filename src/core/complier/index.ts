@@ -145,7 +145,7 @@ export default class CoreComplier implements CoreComplierInterface{
     private isFileNode(node): node is FileNode {
         const keys = ["path", "rootPath", "fileName", "isFolder", "content", "parent", "children"];
         const nodeKeys = Object.keys(node);
-        if(keys.length !== nodeKeys.length) return false;
+        if(keys.length < nodeKeys.length) return false;
         let res = true;
         for(let i=0;i<keys.length;i++){
             if(nodeKeys.includes(keys[i])===false){
