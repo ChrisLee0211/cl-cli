@@ -55,3 +55,9 @@ interface contextCtr {
     /** 检查是否所有配置项加载完成 */
     isFinish():boolean
 }
+
+declare namespace NodeJS {
+    export interface Global {
+        currentStep: "init" | "parse" | "transform" | "finish"
+    }
+  }

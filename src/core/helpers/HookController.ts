@@ -80,18 +80,22 @@ class HookController implements HookCL{
          case "init":
              queue = this.initEvents;
              this.currentStep = "init";
+             (global as any).currentStep = "init";
              break;
          case "parse":
              queue = this.parseEvents;
              this.currentStep = "parse";
+             (global as any).currentStep = "parse";
              break;
          case "transform":
              queue = this.transformEvents;
              this.currentStep = "transform";
+             (global as any).currentStep = "transform";
              break;
          case "finish":
              queue = this.finishEvents;
              this.currentStep = "finish";
+             (global as any).currentStep = "finish";
              break;
          default:
              this.checkHookType(type);
