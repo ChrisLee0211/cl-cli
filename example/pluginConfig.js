@@ -67,8 +67,8 @@ module.exports = {
                         obj["dependencies"] = dep;
                         const newContent = JSON.stringify(obj)
                         packageJson.setContent(newContent);
-                        fileTree.removeChild(target);
-                        fileTree.appendChild(packageJson)
+                        // fileTree.removeChild(target);
+                        // fileTree.appendChild(packageJson)
 
                     }
                 }catch(e){
