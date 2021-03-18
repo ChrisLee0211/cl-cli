@@ -2,6 +2,8 @@ import {checkPathIsUseful, getCurrentPath, parseRootPath, concatPath} from "../.
 import {readFileContent} from  "../../utils/file";
 /** 文件节点内容 */
 export interface fileNodeContent {
+    /** id标识 */
+    id:string,
     /** 文件路径 */
     path:string,
     /** 根路径 */
@@ -31,6 +33,7 @@ export interface fileNodeContent {
 }
 
 export default class fileNode implements fileNodeContent {
+    id:string;
     parent:fileNode | null = null;
     children:fileNode[] = [];
     private content;
@@ -46,7 +49,8 @@ export default class fileNode implements fileNodeContent {
         this.isFolder = isFolder??false;
         this.isChanged = false;
         this.parent = parent;
-        this.setContent(content??null)
+        this.setContent(content??null);
+        this.id = this.path+this.fileName;
         return this;
     }
 
