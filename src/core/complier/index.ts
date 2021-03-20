@@ -1,17 +1,16 @@
 import utils from "../helpers/UtilsLib";
 import * as path from "path";
 import {readFileContent, scanFolder, createFile} from "../../utils/file";
-import FileNode from "../fNode/main"; 
+import FileTree from "../fileTree"; 
+import FileNode from "../fnode/main"; 
 import {Stack} from "../../utils/stack";
 import {CoreParser} from "../parser";
 import {concatPath} from "../../utils/path";
 
 interface CoreComplierInterface {
-    fileTree : FileNode | undefined,
+    fileTree : FileTree | undefined,
     /** 获取fileTree */
-    getFileTree():Readonly<FileNode>|undefined,
-    /** 构建基础fileNode */
-    // createBaseFileNode(pathName:string):FileNode
+    getFileTree():FileTree|undefined,
     /** 将本地拉取的模版目录编译成fileTree */
     complieLocalTemplate():void;
     /** 将传入的fileList依次解析覆盖最新的fileTree */
@@ -24,13 +23,15 @@ interface CoreComplierInterface {
 
 type outputCallback = (cur:FileNode) => Promise<void>;
 export default class CoreComplier implements CoreComplierInterface{
-    fileTree:FileNode|undefined;
+    fileTree:FileTree|undefined;
+    rootFileNode:FileNode | undefined;
     extraTree:FileNode | undefined = undefined;
     outputCbs:Array<outputCallback> = [];
     projectName:string;
     projectPath:string;
     constructor(name:string, path:string){
-        this.fileTree = this.createBaseFileNode(name, path);
+        this.rootFileNode = this.createBaseFileNode(name, path);
+        this.fileTree = new FileTree(this.rootFileNode)
         this.projectName = name;
         this.projectPath = path;
         this.setEffect = this.setEffect.bind(this);
@@ -38,7 +39,7 @@ export default class CoreComplier implements CoreComplierInterface{
     /**
      * 返回一个只读的fileTree
      */
-    getFileTree():Readonly<FileNode>|undefined{
+    getFileTree():FileTree |undefined{
         return this.fileTree;
     }
     /**
@@ -107,39 +108,24 @@ export default class CoreComplier implements CoreComplierInterface{
     async complierExtra(ctx:any,list:CoreParser["parseFnTree"]){
         const fileList = [...list];
         if(!fileList.length) return this.fileTree;
-        if(fileList.length && this.fileTree){
-            this.extraTree = this.fileTree;
-        }
+        if(this.fileTree === undefined) throw new Error('Fail to parse local template')
         while(fileList.length){
             const cb = fileList.shift();
             if(cb){
                 const fn = cb;
                 try{
-                    if(this.fileTreeIsDone(this.extraTree, list)){
-                        const keys = Object.keys(ctx);
+                    const keys = Object.keys(ctx);
                         for(let i=0;i<keys.length;i++){
                             const key = keys[i];
                             const value = ctx[key];
-                            const result = await fn(key,value,this.extraTree);
-                            if(this.isFileNode(result)){
-                                this.extraTree = result;
-                            }
+                            await fn(key,value,this.fileTree);
                         }
-                    }
                 }catch(e){
                     throw new Error(e);
                 }
             }
         }
-        this.fileTree = this.extraTree as FileNode;
         return this.fileTree;
-    }
-
-    private fileTreeIsDone(tree, list:any[]): tree is FileNode {
-        if(list.length){
-            return true;
-        }
-        return false;
     }
 
     private isFileNode(node): node is FileNode {
@@ -188,8 +174,9 @@ export default class CoreComplier implements CoreComplierInterface{
     }
     
     async output(){
+        if(this.fileTree === undefined) throw new Error(`fileTree is undefined!`)
         const stack = new Stack();
-        stack.push(this.fileTree);
+        stack.push(this.fileTree.getRoot());
         while(stack.length){
             const curNode = stack.pop() as FileNode;
             this.useEffect(curNode, this.outputCbs);

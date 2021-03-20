@@ -1,7 +1,7 @@
 import FileNode from "../fNode/main";
+import FileTree from "../fileTree";
 
-
-type ruleSetterFn = (key:string,value:string,fileTree:FileNode)=>Promise<FileNode>
+type ruleSetterFn = (key:string,value:string,fileTree:FileTree)=>Promise<FileNode>
 export class CoreParser {
     parseFnTree:ruleSetterFn[] = [];
 

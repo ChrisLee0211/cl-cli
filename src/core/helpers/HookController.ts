@@ -4,6 +4,7 @@ import {Ctx} from "../context";
 import {CoreParser} from "../parser";
 import CoreComplier from "../complier";
 import fileNode from "../fNode/main";
+import fileTree from "../fileTree";
 export interface HookCL<T = any> {
     register<T>(type:"init", fn:initFn<T>):void
     register<T>(type:"parse", fn:parseFn<T>):void
@@ -12,7 +13,7 @@ export interface HookCL<T = any> {
     emitter<T>(type:"init", args:[T,]);
     emitter<T>(type:"parse", args:[T, rset]);
     emitter(type:"transform", args:[ CoreComplier["setEffect"]]);
-    emitter(type:"finish", args:[Readonly<fileNode>|undefined])
+    emitter(type:"finish", args:[fileTree|undefined])
 }
 
 type lifeType = "init" | "parse" | "transform" | "finish"
@@ -72,7 +73,7 @@ class HookController implements HookCL{
      public emitter<T>(type:"init", args:[T]);
      public emitter<T>(type:"parse", args:[T, rset]);
      public emitter<T>(type:"transform", args:[ CoreComplier["setEffect"]]);
-     public emitter<T>(type:"finish", args:[Readonly<fileNode>|undefined])
+     public emitter<T>(type:"finish", args:[fileTree|undefined])
      public async emitter(type:lifeType, args:any[]){
          let cb:Function | undefined;
          let queue: Array<Function>;
