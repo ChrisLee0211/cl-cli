@@ -69,8 +69,8 @@ export default class CoreComplier implements CoreComplierInterface{
         const projectPath = this.projectPath
         try{
             const stack = new Stack();
-            if(this.fileTree!==undefined){
-                stack.push(this.fileTree);
+            if(this.rootFileNode!==undefined){
+                stack.push(this.rootFileNode);
                 while(stack.length>0){
                     const curNode = stack.pop() as FileNode;
                     if(curNode.isFolder){

@@ -49,8 +49,7 @@ module.exports = {
         register("parse", async (cfg, ruleSetter)=>{
             ruleSetter( async(key,val,fileTree)=>{
                 try{
-                    const target = fileTree.children.find((fnode) => {return fnode.fileName === 'package.json'});
-                    const packageJson = target
+                    const packageJson = fileTree.findByName('package.json')[0];
                     console.log('packageJson',packageJson)
                     if(packageJson){
                         const content = await packageJson.getContent();
