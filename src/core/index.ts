@@ -106,7 +106,7 @@ export class ClCore {
      * @author chris lee
      * @Time 2021/02/28
      */
-    async getProjectName(name):Promise<string>{
+    private async getProjectName(name):Promise<string>{
         const path = getCurrentPath();
         const isBuild = await checkFileIsBuilt(concatPath(path, name));
         let projectName = name;
@@ -134,7 +134,7 @@ export class ClCore {
      * @author chris lee
      * @Time 2021/02/28
      */
-    renderProgressBar(){
+    private renderProgressBar(){
         this.barTimer = setTimeout(()=>{
             if(this.OutPutPercent<100){
                 const random = Math.random();
@@ -150,7 +150,7 @@ export class ClCore {
      * @author chris lee
      * @Time 2021/02/28
      */
-    destoryProgerssBar(){
+    private destoryProgerssBar(){
         return new Promise<void>((rs,rj)=>{
             this.OutPutPercent = 100;
             Utils.progressBar("当前进度",this.OutPutPercent);
