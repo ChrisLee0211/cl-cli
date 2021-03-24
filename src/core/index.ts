@@ -18,15 +18,22 @@ function isPluginFn(fn): fn is PluginFunction {
 export class ClCore {
     pluginsQueue:Array<Plugin> = [];
     ctx:any;
-    // eslint-disable-next-line no-undef
     barTimer:null|NodeJS.Timeout = null;
     OutPutPercent = 0;
 
+    /**
+     * 注册插件
+     * @param plugin 插件函数
+     * @returns 
+     */
     public use(plugin:Plugin){
         this.pluginsQueue.push(plugin);
         return this;
     }
     
+    /**
+     * 安装插件
+     */
     private installPlugins(){
         const cliUtils:typeof Utils = Utils; // prompt\gitDownload
         const registerFn = HookController.register;
@@ -42,6 +49,11 @@ export class ClCore {
         }
     }
 
+    /**
+     * 开始建立脚手架
+     * @param name 项目名称
+     * @returns 
+     */
     public async createCli(name) {
         this.installPlugins();
         const path = getCurrentPath();

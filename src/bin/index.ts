@@ -5,7 +5,6 @@ import {ClCore,Plugin} from "../core";
 import {configLoader} from "../core/configLoader";
 import {checkPathIsUseful,concatPath,getCurrentPath} from '../utils/path';
 import {checkFileIsBuilt} from '../utils/file'
-import {basePlugin, uiPlugin, framePlugin} from "../core/plugins/self";
 
 // 设置版本号和参数，通过 mycli --help 查看
 program.version("1.0.0")
