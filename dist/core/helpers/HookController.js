@@ -45,18 +45,22 @@ class HookController {
                 case "init":
                     queue = this.initEvents;
                     this.currentStep = "init";
+                    global.currentStep = "init";
                     break;
                 case "parse":
                     queue = this.parseEvents;
                     this.currentStep = "parse";
+                    global.currentStep = "parse";
                     break;
                 case "transform":
                     queue = this.transformEvents;
                     this.currentStep = "transform";
+                    global.currentStep = "transform";
                     break;
                 case "finish":
                     queue = this.finishEvents;
                     this.currentStep = "finish";
+                    global.currentStep = "finish";
                     break;
                 default:
                     this.checkHookType(type);

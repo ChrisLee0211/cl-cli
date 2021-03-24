@@ -8,8 +8,21 @@ export declare class ClCore {
     ctx: any;
     barTimer: null | NodeJS.Timeout;
     OutPutPercent: number;
+    /**
+     * 注册插件
+     * @param plugin 插件函数
+     * @returns
+     */
     use(plugin: Plugin): this;
+    /**
+     * 安装插件
+     */
     private installPlugins;
+    /**
+     * 开始建立脚手架
+     * @param name 项目名称
+     * @returns
+     */
     createCli(name: any): Promise<void>;
     /**
      * 获取项目名称，重复则继续调用自身

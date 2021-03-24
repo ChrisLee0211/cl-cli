@@ -12,12 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const UtilsLib_1 = require("../helpers/UtilsLib");
 const path = require("path");
 const file_1 = require("../../utils/file");
+const fileTree_1 = require("../fileTree");
 const stack_1 = require("../../utils/stack");
 class CoreComplier {
     constructor(name, path) {
         this.extraTree = undefined;
         this.outputCbs = [];
-        this.fileTree = this.createBaseFileNode(name, path);
+        this.rootFileNode = this.createBaseFileNode(name, path);
+        this.fileTree = new fileTree_1.default(this.rootFileNode);
         this.projectName = name;
         this.projectPath = path;
         this.setEffect = this.setEffect.bind(this);
@@ -49,8 +51,8 @@ class CoreComplier {
             const projectPath = this.projectPath;
             try {
                 const stack = new stack_1.Stack();
-                if (this.fileTree !== undefined) {
-                    stack.push(this.fileTree);
+                if (this.rootFileNode !== undefined) {
+                    stack.push(this.rootFileNode);
                     while (stack.length > 0) {
                         const curNode = stack.pop();
                         if (curNode.isFolder) {
@@ -89,27 +91,21 @@ class CoreComplier {
      */
     complierExtra(ctx, list) {
         return __awaiter(this, void 0, void 0, function* () {
-            const fileList = list;
+            const fileList = [...list];
             if (!fileList.length)
                 return this.fileTree;
-            if (fileList.length && this.fileTree) {
-                this.extraTree = this.fileTree;
-            }
+            if (this.fileTree === undefined)
+                throw new Error('Fail to parse local template');
             while (fileList.length) {
                 const cb = fileList.shift();
                 if (cb) {
                     const fn = cb;
                     try {
-                        if (this.fileTreeIsDone(this.extraTree, list)) {
-                            const keys = Object.keys(ctx);
-                            for (let i = 0; i < keys.length; i++) {
-                                const key = keys[i];
-                                const value = ctx[key];
-                                const result = yield fn(key, value, this.extraTree);
-                                if (this.isFileNode(result)) {
-                                    this.extraTree = result;
-                                }
-                            }
+                        const keys = Object.keys(ctx);
+                        for (let i = 0; i < keys.length; i++) {
+                            const key = keys[i];
+                            const value = ctx[key];
+                            yield fn(key, value, this.fileTree);
                         }
                     }
                     catch (e) {
@@ -117,20 +113,13 @@ class CoreComplier {
                     }
                 }
             }
-            this.fileTree = this.extraTree;
             return this.fileTree;
         });
-    }
-    fileTreeIsDone(tree, list) {
-        if (list.length) {
-            return true;
-        }
-        return false;
     }
     isFileNode(node) {
         const keys = ["path", "rootPath", "fileName", "isFolder", "content", "parent", "children"];
         const nodeKeys = Object.keys(node);
-        if (keys.length !== nodeKeys.length)
+        if (keys.length < nodeKeys.length)
             return false;
         let res = true;
         for (let i = 0; i < keys.length; i++) {
@@ -175,8 +164,10 @@ class CoreComplier {
     }
     output() {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.fileTree === undefined)
+                throw new Error(`fileTree is undefined!`);
             const stack = new stack_1.Stack();
-            stack.push(this.fileTree);
+            stack.push(this.fileTree.getRoot());
             while (stack.length) {
                 const curNode = stack.pop();
                 this.useEffect(curNode, this.outputCbs);

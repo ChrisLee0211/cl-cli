@@ -25,14 +25,21 @@ function isPluginFn(fn) {
 class ClCore {
     constructor() {
         this.pluginsQueue = [];
-        // eslint-disable-next-line no-undef
         this.barTimer = null;
         this.OutPutPercent = 0;
     }
+    /**
+     * 注册插件
+     * @param plugin 插件函数
+     * @returns
+     */
     use(plugin) {
         this.pluginsQueue.push(plugin);
         return this;
     }
+    /**
+     * 安装插件
+     */
     installPlugins() {
         const cliUtils = UtilsLib_1.default; // prompt\gitDownload
         const registerFn = HookController_1.default.register;
@@ -46,6 +53,11 @@ class ClCore {
             len--;
         }
     }
+    /**
+     * 开始建立脚手架
+     * @param name 项目名称
+     * @returns
+     */
     createCli(name) {
         return __awaiter(this, void 0, void 0, function* () {
             this.installPlugins();
@@ -75,7 +87,7 @@ class ClCore {
             /** 开始解析配置项，构造fileTree */
             yield HookController_1.default.emitter("parse", [this.ctx, parser_1.default.ruleSetter]);
             const parseFnTree = parser_1.default.getParseFnTree();
-            yield complier.complierExtra(this.ctx, parseFnTree);
+            yield complier.complierExtra(this.ctx.getConfig(), parseFnTree);
             /** 得到最终的fileTree，开始转化成文件项目目录，期间收集每个fileNode转化前的副作用函数 */
             yield HookController_1.default.emitter("transform", [complier.setEffect]);
             UtilsLib_1.default.log("开始生成项目目录......", "success");

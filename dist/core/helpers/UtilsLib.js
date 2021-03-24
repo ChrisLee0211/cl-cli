@@ -23,6 +23,16 @@ const useCommand = (question, property) => __awaiter(void 0, void 0, void 0, fun
     const result = yield inquirer.prompt([question]);
     return result[property];
 });
+/**
+ * 创建虚拟文件节点
+ * @param name 文件名称
+ * @param path 文件路径
+ * @param rootPath 根路径
+ * @param content 文件内容
+ * @param isFolder 是否文件夹
+ * @param parent 父节点
+ * @returns
+ */
 const createFileNode = (name, path, rootPath, content, isFolder, parent = null) => {
     const fileName = name;
     const _path = path_1.checkPathIsUseful(path) ? path : path_1.getCurrentPath();

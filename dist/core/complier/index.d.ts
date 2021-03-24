@@ -1,10 +1,10 @@
-import FileNode from "../fNode/main";
+import FileTree from "../fileTree";
+import FileNode from "../fnode/main";
 import { CoreParser } from "../parser";
 interface CoreComplierInterface {
-    fileTree: FileNode | undefined;
+    fileTree: FileTree | undefined;
     /** 获取fileTree */
-    getFileTree(): Readonly<FileNode> | undefined;
-    /** 构建基础fileNode */
+    getFileTree(): FileTree | undefined;
     /** 将本地拉取的模版目录编译成fileTree */
     complieLocalTemplate(): void;
     /** 将传入的fileList依次解析覆盖最新的fileTree */
@@ -16,7 +16,8 @@ interface CoreComplierInterface {
 }
 declare type outputCallback = (cur: FileNode) => Promise<void>;
 export default class CoreComplier implements CoreComplierInterface {
-    fileTree: FileNode | undefined;
+    fileTree: FileTree | undefined;
+    rootFileNode: FileNode | undefined;
     extraTree: FileNode | undefined;
     outputCbs: Array<outputCallback>;
     projectName: string;
@@ -25,7 +26,7 @@ export default class CoreComplier implements CoreComplierInterface {
     /**
      * 返回一个只读的fileTree
      */
-    getFileTree(): Readonly<FileNode> | undefined;
+    getFileTree(): FileTree | undefined;
     /**
      * 构建fileTree顶端节点
      * @param pathName 根文件入口路径
@@ -46,8 +47,7 @@ export default class CoreComplier implements CoreComplierInterface {
      * @author chris lee
      * @Time 2021/02/14
      */
-    complierExtra(ctx: any, list: CoreParser["parseFnTree"]): Promise<FileNode | undefined>;
-    private fileTreeIsDone;
+    complierExtra(ctx: any, list: CoreParser["parseFnTree"]): Promise<FileTree | undefined>;
     private isFileNode;
     /**
      * 注册副作用函数供编译outpuy时调用

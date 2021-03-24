@@ -1,5 +1,7 @@
 /** 文件节点内容 */
 export interface fileNodeContent {
+    /** id标识 */
+    id: string;
     /** 文件路径 */
     path: string;
     /** 根路径 */
@@ -27,6 +29,7 @@ export interface fileNodeContent {
     setContent(newContent: any): boolean;
 }
 export default class fileNode implements fileNodeContent {
+    id: string;
     parent: fileNode | null;
     children: fileNode[];
     private content;

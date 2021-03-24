@@ -5,7 +5,6 @@ import * as fs from "fs";
 import {configLoader} from "../src/core/configLoader";
 import {checkPathIsUseful,concatPath,getCurrentPath} from '../src/utils/path';
 import {checkFileIsBuilt} from '../src/utils/file'
-import {basePlugin, uiPlugin, framePlugin} from "../src/core/plugins/self";
 
 // 设置版本号和参数，通过 mycli --help 查看
 // program.version('1.0.0')

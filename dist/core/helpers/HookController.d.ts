@@ -2,6 +2,7 @@ import { Ctx } from "../context";
 import { CoreParser } from "../parser";
 import CoreComplier from "../complier";
 import fileNode from "../fNode/main";
+import fileTree from "../fileTree";
 export interface HookCL<T = any> {
     register<T>(type: "init", fn: initFn<T>): void;
     register<T>(type: "parse", fn: parseFn<T>): void;
@@ -10,7 +11,7 @@ export interface HookCL<T = any> {
     emitter<T>(type: "init", args: [T]): any;
     emitter<T>(type: "parse", args: [T, rset]): any;
     emitter(type: "transform", args: [CoreComplier["setEffect"]]): any;
-    emitter(type: "finish", args: [Readonly<fileNode> | undefined]): any;
+    emitter(type: "finish", args: [fileTree | undefined]): any;
 }
 declare type lifeType = "init" | "parse" | "transform" | "finish";
 declare type rset = CoreParser["ruleSetter"];
@@ -46,7 +47,7 @@ declare class HookController implements HookCL {
     emitter<T>(type: "init", args: [T]): any;
     emitter<T>(type: "parse", args: [T, rset]): any;
     emitter<T>(type: "transform", args: [CoreComplier["setEffect"]]): any;
-    emitter<T>(type: "finish", args: [Readonly<fileNode> | undefined]): any;
+    emitter<T>(type: "finish", args: [fileTree | undefined]): any;
     private checkHookType;
 }
 declare const _default: HookController;

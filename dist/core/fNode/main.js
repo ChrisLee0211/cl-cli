@@ -26,6 +26,7 @@ class fileNode {
         this.isChanged = false;
         this.parent = parent;
         this.setContent(content !== null && content !== void 0 ? content : null);
+        this.id = this.path + this.fileName;
         return this;
     }
     getContent() {
@@ -81,7 +82,15 @@ class fileNode {
         this.freezeMethod();
     }
     removeChild(fnode) {
-        this.children = this.children.filter(node => node.fileName !== fnode.fileName);
+        const len = this.children.length;
+        const newFileNodes = [];
+        for (let i = 0; i < len; i++) {
+            const node = this.children[i];
+            if (node.fileName !== fnode.fileName) {
+                newFileNodes.push(node);
+            }
+        }
+        this.children = newFileNodes;
         // this.isChanged = true;
         this.freezeMethod();
     }
